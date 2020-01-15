@@ -81,7 +81,7 @@ function SideBar ({ className, collapse, handleResize, isCollapsed, toggleMenu, 
               className='apps--SideBar-logo'
               onClick={_toggleModal('network')}
             >
-              <ChainImg />
+              <ChainImg className='Bifrost logo' logo='bifrostIcon'/>
               <div className='info'>
                 <Chain className='chain' />
                 {runtimeVersion && (
