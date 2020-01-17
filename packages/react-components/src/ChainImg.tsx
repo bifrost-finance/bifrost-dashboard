@@ -11,7 +11,7 @@ import { useApi } from '@polkadot/react-hooks';
 
 // last-resort fallback, just something empty
 import EMPTY from '@polkadot/ui-assets/empty.svg';
-import bifrostIcon from './logo/bifrost-icon-circle-1.svg'
+import bifrostIcon from './logo/bifrost-icon-circle-3.svg'
 // anything fopr a specific chain, most items will probably go in here
 import chainKusama from '@polkadot/ui-assets/chains/kusama-128.gif';
 
