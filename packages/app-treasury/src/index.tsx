@@ -2,35 +2,38 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { AppProps, BareProps, I18nProps } from '@polkadot/react-components/types';
+import { AppProps, BareProps } from '@polkadot/react-components/types';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
 import { HelpOverlay, Tabs } from '@polkadot/react-components';
 
 import basicMd from './md/basic.md';
 import Overview from './Overview';
 
-import translate from './translate';
+import { useTranslation } from './translate';
 
 export { default as useCounter } from './useCounter';
 
-interface Props extends AppProps, BareProps, I18nProps {}
+interface Props extends AppProps, BareProps {}
 
-function TreasuryApp ({ basePath, t }: Props): React.ReactElement<Props> {
+export default function TreasuryApp ({ basePath }: Props): React.ReactElement<Props> {
+  const { t } = useTranslation();
+  const items = useMemo(() => [
+    {
+      isRoot: true,
+      name: 'overview',
+      text: t('Treasury overview')
+    }
+  ], [t]);
+
   return (
     <main className='treasury--App'>
       <HelpOverlay md={basicMd} />
       <header>
         <Tabs
           basePath={basePath}
-          items={[
-            {
-              isRoot: true,
-              name: 'overview',
-              text: t('Treasury overview')
-            }
-          ]}
+          items={items}
         />
       </header>
       <Switch>
@@ -39,5 +42,3 @@ function TreasuryApp ({ basePath, t }: Props): React.ReactElement<Props> {
     </main>
   );
 }
-
-export default translate(TreasuryApp);

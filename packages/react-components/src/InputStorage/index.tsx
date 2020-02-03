@@ -5,31 +5,29 @@
 // TODO: We have a lot shared between this and InputExtrinsic
 
 import { DropdownOptions } from '../util/types';
-import { I18nProps } from '../types';
 import { StorageEntryPromise } from './types';
-
-import '../InputExtrinsic/InputExtrinsic.css';
 
 import React, { useState } from 'react';
 import { useApi } from '@polkadot/react-hooks';
 
-import Labelled from '../Labelled';
-import translate from '../translate';
+import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
 import SelectKey from './SelectKey';
 import SelectSection from './SelectSection';
 import keyOptions from './options/key';
 import sectionOptions from './options/section';
 
-interface Props extends I18nProps {
+interface Props {
+  className?: string;
   defaultValue: StorageEntryPromise;
   help?: React.ReactNode;
   isError?: boolean;
   label: React.ReactNode;
   onChange?: (value: StorageEntryPromise) => void;
+  style?: any;
   withLabel?: boolean;
 }
 
-function InputStorage ({ className, defaultValue, help, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
+export default function InputStorage ({ className, defaultValue, help, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
   const { api } = useApi();
   const [optionsMethod, setOptionsMethod] = useState<DropdownOptions>(keyOptions(api, defaultValue.creator.section));
   const [optionsSection] = useState<DropdownOptions>(sectionOptions(api));
@@ -56,32 +54,25 @@ function InputStorage ({ className, defaultValue, help, label, onChange, style, 
   };
 
   return (
-    <div
+    <LinkedWrapper
       className={className}
+      help={help}
+      label={label}
       style={style}
+      withLabel={withLabel}
     >
-      <Labelled
-        help={help}
-        label={label}
-        withLabel={withLabel}
-      >
-        <div className=' ui--DropdownLinked ui--row'>
-          <SelectSection
-            className='small'
-            onChange={_onSectionChange}
-            options={optionsSection}
-            value={value}
-          />
-          <SelectKey
-            className='large'
-            onChange={_onKeyChange}
-            options={optionsMethod}
-            value={value}
-          />
-        </div>
-      </Labelled>
-    </div>
+      <SelectSection
+        className='small'
+        onChange={_onSectionChange}
+        options={optionsSection}
+        value={value}
+      />
+      <SelectKey
+        className='large'
+        onChange={_onKeyChange}
+        options={optionsMethod}
+        value={value}
+      />
+    </LinkedWrapper>
   );
 }
-
-export default translate(InputStorage);

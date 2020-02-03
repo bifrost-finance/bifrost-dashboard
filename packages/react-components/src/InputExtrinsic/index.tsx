@@ -3,22 +3,19 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { CallFunction } from '@polkadot/types/types';
-import { I18nProps } from '../types';
 import { DropdownOptions } from '../util/types';
-
-import './InputExtrinsic.css';
 
 import React, { useState } from 'react';
 import { useApi } from '@polkadot/react-hooks';
 
-import Labelled from '../Labelled';
-import translate from '../translate';
+import LinkedWrapper from './LinkedWrapper';
 import SelectMethod from './SelectMethod';
 import SelectSection from './SelectSection';
 import methodOptions from './options/method';
 import sectionOptions from './options/section';
 
-interface Props extends I18nProps {
+interface Props {
+  className?: string;
   defaultValue: CallFunction;
   help?: React.ReactNode;
   isDisabled?: boolean;
@@ -26,10 +23,11 @@ interface Props extends I18nProps {
   isPrivate?: boolean;
   label: React.ReactNode;
   onChange: (value: CallFunction) => void;
+  style?: any;
   withLabel?: boolean;
 }
 
-function InputExtrinsic ({ className, defaultValue, help, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
+export default function InputExtrinsic ({ className, defaultValue, help, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
   const { api } = useApi();
   const [optionsMethod, setOptionsMethod] = useState<DropdownOptions>(methodOptions(api, defaultValue.section));
   const [optionsSection] = useState<DropdownOptions>(sectionOptions(api));
@@ -56,33 +54,26 @@ function InputExtrinsic ({ className, defaultValue, help, label, onChange, style
   };
 
   return (
-    <div
+    <LinkedWrapper
       className={className}
+      help={help}
+      label={label}
       style={style}
+      withLabel={withLabel}
     >
-      <Labelled
-        help={help}
-        label={label}
-        withLabel={withLabel}
-      >
-        <div className=' ui--DropdownLinked ui--row'>
-          <SelectSection
-            className='small'
-            onChange={_onSectionChange}
-            options={optionsSection}
-            value={value}
-          />
-          <SelectMethod
-            api={api}
-            className='large'
-            onChange={_onKeyChange}
-            options={optionsMethod}
-            value={value}
-          />
-        </div>
-      </Labelled>
-    </div>
+      <SelectSection
+        className='small'
+        onChange={_onSectionChange}
+        options={optionsSection}
+        value={value}
+      />
+      <SelectMethod
+        api={api}
+        className='large'
+        onChange={_onKeyChange}
+        options={optionsMethod}
+        value={value}
+      />
+    </LinkedWrapper>
   );
 }
-
-export default translate(InputExtrinsic);

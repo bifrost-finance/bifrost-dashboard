@@ -3,44 +3,38 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { DerivedCollectiveProposals, DerivedCollectiveProposal } from '@polkadot/api-derive/types';
-import { I18nProps } from '@polkadot/react-components/types';
-import { AccountId, Balance } from '@polkadot/types/interfaces';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Table } from '@polkadot/react-components';
-import { useApi, useAccounts, useCall } from '@polkadot/react-hooks';
 
+import { useTranslation } from '../translate';
+import useCouncilMembers from '../useCouncilMembers';
 import Motion from './Motion';
 import Propose from './Propose';
 import Slashing from './Slashing';
-import translate from '../translate';
 
-interface Props extends I18nProps {
+interface Props {
+  className?: string;
   motions?: DerivedCollectiveProposals;
 }
 
-function Proposals ({ className, motions, t }: Props): React.ReactElement<Props> {
-  const { api } = useApi();
-  const { allAccounts } = useAccounts();
-  const members = useCall<[AccountId, Balance][]>(api.query.electionsPhragmen?.members || api.query.elections.members, []);
-  const [isMember, setIsMember] = useState(false);
-
-  useEffect((): void => {
-    if (allAccounts && members) {
-      setIsMember(
-        members
-          .map(([accountId]): string => accountId.toString())
-          .some((accountId): boolean => allAccounts.includes(accountId))
-      );
-    }
-  }, [allAccounts, members]);
+export default function Proposals ({ className, motions }: Props): React.ReactElement<Props> {
+  const { t } = useTranslation();
+  const { isMember, members } = useCouncilMembers();
 
   return (
     <div className={className}>
       <Button.Group>
-        <Propose isMember={isMember} />
+        <Propose
+          filter={members}
+          isMember={isMember}
+          members={members}
+        />
         <Button.Or />
-        <Slashing isMember={isMember} />
+        <Slashing
+          isMember={isMember}
+          members={members}
+        />
       </Button.Group>
       {motions?.length
         ? (
@@ -50,6 +44,7 @@ function Proposals ({ className, motions, t }: Props): React.ReactElement<Props>
                 <Motion
                   isMember={isMember}
                   key={motion.hash.toHex()}
+                  members={members}
                   motion={motion}
                 />
               ))}
@@ -61,5 +56,3 @@ function Proposals ({ className, motions, t }: Props): React.ReactElement<Props>
     </div>
   );
 }
-
-export default translate(Proposals);

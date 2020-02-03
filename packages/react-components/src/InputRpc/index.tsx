@@ -6,31 +6,29 @@
 
 import { RpcMethod } from '@polkadot/jsonrpc/types';
 import { DropdownOptions } from '../util/types';
-import { I18nProps } from '../types';
-
-import '../InputExtrinsic/InputExtrinsic.css';
 
 import React, { useState } from 'react';
 import map from '@polkadot/jsonrpc';
 import { useApi } from '@polkadot/react-hooks';
 
-import Labelled from '../Labelled';
-import translate from '../translate';
+import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
 import SelectMethod from './SelectMethod';
 import SelectSection from './SelectSection';
 import methodOptions from './options/method';
 import sectionOptions from './options/section';
 
-interface Props extends I18nProps {
+interface Props {
+  className?: string;
   defaultValue: RpcMethod;
   help?: React.ReactNode;
   isError?: boolean;
   label: React.ReactNode;
   onChange?: (value: RpcMethod) => void;
+  style?: any;
   withLabel?: boolean;
 }
 
-function InputRpc ({ className, defaultValue, help, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
+export default function InputRpc ({ className, defaultValue, help, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
   const { api } = useApi();
   const [optionsMethod, setOptionsMethod] = useState<DropdownOptions>(methodOptions(api, defaultValue.section));
   const [optionsSection] = useState<DropdownOptions>(sectionOptions(api));
@@ -57,32 +55,25 @@ function InputRpc ({ className, defaultValue, help, label, onChange, style, with
   };
 
   return (
-    <div
+    <LinkedWrapper
       className={className}
+      help={help}
+      label={label}
       style={style}
+      withLabel={withLabel}
     >
-      <Labelled
-        help={help}
-        label={label}
-        withLabel={withLabel}
-      >
-        <div className=' ui--DropdownLinked ui--row'>
-          <SelectSection
-            className='small'
-            onChange={_onSectionChange}
-            options={optionsSection}
-            value={value}
-          />
-          <SelectMethod
-            className='large'
-            onChange={_onMethodChange}
-            options={optionsMethod}
-            value={value}
-          />
-        </div>
-      </Labelled>
-    </div>
+      <SelectSection
+        className='small'
+        onChange={_onSectionChange}
+        options={optionsSection}
+        value={value}
+      />
+      <SelectMethod
+        className='large'
+        onChange={_onMethodChange}
+        options={optionsMethod}
+        value={value}
+      />
+    </LinkedWrapper>
   );
 }
-
-export default translate(InputRpc);
