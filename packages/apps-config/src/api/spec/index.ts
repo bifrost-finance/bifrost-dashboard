@@ -6,10 +6,12 @@ import centrifugeChain from './centrifuge-chain';
 import edgeware from './edgeware';
 import kulupu from './kulupu';
 import nodeTemplate from './node-template';
+import bifrost from './bifrost';
 
 export default {
   'centrifuge-chain': centrifugeChain,
   edgeware,
   kulupu,
-  'node-template': nodeTemplate
+  'node-template': nodeTemplate,
+  'bifrost': bifrost
 };
