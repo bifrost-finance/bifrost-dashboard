@@ -8,9 +8,11 @@ const emptyColor = '#999';
 const chainKulupu = '#003366';
 const chainKusama = '#d32e79';
 const chainWestend = '#da68a7';
+const chainBifrost = '#002cc3';
 
 const nodeCentrifuge = '#fcc367';
 const nodeEdgeware = '#0a95df';
+const nodeBifrost = '#002cc3';
 
 // overrides based on the actual matched chain name
 const chainColors: Record<string, any> = [
@@ -19,7 +21,8 @@ const chainColors: Record<string, any> = [
   ['Kusama CC1', chainKusama],
   ['Kusama CC2', chainKusama],
   ['Kusama CC3', chainKusama],
-  ['Westend', chainWestend]
+  ['Westend', chainWestend],
+  ['Bifrost', chainBifrost]
 ].reduce((colors, [chain, color]): Record<string, any> => ({
   ...colors,
   [chain.toLowerCase()]: color
@@ -29,6 +32,7 @@ const chainColors: Record<string, any> = [
 const nodeColors: Record<string, any> = [
   ['centrifuge chain', nodeCentrifuge],
   ['edgeware node', nodeEdgeware],
+  ['bifrost node', nodeBifrost],
   ['node template', emptyColor],
   ['parity polkadot', emptyColor],
   ['substrate node', emptyColor]

@@ -11,7 +11,8 @@ export default {
     Kulupu: 'kulupu',
     Kusama: 'kusama',
     'Kusama CC3': 'kusama',
-    Westend: 'westend'
+    Westend: 'westend',
+    Bifrost: 'bifrost'
   },
   paths: {
     address: 'module/account',

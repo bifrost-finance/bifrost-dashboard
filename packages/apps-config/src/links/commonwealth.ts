@@ -9,7 +9,8 @@ export default {
   chains: {
     Edgeware: 'edgeware',
     Kusama: 'kusama',
-    'Kusama CC3': 'kusama'
+    'Kusama CC3': 'kusama',
+    Bifrost: 'bifrost',
   },
   paths: {
     council: 'proposal/councilmotion',

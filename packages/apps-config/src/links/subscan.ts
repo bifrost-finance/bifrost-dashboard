@@ -7,8 +7,7 @@ import BN from 'bn.js';
 export default {
   isActive: false,
   chains: {
-    Kusama: 'kusama',
-    'Kusama CC3': 'kusama'
+    Bifrost: 'bifrost',
   },
   paths: {
     address: 'account',

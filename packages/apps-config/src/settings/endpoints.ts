@@ -13,43 +13,14 @@ const DEV: Option[] = [
 ];
 
 const LIVE: Option[] = [
-  {
-    info: 'kusama',
-    text: 'Kusama (Polkadot Canary, hosted by Parity)',
-    value: 'wss://kusama-rpc.polkadot.io/'
-  },
-  {
-    info: 'kusama',
-    text: 'Kusama (Polkadot Canary, hosted by Web3 Foundation)',
-    value: 'wss://cc3-5.kusama.network/'
-  },
-  {
-    info: 'edgeware',
-    text: 'Edgeware (Edgeware Mainnet, hosted by Commonwealth Labs)',
-    value: 'wss://mainnet1.edgewa.re'
-  },
-  {
-    info: 'substrate',
-    text: 'Kulupu (Kulupu Mainnet, hosted by Kulupu)',
-    value: 'wss://rpc.kulupu.network/ws'
-  }
+
 ];
 
 const TEST: Option[] = [
   {
-    info: 'westend',
-    text: 'Westend (Polkadot Testnet, hosted by Parity)',
-    value: 'wss://westend-rpc.polkadot.io'
-  },
-  {
-    info: 'edgeware',
-    text: 'Berlin (Edgeware Testnet, hosted by Commonwealth Labs)',
-    value: 'wss://berlin1.edgewa.re'
-  },
-  {
-    info: 'substrate',
-    text: 'Flaming Fir (Substrate Testnet, hosted by Parity)',
-    value: 'wss://substrate-rpc.parity.io/'
+    info: 'bifrost',
+    text: 'Bifrost (Bifrost POC-2 Testnet, hosted by liebi)',
+    value: 'wss://testnet.liebi.com'
   }
 ];
 
