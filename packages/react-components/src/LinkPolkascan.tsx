@@ -27,7 +27,8 @@ const CHAINS: Record<string, string> = {
   'Kusama CC1': 'kusama-cc1',
   'Kusama CC2': 'kusama-cc2',
   'Kusama CC3': 'kusama-cc3',
-  Westend: 'westend'
+  Westend: 'westend',
+  Bifrost: 'bifrost'
 };
 
 const TYPES: Record<string, string> = {

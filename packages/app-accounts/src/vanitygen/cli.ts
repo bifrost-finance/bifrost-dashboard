@@ -33,7 +33,7 @@ const { match, mnemonic, network, type, withCase } = yargs
     type: 'boolean'
   })
   .option('network', {
-    choices: ['substrate', 'polkadot', 'kusama'],
+    choices: ['substrate', 'polkadot', 'kusama', 'bifrost'],
     default: 'substrate'
   })
   .option('type', {
