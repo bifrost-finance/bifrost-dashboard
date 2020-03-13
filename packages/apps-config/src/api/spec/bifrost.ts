@@ -85,6 +85,7 @@ export default {
     TxOut: {},
     ExchangeRate: "u64",
     RatePerBlock: "u64",
+    Fee: "u64",
     TokenPool: "Balance",
     VTokenPool: "Balance",
     InVariantPool: "Balance",
@@ -97,5 +98,13 @@ export default {
     TokenPair: {
         token: "Token",
         vtoken: "Token"
+    },
+    Cost: "u128",
+    Income: "u128",
+    Price: "u64",
+    AccountAsset: {
+        balance: "Balance",
+        cost: "Cost",
+        income: "Income"
     }
 };
