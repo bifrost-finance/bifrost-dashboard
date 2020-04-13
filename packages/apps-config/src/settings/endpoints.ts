@@ -16,17 +16,17 @@ const DEV: Option[] = [
 
 const TEST: Option[] = [
     {
-        info: 'Bifrost Node 1',
+        info: 'bifrost',
         text: 'Bifrost Node 1 (POC-2 Testnet, n1.testnet.liebi.com, hosted by Liebi)',
         value: 'wss://n1.testnet.liebi.com'
     },
     {
-        info: 'Bifrost Node 2',
+        info: 'bifrost',
         text: 'Bifrost Node 2 (POC-2 Testnet, n2.testnet.liebi.com, hosted by Liebi)',
         value: 'wss://n2.testnet.liebi.com'
     },
     {
-        info: 'Bifrost Node 3',
+        info: 'bifrost',
         text: 'Bifrost Node 3 (POC-2 Testnet, n3.testnet.liebi.com, hosted by Liebi)',
         value: 'wss://n3.testnet.liebi.com'
     }
