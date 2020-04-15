@@ -8,6 +8,7 @@ import encointerNode from './encointer-node';
 import kulupu from './kulupu';
 import kusama from './kusama';
 import nodeTemplate from './node-template';
+import bifrost from './bifrost';
 
 export default {
   'centrifuge-chain': centrifugeChain,
@@ -15,5 +16,6 @@ export default {
   'encointer-node': encointerNode,
   kulupu,
   kusama,
-  'node-template': nodeTemplate
+  'node-template': nodeTemplate,
+  'bifrost': bifrost
 };

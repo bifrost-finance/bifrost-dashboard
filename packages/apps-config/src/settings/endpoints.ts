@@ -22,25 +22,35 @@ if (process.env.WS_URL) {
   });
 }
 
-const LIVE: Option[] = [
-
-];
+// const LIVE: Option[] = [
+//
+// ];
 
 const TEST: Option[] = [
-  {
-    info: 'bifrost',
-    text: 'Bifrost (Bifrost POC-2 Testnet, hosted by liebi)',
-    value: 'wss://testnet.liebi.com'
-  }
+    {
+        info: 'bifrost',
+        text: 'Bifrost Node 1 (POC-2 Testnet, n1.testnet.liebi.com, hosted by Liebi)',
+        value: 'wss://n1.testnet.liebi.com'
+    },
+    {
+        info: 'bifrost',
+        text: 'Bifrost Node 2 (POC-2 Testnet, n2.testnet.liebi.com, hosted by Liebi)',
+        value: 'wss://n2.testnet.liebi.com'
+    },
+    {
+        info: 'bifrost',
+        text: 'Bifrost Node 3 (POC-2 Testnet, n3.testnet.liebi.com, hosted by Liebi)',
+        value: 'wss://n3.testnet.liebi.com'
+    }
 ];
 
 let endpoints = [
-  {
-    isHeader: true,
-    text: 'Live networks',
-    value: ''
-  },
-  ...LIVE,
+  // {
+  //   isHeader: true,
+  //   text: 'Live networks',
+  //   value: ''
+  // },
+  // ...LIVE,
   {
     isHeader: true,
     text: 'Test networks',
