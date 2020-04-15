@@ -4,8 +4,9 @@
 
 import { PropIndex, Proposal } from '@polkadot/types/interfaces';
 
-import React, { useMemo, useState } from 'react';
-import { Button, Dropdown, Modal, ProposedAction, VoteAccount, VoteActions, VoteToggle } from '@polkadot/react-components';
+import BN from 'bn.js';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Dropdown, Modal, ProposedAction, VoteAccount, VoteActions, VoteToggle, VoteValue } from '@polkadot/react-components';
 import { useAccounts, useApi, useToggle } from '@polkadot/react-hooks';
 import { isBoolean } from '@polkadot/util';
 
@@ -18,17 +19,29 @@ interface Props {
 
 const CONVICTIONS: [number, number][] = [1, 2, 4, 8, 16, 32].map((lock, index) => [index + 1, lock]);
 
-export default function Voting ({ proposal, referendumId }: Props): React.ReactElement<Props> | null {
+function Voting ({ proposal, referendumId }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const { api } = useApi();
   const { hasAccounts } = useAccounts();
   const [accountId, setAccountId] = useState<string | null>(null);
+  const [balance, setBalance] = useState<BN | undefined>();
   const [conviction, setConviction] = useState(0);
   const [isVotingOpen, toggleVoting] = useToggle();
   const [aye, setVoteValue] = useState(true);
+
+  useEffect((): void => {
+    isVotingOpen && setVoteValue(true);
+  }, [isVotingOpen]);
+
+  const isCurrentVote = useMemo(
+    () => !!api.query.democracy.votingOf,
+    [api]
+  );
+
   const [enact] = useState(
     (api.consts.democracy.enactmentPeriod.toNumber() * api.consts.timestamp.minimumPeriod.toNumber() / 1000 * 2) / 60 / 60 / 24
   );
+
   const convictionOpts = useMemo(() => [
     { text: t('0.1x voting balance, no lockup period'), value: 0 },
     ...CONVICTIONS.map(([value, lock]): { text: string; value: number } => ({
@@ -43,11 +56,14 @@ export default function Voting ({ proposal, referendumId }: Props): React.ReactE
     }))
   ], [t, enact]);
 
+  const _onChangeVote = useCallback(
+    (vote?: boolean): void => setVoteValue(isBoolean(vote) ? vote : true),
+    []
+  );
+
   if (!hasAccounts) {
     return null;
   }
-
-  const _onChangeVote = (vote?: boolean): void => setVoteValue(isBoolean(vote) ? vote : true);
 
   return (
     <>
@@ -62,10 +78,13 @@ export default function Voting ({ proposal, referendumId }: Props): React.ReactE
               proposal={proposal}
             />
             <VoteAccount onChange={setAccountId} />
-            <VoteToggle
-              onChange={_onChangeVote}
-              value={aye}
-            />
+            {isCurrentVote && (
+              <VoteValue
+                accountId={accountId}
+                autoFocus
+                onChange={setBalance}
+              />
+            )}
             <Dropdown
               help={t('The conviction to use for this vote, with an appropriate lock period.')}
               label={t('conviction')}
@@ -73,21 +92,31 @@ export default function Voting ({ proposal, referendumId }: Props): React.ReactE
               options={convictionOpts}
               value={conviction}
             />
+            <VoteToggle
+              onChange={_onChangeVote}
+              value={aye}
+            />
           </Modal.Content>
           <VoteActions
             accountId={accountId}
+            aye={aye}
+            isDisabled={isCurrentVote ? !balance : false}
             onClick={toggleVoting}
-            params={[referendumId, { aye, conviction }]}
+            params={
+              isCurrentVote
+                ? [referendumId, { Standard: { balance, vote: { aye, conviction } } }]
+                : [referendumId, { aye, conviction }]}
             tx='democracy.vote'
           />
         </Modal>
       )}
       <Button
         icon='check'
-        isPrimary
         label={t('Vote')}
         onClick={toggleVoting}
       />
     </>
   );
 }
+
+export default React.memo(Voting);

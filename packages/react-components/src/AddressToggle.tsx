@@ -4,7 +4,7 @@
 
 import { DeriveAccountInfo } from '@polkadot/api-derive/types';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useApi, useCall } from '@polkadot/react-hooks';
 
@@ -17,6 +17,7 @@ interface Props {
   className?: string;
   isHidden?: boolean;
   filter?: string;
+  noLookup?: boolean;
   noToggle?: boolean;
   onChange?: (isChecked: boolean) => void;
   value?: boolean;
@@ -45,16 +46,19 @@ function getIsFiltered (address: string, filter?: string, info?: DeriveAccountIn
   return true;
 }
 
-function AddressToggle ({ address, className, filter, isHidden, noToggle, onChange, value }: Props): React.ReactElement<Props> | null {
+function AddressToggle ({ address, className, filter, isHidden, noLookup, noToggle, onChange, value }: Props): React.ReactElement<Props> | null {
   const { api } = useApi();
-  const info = useCall<DeriveAccountInfo>(api.derive.accounts.info as any, [address]);
+  const info = useCall<DeriveAccountInfo>(!noLookup && api.derive.accounts.info, [address]);
   const [isFiltered, setIsFiltered] = useState(false);
 
   useEffect((): void => {
     setIsFiltered(getIsFiltered(address, filter, info));
   }, [address, filter, info]);
 
-  const _onClick = (): void => onChange && onChange(!value);
+  const _onClick = useCallback(
+    (): void => onChange && onChange(!value),
+    [onChange, value]
+  );
 
   return (
     <div
@@ -63,6 +67,7 @@ function AddressToggle ({ address, className, filter, isHidden, noToggle, onChan
     >
       <AddressMini
         className='ui--AddressToggle-address'
+        noLookup={noLookup}
         value={address}
       />
       {!noToggle && (
@@ -77,7 +82,7 @@ function AddressToggle ({ address, className, filter, isHidden, noToggle, onChan
   );
 }
 
-export default styled(AddressToggle)`
+export default React.memo(styled(AddressToggle)`
   align-items: flex-start;
   border: 1px solid transparent; /* #eee */
   border-radius: 0.25rem;
@@ -108,15 +113,6 @@ export default styled(AddressToggle)`
     box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.15);
   }
 
-  &.isAye {
-    cursor: move;
-    .ui--AddressToggle-address {
-      filter: none;
-      opacity: 1;
-    }
-    /* border-color: #ccc; */
-  }
-
   .ui--AddressToggle-address,
   .ui--AddressToggle-toggle {
     flex: 1;
@@ -127,4 +123,11 @@ export default styled(AddressToggle)`
     margin-top: 0.1rem;
     text-align: right;
   }
-`;
+
+  &.isAye {
+    .ui--AddressToggle-address {
+      filter: none;
+      opacity: 1;
+    }
+  }
+`);

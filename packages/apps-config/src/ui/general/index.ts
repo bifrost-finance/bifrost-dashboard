@@ -33,9 +33,9 @@ const nodeColors: Record<string, any> = [
   ['centrifuge chain', nodeCentrifuge],
   ['edgeware node', nodeEdgeware],
   ['bifrost node', nodeBifrost],
-  ['node template', emptyColor],
-  ['parity polkadot', emptyColor],
-  ['substrate node', emptyColor]
+  // ['node template', emptyColor],
+  // ['parity polkadot', emptyColor],
+  // ['substrate node', emptyColor]
 ].reduce((colors, [node, color]): Record<string, any> => ({
   ...colors,
   [node.toLowerCase().replace(/-/g, ' ')]: color

@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DerivedSessionInfo } from '@polkadot/api-derive/types';
+import { DeriveSessionProgress } from '@polkadot/api-derive/types';
 
 import React, { useMemo } from 'react';
 import { CardSummary } from '@polkadot/react-components';
@@ -16,10 +16,10 @@ interface Props {
   withSession?: boolean;
 }
 
-export default function SummarySession ({ withEra = true, withSession = true }: Props): React.ReactElement<Props> {
+function SummarySession ({ withEra = true, withSession = true }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
-  const sessionInfo = useCall<DerivedSessionInfo>(api.derive.session?.info, []);
+  const sessionInfo = useCall<DeriveSessionProgress>(api.derive.session?.progress, []);
   const eraLabel = useMemo(() =>
     t('era')
   , [t]);
@@ -74,3 +74,5 @@ export default function SummarySession ({ withEra = true, withSession = true }: 
     </>
   );
 }
+
+export default React.memo(SummarySession);

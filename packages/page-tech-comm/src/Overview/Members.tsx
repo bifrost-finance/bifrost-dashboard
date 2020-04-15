@@ -5,36 +5,46 @@
 import { AccountId } from '@polkadot/types/interfaces';
 
 import React from 'react';
-import { AddressSmall, Table } from '@polkadot/react-components';
+import { AddressSmall, Table, Tag } from '@polkadot/react-components';
 
 import { useTranslation } from '../translate';
 
 interface Props {
   className?: string;
-  members?: AccountId[];
+  members?: string[];
+  prime?: AccountId | null;
 }
 
-export default function Members ({ className, members }: Props): React.ReactElement<Props> {
+function Members ({ className, members, prime }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
 
   return (
-    <div className={className}>
-      {members?.length
-        ? (
-          <Table>
-            <Table.Body>
-              {members.map((accountId): React.ReactNode => (
-                <tr key={accountId.toString()}>
-                  <td>
-                    <AddressSmall value={accountId} />
-                  </td>
-                </tr>
-              ))}
-            </Table.Body>
-          </Table>
-        )
-        : t('No members found')
-      }
-    </div>
+    <Table
+      className={className}
+      empty={members && t('No members found')}
+      header={[
+        [t('members'), 'start', 3]
+      ]}
+    >
+      {members?.map((accountId): React.ReactNode => (
+        <tr key={accountId.toString()}>
+          <td className='address'>
+            <AddressSmall value={accountId} />
+          </td>
+          <td>
+            {prime?.eq(accountId) && (
+              <Tag
+                color='green'
+                hover={t('Committee prime member, default voting')}
+                label={t('prime member')}
+              />
+            )}
+          </td>
+          <td className='all'>&nbsp;</td>
+        </tr>
+      ))}
+    </Table>
   );
 }
+
+export default React.memo(Members);

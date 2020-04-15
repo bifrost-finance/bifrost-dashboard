@@ -14,30 +14,32 @@ import Candidate from './Candidate';
 interface Props extends ComponentProps {
   allVotes?: Record<string, AccountId[]>;
   className?: string;
+  prime?: AccountId | null;
 }
 
-export default function Members ({ allVotes = {}, className, electionsInfo: { members } }: Props): React.ReactElement<Props> {
+function Members ({ allVotes = {}, className, electionsInfo, prime }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
 
   return (
-    <div className={className}>
-      {members.length
-        ? (
-          <Table>
-            <Table.Body>
-              {members.map(([accountId, balance]): React.ReactNode => (
-                <Candidate
-                  address={accountId}
-                  balance={balance}
-                  key={accountId.toString()}
-                  voters={allVotes[accountId.toString()]}
-                />
-              ))}
-            </Table.Body>
-          </Table>
-        )
-        : t('No members found')
-      }
-    </div>
+    <Table
+      className={className}
+      empty={electionsInfo && t('No members found')}
+      header={[
+        [t('members'), 'start', 2],
+        [t('backing')]
+      ]}
+    >
+      {electionsInfo?.members.map(([accountId, balance]): React.ReactNode => (
+        <Candidate
+          address={accountId}
+          balance={balance}
+          isPrime={prime?.eq(accountId)}
+          key={accountId.toString()}
+          voters={allVotes[accountId.toString()]}
+        />
+      ))}
+    </Table>
   );
 }
+
+export default React.memo(Members);

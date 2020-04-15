@@ -2,7 +2,8 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { AccountId, Proposal } from '@polkadot/types/interfaces';
+import { DeriveProposalImage } from '@polkadot/api-derive/types';
+import { AccountId } from '@polkadot/types/interfaces';
 
 import BN from 'bn.js';
 import React, { useState } from 'react';
@@ -14,11 +15,11 @@ import { useTranslation } from '../translate';
 interface Props {
   className?: string;
   depositors: AccountId[];
-  proposal?: Proposal;
+  image?: DeriveProposalImage;
   proposalId: BN | number;
 }
 
-export default function Seconding ({ depositors, proposal, proposalId }: Props): React.ReactElement<Props> | null {
+function Seconding ({ depositors, image, proposalId }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const { hasAccounts } = useAccounts();
   const [accountId, setAccountId] = useState<string | null>(null);
@@ -40,7 +41,7 @@ export default function Seconding ({ depositors, proposal, proposalId }: Props):
           <Modal.Content>
             <ProposedAction
               idNumber={proposalId}
-              proposal={proposal}
+              proposal={image?.proposal}
             />
             <InputAddress
               help={t('Select the account you wish to second with. This will lock your funds until the proposal is either approved or rejected')}
@@ -53,10 +54,10 @@ export default function Seconding ({ depositors, proposal, proposalId }: Props):
           <Modal.Actions onCancel={toggleSeconding}>
             <TxButton
               accountId={accountId}
+              icon='sign-in'
               isDisabled={!accountId || isDepositor}
               isPrimary
               label={t('Second')}
-              icon='sign-in'
               onStart={toggleSeconding}
               params={[proposalId]}
               tx='democracy.second'
@@ -65,11 +66,12 @@ export default function Seconding ({ depositors, proposal, proposalId }: Props):
         </Modal>
       )}
       <Button
-        isPrimary
-        label={t('Second')}
         icon='toggle off'
+        label={t('Second')}
         onClick={toggleSeconding}
       />
     </>
   );
 }
+
+export default React.memo(Seconding);

@@ -15,7 +15,7 @@ interface Props {
   defaultName?: string;
   onClickName?: () => void;
   overrideName?: React.ReactNode;
-  toggle?: any;
+  toggle?: boolean;
   value?: string | Address | AccountId | null | Uint8Array;
 }
 
@@ -30,8 +30,8 @@ function AddressSmall ({ className, defaultName, onClickName, overrideName, togg
         <AccountName
           className={(overrideName || !onClickName) ? '' : 'name--clickable'}
           defaultName={defaultName}
-          override={overrideName}
           onClick={onClickName}
+          override={overrideName}
           toggle={toggle}
           value={value}
         />
@@ -40,7 +40,7 @@ function AddressSmall ({ className, defaultName, onClickName, overrideName, togg
   );
 }
 
-export default styled(AddressSmall)`
+export default React.memo(styled(AddressSmall)`
   vertical-align: middle;
   white-space: nowrap;
 
@@ -65,4 +65,4 @@ export default styled(AddressSmall)`
       text-overflow: ellipsis;
     }
   }
-`;
+`);

@@ -2,9 +2,9 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DerivedHeartbeats, DerivedStakingOverview } from '@polkadot/api-derive/types';
+import { DeriveStakingOverview } from '@polkadot/api-derive/types';
 import { AppProps as Props } from '@polkadot/react-components/types';
-import { AccountId } from '@polkadot/types/interfaces';
+import { AccountId, ElectionStatus } from '@polkadot/types/interfaces';
 
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { Route, Switch } from 'react-router';
@@ -12,17 +12,21 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { HelpOverlay } from '@polkadot/react-components';
 import Tabs from '@polkadot/react-components/Tabs';
-import { useAccounts, useApi, useCall, useOwnEraRewards } from '@polkadot/react-hooks';
+import { useAccounts, useApi, useCall } from '@polkadot/react-hooks';
 
 import basicMd from './md/basic.md';
 import Actions from './Actions';
 import Overview from './Overview';
-import Summary from './Overview/Summary';
+import Payouts from './Payouts';
 import Query from './Query';
+import Summary from './Overview/Summary';
 import Targets from './Targets';
 import { useTranslation } from './translate';
 
-export { default as useCounter } from './useCounter';
+interface Validators {
+  next?: string[];
+  validators?: string[];
+}
 
 function reduceNominators (nominators: string[], additional: string[]): string[] {
   return nominators.concat(...additional.filter((nominator): boolean => !nominators.includes(nominator)));
@@ -33,18 +37,21 @@ function StakingApp ({ basePath, className }: Props): React.ReactElement<Props> 
   const { api } = useApi();
   const { hasAccounts } = useAccounts();
   const { pathname } = useLocation();
-  const { allRewards, rewardCount } = useOwnEraRewards();
-  const [next, setNext] = useState<string[] | undefined>();
-  const allStashes = useCall<string[]>(api.derive.staking.controllers, [], {
-    transform: ([stashes]: [AccountId[]]): string[] =>
+  const [{ next, validators }, setValidators] = useState<Validators>({});
+  const allStashes = useCall<string[]>(api.derive.staking.stashes, [], {
+    transform: (stashes: AccountId[]): string[] =>
       stashes.map((accountId): string => accountId.toString())
   });
-  const recentlyOnline = useCall<DerivedHeartbeats>(api.derive.imOnline?.receivedHeartbeats, []);
-  const stakingOverview = useCall<DerivedStakingOverview>(api.derive.staking.overview, []);
+  const stakingOverview = useCall<DeriveStakingOverview>(api.derive.staking.overview, []);
+  const isInElection = useCall<boolean>(api.query.staking?.eraElectionStatus, [], {
+    transform: (status: ElectionStatus) => status.isOpen
+  });
   const [nominators, dispatchNominators] = useReducer(reduceNominators, [] as string[]);
-  const hasQueries = useMemo((): boolean => {
-    return hasAccounts && !!(api.query.imOnline?.authoredBlocks) && !!(api.query.staking.activeEra);
-  }, [api, hasAccounts]);
+  const hasQueries = useMemo(
+    (): boolean =>
+      hasAccounts && !!(api.query.imOnline?.authoredBlocks) && !!(api.query.staking.activeEra),
+    [api, hasAccounts]
+  );
   const items = useMemo(() => [
     {
       isRoot: true,
@@ -52,46 +59,45 @@ function StakingApp ({ basePath, className }: Props): React.ReactElement<Props> 
       text: t('Staking overview')
     },
     {
+      name: 'actions',
+      text: t('Account actions')
+    },
+    api.query.staking.activeEra
+      ? {
+        name: 'payout',
+        text: 'Payouts'
+      }
+      : null,
+    {
+      name: 'calculator',
+      text: t('Calculator')
+    },
+    {
       name: 'waiting',
       text: t('Waiting')
-    },
-    {
-      name: 'returns',
-      text: t('Returns')
-    },
-    {
-      name: 'actions',
-      text: t('Account actions{{count}}', {
-        replace: {
-          count: rewardCount
-            ? ` (${rewardCount})`
-            : ''
-        }
-      })
     },
     {
       hasParams: true,
       name: 'query',
       text: t('Validator stats')
     }
-  ], [rewardCount, t]);
-  const hiddenTabs = useMemo((): string[] => {
-    const result = next ? [] : ['waiting'];
-
-    if (!hasAccounts) {
-      result.push('actions', 'query');
-    } else if (!hasQueries) {
-      result.push('returns', 'query');
-    }
-
-    return result;
-  }, [hasAccounts, hasQueries, next]);
+  ].filter((q): q is { name: string; text: string } => !!q), [api, t]);
+  const hiddenTabs = useMemo(
+    (): string[] =>
+      !hasAccounts
+        ? ['actions', 'query']
+        : !hasQueries
+          ? ['returns', 'query']
+          : [],
+    [hasAccounts, hasQueries]
+  );
 
   useEffect((): void => {
-    allStashes && stakingOverview && setNext(
-      allStashes.filter((address): boolean => !stakingOverview.validators.includes(address as any))
-    );
-  }, [allStashes, stakingOverview?.validators]);
+    allStashes && stakingOverview && setValidators({
+      next: allStashes.filter((address) => !stakingOverview.validators.includes(address as any)),
+      validators: stakingOverview.validators.map((a) => a.toString())
+    });
+  }, [allStashes, stakingOverview]);
 
   return (
     <main className={`staking--App ${className}`}>
@@ -110,25 +116,35 @@ function StakingApp ({ basePath, className }: Props): React.ReactElement<Props> 
         stakingOverview={stakingOverview}
       />
       <Switch>
+        <Route path={`${basePath}/calculator`}>
+          <Targets />
+        </Route>
+        <Route path={`${basePath}/payout`}>
+          <Payouts isInElection={isInElection} />
+        </Route>
         <Route path={[`${basePath}/query/:value`, `${basePath}/query`]}>
           <Query />
         </Route>
-        <Route path={`${basePath}/returns`}>
-          <Targets />
+        <Route path={`${basePath}/waiting`}>
+          <Overview
+            className={`${basePath}/waiting` === pathname ? '' : 'staking--hidden'}
+            hasQueries={hasQueries}
+            isIntentions
+            next={next}
+            stakingOverview={stakingOverview}
+          />
         </Route>
       </Switch>
       <Actions
-        allRewards={allRewards}
         allStashes={allStashes}
-        isVisible={pathname === `${basePath}/actions`}
-        recentlyOnline={recentlyOnline}
+        className={pathname === `${basePath}/actions` ? '' : 'staking--hidden'}
+        isInElection={isInElection}
         next={next}
-        stakingOverview={stakingOverview}
+        validators={validators}
       />
       <Overview
+        className={basePath === pathname ? '' : 'staking--hidden'}
         hasQueries={hasQueries}
-        isVisible={[basePath, `${basePath}/waiting`].includes(pathname)}
-        recentlyOnline={recentlyOnline}
         next={next}
         setNominators={dispatchNominators}
         stakingOverview={stakingOverview}
@@ -137,20 +153,20 @@ function StakingApp ({ basePath, className }: Props): React.ReactElement<Props> 
   );
 }
 
-export default styled(StakingApp)`
+export default React.memo(styled(StakingApp)`
   .staking--hidden {
     display: none;
   }
 
-  .staking--queryInput {
-    margin-bottom: 1.5rem;
-  }
-
-  .staking--Chart h1 {
-    margin-bottom: 0.5rem;
-  }
-
-  .staking--Chart+.staking--Chart {
+  .staking--Chart {
     margin-top: 1.5rem;
+
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .ui--Spinner {
+      margin: 2.5rem auto;
+    }
   }
-`;
+`);
