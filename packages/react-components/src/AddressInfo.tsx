@@ -2,10 +2,9 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DeriveBalancesAll, DeriveStakingAccount } from '@polkadot/api-derive/types';
+import { DeriveBalancesAll, DeriveStakingAccount, DeriveBalancesVoucher } from '@polkadot/api-derive/types';
 import { LockIdentifier, ValidatorPrefsTo145 } from '@polkadot/types/interfaces';
 import { BareProps } from './types';
-
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
@@ -52,6 +51,7 @@ interface Props extends BareProps {
   stakingInfo?: DeriveStakingAccount;
   withBalance?: boolean | BalanceActiveType;
   withBalanceToggle?: false;
+  BNC?: DeriveBalancesVoucher;
   withExtended?: boolean | CryptoActiveType;
   withHexSessionId?: (string | null)[];
   withValidatorPrefs?: boolean | ValidatorPrefsType;
@@ -77,7 +77,7 @@ const DEFAULT_PREFS = {
   validatorPayment: true
 };
 
-function lookupLock (lookup: Record<string, string>, lockId: LockIdentifier): string {
+function lookupLock(lookup: Record<string, string>, lockId: LockIdentifier): string {
   const lockHex = lockId.toHex();
 
   try {
@@ -90,7 +90,7 @@ function lookupLock (lookup: Record<string, string>, lockId: LockIdentifier): st
 }
 
 // skip balances retrieval of none of this matches
-function skipBalancesIf ({ withBalance = true, withExtended = false }: Props): boolean {
+function skipBalancesIf({ withBalance = true, withExtended = false }: Props): boolean {
   if (withBalance === true || withExtended === true) {
     return false;
   } else if (isObject(withBalance)) {
@@ -107,7 +107,7 @@ function skipBalancesIf ({ withBalance = true, withExtended = false }: Props): b
   return true;
 }
 
-function skipStakingIf ({ stakingInfo, withBalance = true, withValidatorPrefs = false }: Props): boolean {
+function skipStakingIf({ stakingInfo, withBalance = true, withValidatorPrefs = false }: Props): boolean {
   if (stakingInfo) {
     return true;
   } else if (withBalance === true || withValidatorPrefs) {
@@ -124,7 +124,7 @@ function skipStakingIf ({ stakingInfo, withBalance = true, withValidatorPrefs = 
 }
 
 // calculates the bonded, first being the own, the second being nominated
-function calcBonded (stakingInfo?: DeriveStakingAccount, bonded?: boolean | BN[]): [BN, BN[]] {
+function calcBonded(stakingInfo?: DeriveStakingAccount, bonded?: boolean | BN[]): [BN, BN[]] {
   let other: BN[] = [];
   let own = new BN(0);
 
@@ -141,7 +141,7 @@ function calcBonded (stakingInfo?: DeriveStakingAccount, bonded?: boolean | BN[]
   return [own, other];
 }
 
-function renderExtended ({ address, balancesAll, withExtended }: Props, t: (key: string) => string): React.ReactNode {
+function renderExtended({ address, balancesAll, withExtended }: Props, t: (key: string) => string): React.ReactNode {
   const extendedDisplay = withExtended === true
     ? DEFAULT_EXTENDED
     : withExtended || undefined;
@@ -171,7 +171,7 @@ function renderExtended ({ address, balancesAll, withExtended }: Props, t: (key:
   );
 }
 
-function renderValidatorPrefs ({ stakingInfo, withValidatorPrefs = false }: Props, t: (key: string) => string): React.ReactNode {
+function renderValidatorPrefs({ stakingInfo, withValidatorPrefs = false }: Props, t: (key: string) => string): React.ReactNode {
   const validatorPrefsDisplay = withValidatorPrefs === true
     ? DEFAULT_PREFS
     : withValidatorPrefs;
@@ -213,8 +213,8 @@ function renderValidatorPrefs ({ stakingInfo, withValidatorPrefs = false }: Prop
   );
 }
 
-function renderBalances (props: Props, allAccounts: string[], t: (key: string) => string): React.ReactNode {
-  const { address, balancesAll, stakingInfo, withBalance = true, withBalanceToggle = false } = props;
+function renderBalances(props: Props, allAccounts: string[], t: (key: string) => string): React.ReactNode {
+  const { address, balancesAll, BNC, stakingInfo, withBalance = true, withBalanceToggle = false } = props;
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
     : withBalance || false;
@@ -231,7 +231,6 @@ function renderBalances (props: Props, allAccounts: string[], t: (key: string) =
     'staking ': t('via Staking/Bond'),
     'vesting ': t('via Vesting')
   };
-
   const allItems = (
     <>
       {!withBalanceToggle && balancesAll && balanceDisplay.total && (
@@ -339,7 +338,24 @@ function renderBalances (props: Props, allAccounts: string[], t: (key: string) =
   if (withBalanceToggle) {
     return (
       <>
-        <Expander summary={<FormatBalance value={balancesAll?.votingBalance} />}>
+        <Expander
+          summary={<FormatBalance value={balancesAll?.votingBalance} />}
+          BNCsummary={<FormatBalance
+            label={<>
+              <Icon
+                data-for={`${address}-info circle`}
+                data-tip
+                name='info circle'
+              />
+
+              <Tooltip
+                text={'TIPS：主网凭证，不可交易，Bifrost 主网上线时可 1:1 兑换'}
+                trigger={`${address}-info circle`} />
+            </>
+            }
+            value={BNC?.toJSON()} BNC
+          />
+          }>
           <div className='body column'>
             {allItems}
           </div>
@@ -355,7 +371,7 @@ function renderBalances (props: Props, allAccounts: string[], t: (key: string) =
   );
 }
 
-function AddressInfo (props: Props): React.ReactElement<Props> {
+function AddressInfo(props: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { allAccounts } = useAccounts();
   const { children, className, extraInfo, withBalanceToggle, withHexSessionId } = props;
@@ -430,7 +446,7 @@ export default withMulti(
       }
 
       &:not(.column--expander) {
-        flex: 1;
+            flex: 1;
         display: grid;
         opacity: 1;
 

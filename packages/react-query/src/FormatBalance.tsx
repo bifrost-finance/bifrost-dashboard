@@ -19,13 +19,14 @@ interface Props extends BareProps {
   labelPost?: React.ReactNode;
   value?: Compact<any> | BN | string | null | 'all';
   withSi?: boolean;
+  BNC?: boolean;
 }
 
 // for million, 2 * 3-grouping + comma
 const M_LENGTH = 6 + 1;
 const K_LENGTH = 3 + 1;
 
-function format (value: Compact<any> | BN | string, currency: string, withSi?: boolean, _isShort?: boolean): React.ReactNode {
+function format(value: Compact<any> | BN | string, currency: string, BNC?: boolean, withSi?: boolean, _isShort?: boolean): React.ReactNode {
   const [prefix, postfix] = formatBalance(value, { forceUnit: '-', withSi: false }).split('.');
   const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
 
@@ -34,7 +35,8 @@ function format (value: Compact<any> | BN | string, currency: string, withSi?: b
     return formatBalance(value);
   }
 
-  return <>{prefix}{!isShort && (<>.<span className='ui--FormatBalance-postfix'>{`000${postfix || ''}`.slice(-3)}</span></>)} {currency}</>;
+  return <>{prefix}{!isShort && (<>.<span className='ui--FormatBalance-postfix'>{`000${postfix || ''}`.slice(-3)}</span></>)}
+    {BNC ? 'BNC' : currency}</>;
 }
 
 // function formatSi (value: Compact<any> | BN | string): React.ReactNode {
@@ -49,17 +51,19 @@ function format (value: Compact<any> | BN | string, currency: string, withSi?: b
 //   return <>{prefix}.<span className='balance-postfix'>{`000${postfix || ''}`.slice(-3)}</span>{unit === '-' ? '' : unit}</>;
 // }
 
-function FormatBalance ({ children, className, isShort, label, labelPost, value, withSi }: Props): React.ReactElement<Props> {
+function FormatBalance({ children, className, isShort, label, BNC, labelPost, value, withSi }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const [currency] = useState(formatBalance.getDefaults().unit);
 
   return (
     <div className={`ui--FormatBalance ${className}`}>
-      {label || ''}<span className='ui--FormatBalance-value'>{
+      {BNC ? value
+        ? label : '' : (label || '')}
+      <span className='ui--FormatBalance-value'>{
         value
           ? value === 'all'
             ? t('everything')
-            : format(value, currency, withSi, isShort)
+            : BNC ? format(value, currency, BNC, withSi, isShort) : format(value, currency, withSi, isShort)
           : '-'
       }</span>{labelPost}{children}
     </div>

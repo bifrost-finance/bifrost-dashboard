@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DeriveAccountInfo, DeriveBalancesAll } from '@polkadot/api-derive/types';
+import { DeriveAccountInfo, DeriveBalancesAll, DeriveBalancesVoucher } from '@polkadot/api-derive/types';
 import { ActionStatus } from '@polkadot/react-components/Status/types';
 import { RecoveryConfig } from '@polkadot/types/interfaces';
 import { SortedAccount } from './types';
@@ -30,7 +30,7 @@ interface Props extends SortedAccount {
   toggleFavorite: (address: string) => void;
 }
 
-function calcVisible (filter: string, name: string, tags: string[]): boolean {
+function calcVisible(filter: string, name: string, tags: string[]): boolean {
   if (filter.length === 0) {
     return true;
   }
@@ -42,11 +42,12 @@ function calcVisible (filter: string, name: string, tags: string[]): boolean {
   }, name.toLowerCase().includes(_filter));
 }
 
-function Account ({ account: { address, meta }, className, filter, isFavorite, toggleFavorite }: Props): React.ReactElement<Props> | null {
+function Account({ account: { address, meta }, className, filter, isFavorite, toggleFavorite }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const api = useApi();
   const info = useCall<DeriveAccountInfo>(api.api.derive.accounts.info, [address]);
   const balancesAll = useCall<DeriveBalancesAll>(api.api.derive.balances.all, [address]);
+  const BNC = useCall<DeriveBalancesVoucher>(api.api.query.voucher.balancesVoucher, [address]);
   const recoveryInfo = useCall<RecoveryConfig | null>(api.api.query.recovery?.recoverable, [address], {
     transform: (opt: Option<RecoveryConfig>) => opt.unwrapOr(null)
   });
@@ -83,7 +84,6 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, t
       setAccName(nickname);
     }
   }, [api, info]);
-
   useEffect((): void => {
     const account = keyring.getAccount(address);
 
@@ -361,6 +361,7 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, t
           withBalance
           withBalanceToggle
           withExtended={false}
+          BNC={BNC}
         />
       </td>
       <td className='button'>
