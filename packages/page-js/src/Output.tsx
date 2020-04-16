@@ -31,7 +31,10 @@ const format = (value: any): string => {
 };
 
 const renderEntry = ({ args, type }: Log, index: number): React.ReactNode => (
-  <div className={`js--Log ${type}`} key={index}>
+  <div
+    className={`js--Log ${type}`}
+    key={index}
+  >
     {args.map((arg): string => format(arg)).join(' ')}
   </div>
 );
@@ -51,7 +54,7 @@ function Output ({ children, className, logs }: Props): React.ReactElement<Props
   );
 }
 
-export default styled(Output)`
+export default React.memo(styled(Output)`
   background-color: #4e4e4e;
   color: #ffffff;
   display: flex;
@@ -73,7 +76,7 @@ export default styled(Output)`
 
   .logs-container {
     flex: 1;
-    overflow: auto;;
+    overflow: auto;
   }
 
   .logs-content {
@@ -89,4 +92,4 @@ export default styled(Output)`
       color: #f88;
     }
   }
-`;
+`);

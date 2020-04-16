@@ -5,19 +5,23 @@
 import React, { useEffect, useState } from 'react';
 import { useApi, useCall } from '@polkadot/react-hooks';
 
-export default function WarmUp (): React.ReactElement {
+function WarmUp (): React.ReactElement {
   const { api, isApiReady } = useApi();
-  const fees = useCall<any>(isApiReady && api.derive.balances?.fees, []);
-  const indexes = useCall<any>(isApiReady && api.derive.accounts?.indexes, []);
-  const registrars = useCall<any>(isApiReady && api.query.identity?.registrars, []);
-  const staking = null; // useCall<any>(isApiReady ? api.derive.staking?.overview : undefined, []);
+  const fees = useCall<unknown>(isApiReady && api.derive.balances?.fees, []);
+  const indexes = useCall<unknown>(isApiReady && api.derive.accounts?.indexes, []);
+  const registrars = useCall<unknown>(isApiReady && api.query.identity?.registrars, []);
+  const staking = null; // useCall<unknown>(isApiReady && api.derive.staking?.overview, []);
+  const issuance = useCall<unknown>(isApiReady && api.query.balances?.totalIssuance, []);
   const [hasValues, setHasValues] = useState(false);
 
   useEffect((): void => {
-    setHasValues(!!fees || !!indexes || !!registrars || !!staking);
+    setHasValues(!!fees || !!indexes || !!issuance || !!registrars || !!staking);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={`apps--api-warm ${hasValues}`} />
   );
 }
+
+export default React.memo(WarmUp);

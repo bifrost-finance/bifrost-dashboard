@@ -22,12 +22,12 @@ interface Props {
 let badgeId = 0;
 
 function Badge ({ className, hover, info, isGray, isInline, isSmall, isTooltip, onClick, type }: Props): React.ReactElement<Props> | null {
-  const [key] = useState(`${Date.now()}-${badgeId++}`);
+  const [trigger] = useState(`badge-hover-${Date.now()}-${badgeId++}`);
 
   return (
     <div
       className={`ui--Badge ${isGray && 'isGray'} ${isInline && 'isInline'} ${isTooltip && 'isTooltip'} ${isSmall && 'isSmall'} ${onClick && 'isClickable'} ${type} ${className}`}
-      data-for={`badge-status-${key}`}
+      data-for={trigger}
       data-tip={true}
       data-tip-disable={!isTooltip}
       onClick={onClick}
@@ -40,15 +40,15 @@ function Badge ({ className, hover, info, isGray, isInline, isSmall, isTooltip, 
       </div>
       {hover && (
         <Tooltip
-          trigger={`badge-status-${key}`}
           text={hover}
+          trigger={trigger}
         />
       )}
     </div>
   );
 }
 
-export default styled(Badge)`
+export default React.memo(styled(Badge)`
   border-radius: 16px;
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
   color: #eee;
@@ -88,6 +88,7 @@ export default styled(Badge)`
   &.isInline {
     display: inline-block;
     margin-right: 0.25rem;
+    vertical-align: middle;
   }
 
   &.next,
@@ -150,4 +151,4 @@ export default styled(Badge)`
       width: auto;
     }
   }
-`;
+`);

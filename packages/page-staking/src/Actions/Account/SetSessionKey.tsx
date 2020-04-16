@@ -1,4 +1,4 @@
-// Copyright 2017-2020 @polkadot/ui-staking authors & contributors
+// Copyright 2017-2020 @polkadot/app-staking authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
@@ -14,7 +14,7 @@ interface Props {
 
 const EMPTY_PROOF = new Uint8Array();
 
-export default function SetSessionKey ({ controllerId, onClose }: Props): React.ReactElement<Props> | null {
+function SetSessionKey ({ controllerId, onClose }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const [keys, setKeys] = useState<string | null>(null);
 
@@ -32,6 +32,7 @@ export default function SetSessionKey ({ controllerId, onClose }: Props): React.
           label={t('controller account')}
         />
         <Input
+          autoFocus
           className='medium'
           help={t('Changing the key only takes effect at the start of the next session. The input here is generates from the author_rotateKeys command')}
           isError={!keys}
@@ -42,10 +43,10 @@ export default function SetSessionKey ({ controllerId, onClose }: Props): React.
       <Modal.Actions onCancel={onClose}>
         <TxButton
           accountId={controllerId}
+          icon='sign-in'
           isDisabled={!keys}
           isPrimary
           label={t('Set Session Key')}
-          icon='sign-in'
           onStart={onClose}
           params={[keys, EMPTY_PROOF]}
           tx='session.setKeys'
@@ -54,3 +55,5 @@ export default function SetSessionKey ({ controllerId, onClose }: Props): React.
     </Modal>
   );
 }
+
+export default React.memo(SetSessionKey);

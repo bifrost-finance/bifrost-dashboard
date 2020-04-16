@@ -87,7 +87,7 @@ function CardSummary ({ children, className, help, label, progress }: Props): Re
   );
 }
 
-export default styled(CardSummary)`
+export default React.memo(styled(CardSummary)`
   align-items: center;
   background: transparent !important;
   border: none !important;
@@ -104,10 +104,10 @@ export default styled(CardSummary)`
   }
 
   > div {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
     font-weight: 100;
     position: relative;
-    line-height: 1.85rem;
+    line-height: 1.75rem;
     text-align: right;
 
     > * {
@@ -150,4 +150,4 @@ export default styled(CardSummary)`
       line-height: 1.4rem;
     }
   }
-`;
+`);

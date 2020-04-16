@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DerivedStakingOverview } from '@polkadot/api-derive/types';
+import { DeriveStakingOverview } from '@polkadot/api-derive/types';
 
 import React, { useContext } from 'react';
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ interface Props {
   isVisible: boolean;
   next?: string[];
   nominators: string[];
-  stakingOverview?: DerivedStakingOverview;
+  stakingOverview?: DeriveStakingOverview;
   style?: any;
 }
 
@@ -70,8 +70,9 @@ function Summary ({ className, isVisible, next, nominators, stakingOverview, sty
   );
 }
 
-export default styled(Summary)`
+export default React.memo(styled(Summary)`
   .validator--Account-block-icon {
+    display: inline-block;
     margin-right: 0.75rem;
     margin-top: -0.25rem;
     vertical-align: middle;
@@ -82,4 +83,4 @@ export default styled(Summary)`
       margin-left: -1.5rem;
     }
   }
-`;
+`);

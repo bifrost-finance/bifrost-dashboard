@@ -18,9 +18,7 @@ function SetKey ({ allAccounts, className, isMine, sudoKey }: Props): React.Reac
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect((): void => {
-    if (sudoKey && !selected) {
-      setSelected(sudoKey);
-    }
+    sudoKey && !selected && setSelected(sudoKey);
   }, [selected, sudoKey]);
 
   const willLose = isMine &&
@@ -36,18 +34,18 @@ function SetKey ({ allAccounts, className, isMine, sudoKey }: Props): React.Reac
             <>
               <InputAddress
                 className='sudoInputAddress'
-                value={selected}
-                label={t('sudo key')}
                 isInput={true}
+                label={t('sudo key')}
                 onChange={setSelected}
                 type='all'
+                value={selected}
               />
               <TxButton
                 accountId={sudoKey}
+                icon='sign-in'
                 isDisabled={!isMine || sudoKey === selected}
                 isPrimary
                 label={t('Reassign')}
-                icon='sign-in'
                 params={[selected]}
                 tx='sudo.setKey'
               />
@@ -76,7 +74,7 @@ function SetKey ({ allAccounts, className, isMine, sudoKey }: Props): React.Reac
   );
 }
 
-export default styled(SetKey)`
+export default React.memo(styled(SetKey)`
   align-items: flex-end;
   justify-content: center;
 
@@ -91,4 +89,4 @@ export default styled(SetKey)`
   .sudoLabelled {
     align-items: center;
   }
-`;
+`);

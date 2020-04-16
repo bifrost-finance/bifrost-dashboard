@@ -5,7 +5,7 @@
 import { DeriveProposal } from '@polkadot/api-derive/types';
 
 import React from 'react';
-import { Spinner, Table } from '@polkadot/react-components';
+import { Table } from '@polkadot/react-components';
 import { useApi, useCall } from '@polkadot/react-hooks';
 
 import ProposalDisplay from './Proposal';
@@ -15,31 +15,30 @@ interface Props {
   className?: string;
 }
 
-export default function Proposals ({ className }: Props): React.ReactElement<Props> {
+function Proposals ({ className }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
   const proposals = useCall<DeriveProposal[]>(api.derive.democracy.proposals, []);
 
   return (
-    <div className={`proposalSection ${className}`}>
-      <h1>{t('proposals')}</h1>
-      {proposals
-        ? proposals.length
-          ? (
-            <Table>
-              <Table.Body>
-                {proposals.map((proposal): React.ReactNode => (
-                  <ProposalDisplay
-                    key={proposal.index.toString()}
-                    value={proposal}
-                  />
-                ))}
-              </Table.Body>
-            </Table>
-          )
-          : t('No active proposals')
-        : <Spinner />
-      }
-    </div>
+    <Table
+      className={className}
+      empty={proposals && t('No active proposals')}
+      header={[
+        [t('proposals'), 'start', 2],
+        [t('proposer'), 'address'],
+        [t('locked')],
+        [undefined, undefined, 3]
+      ]}
+    >
+      {proposals?.map((proposal): React.ReactNode => (
+        <ProposalDisplay
+          key={proposal.index.toString()}
+          value={proposal}
+        />
+      ))}
+    </Table>
   );
 }
+
+export default React.memo(Proposals);

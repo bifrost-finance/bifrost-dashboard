@@ -17,14 +17,15 @@ import Tooltip from './Tooltip';
 interface Props {
   className?: string;
   data: BN | number | string;
+  hash?: string;
   type: LinkTypes;
   withShort?: boolean;
 }
 
-function genLinks (systemChain: string, { data, type, withShort }: Props): React.ReactNode[] {
+function genLinks (systemChain: string, { data, hash, type, withShort }: Props): React.ReactNode[] {
   return Object
     .entries(linked)
-    .map(([name, { isActive, chains, paths, create }]): React.ReactNode | null => {
+    .map(([name, { chains, create, isActive, paths }]): React.ReactNode | null => {
       const extChain = chains[systemChain];
       const extPath = paths[type];
 
@@ -33,7 +34,7 @@ function genLinks (systemChain: string, { data, type, withShort }: Props): React
       }
 
       const trigger = `${name}-${type}-${data}`;
-      const link = create(extChain, extPath, data);
+      const link = create(extChain, extPath, data, hash);
 
       return (
         <a
@@ -59,12 +60,12 @@ function genLinks (systemChain: string, { data, type, withShort }: Props): React
     .filter((node): node is React.ReactNode => !!node);
 }
 
-function LinkExternal ({ className, data, type, withShort }: Props): React.ReactElement<Props> | null {
+function LinkExternal ({ className, data, hash, type, withShort }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const { systemChain } = useApi();
   const links = useMemo((): React.ReactNode[] => {
-    return genLinks(systemChain, { data, type, withShort });
-  }, [systemChain, data, type, withShort]);
+    return genLinks(systemChain, { data, hash, type, withShort });
+  }, [systemChain, data, hash, type, withShort]);
 
   if (!links.length) {
     return null;
@@ -77,16 +78,15 @@ function LinkExternal ({ className, data, type, withShort }: Props): React.React
   );
 }
 
-export default styled(LinkExternal)`
-  margin-top: 0.75rem;
+export default React.memo(styled(LinkExternal)`
   text-align: right;
 
   > div {
     display: block;
-    whitespace: nowrap;
+    white-space: nowrap;
 
     > span+span {
       margin-left: 0.3rem;
     }
   }
-`;
+`);

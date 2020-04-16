@@ -5,15 +5,19 @@
 import BN from 'bn.js';
 
 export default {
-  isActive: false,
   chains: {
     Bifrost: 'bifrost',
   },
+  create: (chain: string, path: string, data: BN | number | string): string =>
+    `https://${chain}.subscan.io/${path}/${data.toString()}`,
+  isActive: true,
   paths: {
     address: 'account',
     block: 'block',
-    extrinsic: 'extrinsic'
-  },
-  create: (chain: string, path: string, data: BN | number | string): string =>
-    `https://${chain}.subscan.io/${path}/${data.toString()}`
+    council: 'council',
+    extrinsic: 'extrinsic',
+    referendum: 'referenda',
+    techcomm: 'tech',
+    treasury: 'treasury'
+  }
 };

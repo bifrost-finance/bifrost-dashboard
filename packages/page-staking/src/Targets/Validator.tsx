@@ -4,49 +4,53 @@
 
 import { ValidatorInfo } from './types';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { AddressSmall, Icon } from '@polkadot/react-components';
 import { FormatBalance } from '@polkadot/react-query';
 import { formatNumber } from '@polkadot/util';
 
-import { useTranslation } from '../translate';
+import Favorite from '../Overview/Address/Favorite';
 
 interface Props {
   info: ValidatorInfo;
   toggleFavorite: (accountId: string) => void;
 }
 
-export default function Validator ({ info: { accountId, bondOther, bondOwn, bondTotal, commissionPer, isCommission, isFavorite, isNominating, key, numNominators, rankOverall, rewardPayout, validatorPayment }, toggleFavorite }: Props): React.ReactElement<Props> {
-  const { t } = useTranslation();
-  const _onFavorite = (): void => toggleFavorite(key);
-  const _onQueryStats = (): void => {
-    window.location.hash = `/staking/query/${key}`;
-  };
+function Validator ({ info: { accountId, bondOther, bondOwn, bondTotal, commissionPer, isCommission, isFavorite, isNominating, key, numNominators, rankOverall, rewardPayout, validatorPayment }, toggleFavorite }: Props): React.ReactElement<Props> {
+  const _onQueryStats = useCallback(
+    (): void => {
+      window.location.hash = `/staking/query/${key}`;
+    },
+    [key]
+  );
 
   return (
     <tr className={`${isNominating && 'isHighlight'}`}>
-      <td className='favorite'>
-        <Icon
-          className={`${isFavorite && 'isSelected isColorHighlight'}`}
-          name={isFavorite ? 'star' : 'star outline'}
-          onClick={_onFavorite}
-        />
-      </td>
+      <Favorite
+        address={key}
+        isFavorite={isFavorite}
+        toggleFavorite={toggleFavorite}
+      />
       <td className='number'>{formatNumber(rankOverall)}</td>
-      <td className='address'>
+      <td className='address all'>
         <AddressSmall value={accountId} />
       </td>
       <td className='number'>
         {
           isCommission
-            ? <><label>{t('commission')}</label>{`${commissionPer.toFixed(2)}%`}</>
-            : <FormatBalance label={<label>{t('commission')}</label>} value={validatorPayment} />
+            ? `${commissionPer.toFixed(2)}%`
+            : <FormatBalance value={validatorPayment} />
         }
       </td>
-      <td className='number together'><FormatBalance label={<label>{t('total stake')}</label>} value={bondTotal} /></td>
-      <td className='number together'><FormatBalance label={<label>{t('own stake')}</label>} value={bondOwn} /></td>
-      <td className='number together'><FormatBalance label={<label>{t('other stake')}</label>} value={bondOther} >&nbsp;({formatNumber(numNominators)})</FormatBalance></td>
-      <td className='number together'><FormatBalance label={<label>{t('profit/era est.')}</label>} value={rewardPayout} /></td>
+      <td className='number together'><FormatBalance value={bondTotal} /></td>
+      <td className='number together'><FormatBalance value={bondOwn} /></td>
+      <td className='number together'>
+        <FormatBalance
+          labelPost={` (${numNominators})`}
+          value={bondOther}
+        />
+      </td>
+      <td className='number together'><FormatBalance value={rewardPayout} /></td>
       <td>
         <Icon
           className='staking--stats'
@@ -57,3 +61,5 @@ export default function Validator ({ info: { accountId, bondOther, bondOwn, bond
     </tr>
   );
 }
+
+export default React.memo(Validator);

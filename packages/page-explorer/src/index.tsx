@@ -63,47 +63,19 @@ function ExplorerApp ({ basePath, className }: Props): React.ReactElement<Props>
         />
       </header>
       <Switch>
-        <Route path={`${basePath}/forks`} component={Forks} />
-        <Route path={`${basePath}/query/:value`} component={BlockInfo} />
-        <Route path={`${basePath}/query`} component={BlockInfo} />
-        <Route path={`${basePath}/node`} component={NodeInfo} />
-        <Route render={(): React.ReactElement<{}> => (
+        <Route path={`${basePath}/forks`}><Forks /></Route>
+        <Route path={`${basePath}/query/:value`}><BlockInfo /></Route>
+        <Route path={`${basePath}/query`}><BlockInfo /></Route>
+        <Route path={`${basePath}/node`}><NodeInfo /></Route>
+        <Route>
           <Main
             events={events}
             headers={lastHeaders}
           />
-        )} />
+        </Route>
       </Switch>
     </main>
   );
 }
 
-export default ExplorerApp;
-
-// export default styled(ExplorerApp)`
-//   .explorer--Container {
-//     color: inherit;
-
-//     .header {
-//       position: relative;
-//       vertical-align: middle;
-
-//       h3 {
-//         margin: 0;
-//       }
-//     }
-
-//     .description {
-//       color: rgba(0, 0, 0, 0.6);
-//       margin: 0rem 0 0.5rem 0;
-//       overflow: hidden;
-//       text-overflow: ellipsis;
-//       vertical-align: middle;
-//       white-space: nowrap;
-//     }
-
-//     > .details {
-//       word-break: break-all;
-//     }
-//   }
-// `;
+export default React.memo(ExplorerApp);

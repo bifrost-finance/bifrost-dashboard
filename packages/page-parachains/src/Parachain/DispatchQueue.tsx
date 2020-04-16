@@ -31,7 +31,7 @@ function DispatchQueue ({ className, dispatchQueue = [] }: Props): React.ReactEl
           : (
             <>
               {
-                dispatchQueue.map(({ origin, data }): React.ReactNode => {
+                dispatchQueue.map(({ data, origin }): React.ReactNode => {
                   return (
                     <Card
                       className='queue-message'
@@ -66,8 +66,8 @@ function DispatchQueue ({ className, dispatchQueue = [] }: Props): React.ReactEl
   );
 }
 
-export default styled(DispatchQueue)`
+export default React.memo(styled(DispatchQueue)`
   .queue-message {
     margin-bottom: 2rem;
   }
-`;
+`);

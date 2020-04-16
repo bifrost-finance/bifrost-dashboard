@@ -4,14 +4,18 @@
 
 import centrifugeChain from './centrifuge-chain';
 import edgeware from './edgeware';
+import encointerNode from './encointer-node';
 import kulupu from './kulupu';
+import kusama from './kusama';
 import nodeTemplate from './node-template';
 import bifrost from './bifrost';
 
 export default {
   'centrifuge-chain': centrifugeChain,
   edgeware,
+  'encointer-node': encointerNode,
   kulupu,
+  kusama,
   'node-template': nodeTemplate,
   'bifrost': bifrost
 };

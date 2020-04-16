@@ -5,38 +5,39 @@
 import { DeriveSocietyMember } from '@polkadot/api-derive/types';
 
 import React from 'react';
-import { AddressSmall, Badge, Icon } from '@polkadot/react-components';
+import { AddressSmall, Tag } from '@polkadot/react-components';
 
 import { useTranslation } from '../translate';
 
 interface Props {
+  className?: string;
   isHead?: boolean;
   value: DeriveSocietyMember;
 }
 
-export default function Member ({ isHead, value: { accountId, strikes } }: Props): React.ReactElement<Props> {
+function Member ({ className, isHead, value: { accountId, strikes } }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
 
   return (
-    <tr>
-      <td className={`${isHead && 'head-icon'}`}>
+    <tr className={className}>
+      <td className='address'>
+        <AddressSmall value={accountId} />
+      </td>
+      <td>
         {isHead && (
-          <Badge
-            hover={t('Current head')}
-            info={<Icon name='check' />}
-            isInline
-            isTooltip
-            type='green'
+          <Tag
+            color='green'
+            hover={t('Current society head, exempt')}
+            label={t('society head')}
           />
         )}
       </td>
-      <td className='top'>
-        <AddressSmall value={accountId} />
-      </td>
+      <td className='all'>&nbsp;</td>
       <td className='number top'>
-        <label>{t('strikes')}</label>
         {strikes.toString()}
       </td>
     </tr>
   );
 }
+
+export default React.memo(Member);
