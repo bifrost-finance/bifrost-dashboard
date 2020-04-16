@@ -106,5 +106,12 @@ export default {
         balance: "Balance",
         cost: "Cost",
         income: "Income"
+    },
+    AssetSymbol: {
+        _enum: [
+            "DOT",
+            "KSM",
+            "EOS"
+        ]
     }
 };
