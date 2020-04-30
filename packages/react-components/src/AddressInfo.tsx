@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DeriveBalancesAll, DeriveStakingAccount, DeriveBalancesVoucher } from '@polkadot/api-derive/types';
+import { DeriveBalancesAll, DeriveStakingAccount } from '@polkadot/api-derive/types';
 import { LockIdentifier, ValidatorPrefsTo145 } from '@polkadot/types/interfaces';
 import { BareProps } from './types';
 import BN from 'bn.js';
@@ -51,7 +51,7 @@ interface Props extends BareProps {
   stakingInfo?: DeriveStakingAccount;
   withBalance?: boolean | BalanceActiveType;
   withBalanceToggle?: false;
-  BNC?: DeriveBalancesVoucher;
+  BNC?: any;
   withExtended?: boolean | CryptoActiveType;
   withHexSessionId?: (string | null)[];
   withValidatorPrefs?: boolean | ValidatorPrefsType;

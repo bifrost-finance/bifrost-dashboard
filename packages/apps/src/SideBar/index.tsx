@@ -103,7 +103,7 @@ function SideBar ({ className, collapse, handleResize, isCollapsed, isMenuOpen, 
             <Menu.Item className='apps--SideBar-Item'>
               <a
                 className='apps--SideBar-Item-NavLink'
-                href='https://github.com/polkadot-js/apps'
+                href='https://github.com/bifrost-codes'
                 rel='noopener noreferrer'
                 target='_blank'
               >
@@ -113,7 +113,7 @@ function SideBar ({ className, collapse, handleResize, isCollapsed, isMenuOpen, 
             <Menu.Item className='apps--SideBar-Item'>
               <a
                 className='apps--SideBar-Item-NavLink'
-                href='https://wiki.polkadot.network'
+                href='https://docs.bifrost.codes'
                 rel='noopener noreferrer'
                 target='_blank'
               >
