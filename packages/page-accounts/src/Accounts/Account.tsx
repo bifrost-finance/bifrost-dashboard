@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DeriveAccountInfo, DeriveBalancesAll, DeriveBalancesVoucher } from '@polkadot/api-derive/types';
+import { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { ActionStatus } from '@polkadot/react-components/Status/types';
 import { H256, Multisig, RecoveryConfig } from '@polkadot/types/interfaces';
 import { SortedAccount } from './types';
@@ -51,7 +51,7 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, s
   const api = useApi();
   const [multiInc, refreshMulti] = useIncrement();
   const balancesAll = useCall<DeriveBalancesAll>(api.api.derive.balances.all, [address]);
-  const BNC = useCall<DeriveBalancesVoucher>(api.api.query.voucher.balancesVoucher, [address]);
+  const BNC = useCall<DeriveBalancesAll>(api.api.query.voucher.balancesVoucher, [address]);
   const recoveryInfo = useCall<RecoveryConfig | null>(api.api.query.recovery?.recoverable, [address], {
     transform: (opt: Option<RecoveryConfig>) => opt.unwrapOr(null)
   });
@@ -74,22 +74,22 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, s
   const [isSettingsOpen, toggleSettings] = useToggle();
   const [isTransferOpen, toggleTransfer] = useToggle();
 
-  const _setTags = useCallback(
-    (tags: string[]): void => setTags(tags.sort()),
-    []
-  );
+  // const _setTags = useCallback(
+  //   (tags: string[]): void => setTags(tags.sort()),
+  //   []
+  // );
 
-  useEffect((): void => {
-    const { identity, nickname } = info || {};
+  // useEffect((): void => {
+  //   const { identity, nickname } = info || {};
 
-    if (api.api.query.identity && api.api.query.identity.identityOf) {
-      if (identity?.display) {
-        setAccName(identity.display);
-      }
-    } else if (nickname) {
-      setAccName(nickname);
-    }
-  }, [api, info]);
+  //   if (api.api.query.identity && api.api.query.identity.identityOf) {
+  //     if (identity?.display) {
+  //       setAccName(identity.display);
+  //     }
+  //   } else if (nickname) {
+  //     setAccName(nickname);
+  //   }
+  // }, [api, info]);
 
   useEffect((): void => {
     balancesAll && setBalance(address, balancesAll.freeBalance);
