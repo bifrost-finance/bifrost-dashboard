@@ -14,7 +14,6 @@ export default {
   edgeware,
   'encointer-node': encointerNode,
   kulupu,
-  kusama,
   'node-template': nodeTemplate,
   'bifrost': bifrost
 };
