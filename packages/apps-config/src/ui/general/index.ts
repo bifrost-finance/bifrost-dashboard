@@ -33,8 +33,8 @@ const chainColors: Record<string, any> = [
 const nodeColors: Record<string, any> = [
   ['centrifuge chain', nodeCentrifuge],
   ['edgeware node', nodeEdgeware],
-  ['nodle chain node', nodeNodle]
-  ['bifrost node', nodeBifrost],
+  ['nodle chain node', nodeNodle],
+  ['bifrost node', nodeBifrost]
   // ['node template', emptyColor],
   // ['parity polkadot', emptyColor],
   // ['substrate node', emptyColor]
