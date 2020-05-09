@@ -82,7 +82,7 @@ export default {
         "map": "Vec<(ActionName, u64)>"
     },
     "TxOut": {},
-    "ConvertRate": "u128",
+    "ConvertPrice": "u128",
     "RatePerBlock": "u64",
     "Fee": "u64",
     "TokenPool": "Balance",
@@ -118,5 +118,22 @@ export default {
         "vtoken_pool": "Balance",
         "current_reward": "Balance",
         "pending_reward": "Balance"
+    },
+    "ProducerAuthoritySchedule": {
+        "version": "u32",
+        "producers": "Vec<ProducerAuthority>"
+    },
+    "ProducerAuthority": {
+        "producer_name": "ActionName",
+        "authority": "BlockSigningAuthority"
+    },
+    "BlockSigningAuthority": "(UnsignedInt, BlockSigningAuthorityV0)",
+    "BlockSigningAuthorityV0": {
+        "threshold": "u32",
+        "keys": "Vec<KeyWeight>"
+    },
+    "KeyWeight": {
+        "key": "PublicKey",
+        "weight": "u16"
     }
 };
