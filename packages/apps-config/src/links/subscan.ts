@@ -16,8 +16,10 @@ export default {
     block: 'block',
     council: 'council',
     extrinsic: 'extrinsic',
+    proposal: 'democracy_proposal',
     referendum: 'referenda',
     techcomm: 'tech',
     treasury: 'treasury'
-  }
+  },
+  url: 'https://subscan.io/'
 };

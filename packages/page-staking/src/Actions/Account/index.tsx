@@ -3,19 +3,19 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { DeriveBalancesAll, DeriveStakingAccount } from '@polkadot/api-derive/types';
-import { AccountId, EraIndex, Exposure, StakingLedger, ValidatorPrefs } from '@polkadot/types/interfaces';
-import { Codec, ITuple } from '@polkadot/types/types';
+import { EraIndex } from '@polkadot/types/interfaces';
+import { StakerState } from '@polkadot/react-hooks/types';
+import { SortedTargets } from '../../types';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { AddressInfo, AddressMini, AddressSmall, Button, Expander, Menu, Popup, StakingBonded, StakingRedeemable, StakingUnbonding, TxButton } from '@polkadot/react-components';
-import { useAccounts, useApi, useCall, useToggle } from '@polkadot/react-hooks';
-import { u8aConcat, u8aToHex } from '@polkadot/util';
+import { AddressInfo, AddressMini, AddressSmall, Button, Menu, Popup, StakingBonded, StakingRedeemable, StakingUnbonding, TxButton } from '@polkadot/react-components';
+import { useApi, useCall, useToggle } from '@polkadot/react-hooks';
 
 import { useTranslation } from '../../translate';
-import useInactives from '../useInactives';
 import BondExtra from './BondExtra';
 import InjectKeys from './InjectKeys';
+import ListNominees from './ListNominees';
 import Nominate from './Nominate';
 import SetControllerAccount from './SetControllerAccount';
 import SetRewardDestination from './SetRewardDestination';
@@ -23,83 +23,22 @@ import SetSessionKey from './SetSessionKey';
 import Unbond from './Unbond';
 import Validate from './Validate';
 
-type ValidatorInfo = ITuple<[ValidatorPrefs, Codec]> | ValidatorPrefs;
-
 interface Props {
   activeEra?: EraIndex;
-  allStashes?: string[];
   className?: string;
   isDisabled?: boolean;
-  isOwnStash: boolean;
+  info: StakerState;
   next?: string[];
-  onUpdateType: (stashId: string, type: 'validator' | 'nominator' | 'started' | 'other') => void;
   stashId: string;
+  targets: SortedTargets;
   validators?: string[];
 }
 
-interface StakeState {
-  controllerId: string | null;
-  destination?: string;
-  destinationId: number;
-  exposure?: Exposure;
-  hexSessionIdNext: string | null;
-  hexSessionIdQueue: string | null;
-  isLoading: boolean;
-  isOwnController: boolean;
-  isStashNominating: boolean;
-  isStashValidating: boolean;
-  nominating?: string[];
-  sessionIds: string[];
-  stakingLedger?: StakingLedger;
-  validatorPrefs?: ValidatorPrefs;
-}
-
-function toIdString (id?: AccountId | null): string | null {
-  return id
-    ? id.toString()
-    : null;
-}
-
-function getStakeState (allAccounts: string[], allStashes: string[] | undefined, { controllerId: _controllerId, exposure, nextSessionIds, nominators, rewardDestination, sessionIds, stakingLedger, validatorPrefs }: DeriveStakingAccount, stashId: string, validateInfo: ValidatorInfo): StakeState {
-  const isStashNominating = !!(nominators?.length);
-  const isStashValidating = !(Array.isArray(validateInfo) ? validateInfo[1].isEmpty : validateInfo.isEmpty) || !!allStashes?.includes(stashId);
-  const nextConcat = u8aConcat(...nextSessionIds.map((id): Uint8Array => id.toU8a()));
-  const currConcat = u8aConcat(...sessionIds.map((id): Uint8Array => id.toU8a()));
-  const controllerId = toIdString(_controllerId);
-
-  return {
-    controllerId,
-    destination: rewardDestination?.toString().toLowerCase(),
-    destinationId: rewardDestination?.toNumber() || 0,
-    exposure,
-    hexSessionIdNext: u8aToHex(nextConcat, 48),
-    hexSessionIdQueue: u8aToHex(currConcat.length ? currConcat : nextConcat, 48),
-    isLoading: false,
-    isOwnController: allAccounts.includes(controllerId || ''),
-    isStashNominating,
-    isStashValidating,
-    // we assume that all ids are non-null
-    nominating: nominators?.map(toIdString) as string[],
-    sessionIds: (
-      nextSessionIds.length
-        ? nextSessionIds
-        : sessionIds
-    ).map(toIdString) as string[],
-    stakingLedger,
-    validatorPrefs
-  };
-}
-
-function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdateType, stashId, validators }: Props): React.ReactElement<Props> {
+function Account ({ className, info: { controllerId, destination, destinationId, hexSessionIdNext, hexSessionIdQueue, isLoading, isOwnController, isOwnStash, isStashNominating, isStashValidating, nominating, sessionIds, stakingLedger, stashId }, isDisabled, next, targets, validators }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
-  const { allAccounts } = useAccounts();
-  const validateInfo = useCall<ValidatorInfo>(api.query.staking.validators, [stashId]);
   const balancesAll = useCall<DeriveBalancesAll>(api.derive.balances.all, [stashId]);
   const stakingAccount = useCall<DeriveStakingAccount>(api.derive.staking.account, [stashId]);
-  const [{ controllerId, destination, destinationId, hexSessionIdNext, hexSessionIdQueue, isLoading, isOwnController, isStashNominating, isStashValidating, nominating, sessionIds, stakingLedger }, setStakeState] = useState<StakeState>({ controllerId: null, destinationId: 0, hexSessionIdNext: null, hexSessionIdQueue: null, isLoading: true, isOwnController: false, isStashNominating: false, isStashValidating: false, sessionIds: [] });
-  const [activeNoms, setActiveNoms] = useState<string[]>([]);
-  const inactiveNoms = useInactives(stashId, nominating);
   const [isBondExtraOpen, toggleBondExtra] = useToggle();
   const [isInjectOpen, toggleInject] = useToggle();
   const [isNominateOpen, toggleNominate] = useToggle();
@@ -109,28 +48,6 @@ function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdat
   const [isSettingsOpen, toggleSettings] = useToggle();
   const [isUnbondOpen, toggleUnbond] = useToggle();
   const [isValidateOpen, toggleValidate] = useToggle();
-
-  useEffect((): void => {
-    if (stakingAccount && validateInfo) {
-      const state = getStakeState(allAccounts, allStashes, stakingAccount, stashId, validateInfo);
-
-      setStakeState(state);
-      onUpdateType(
-        stashId,
-        state.isStashValidating
-          ? 'validator'
-          : state.isStashNominating
-            ? 'nominator'
-            : 'other'
-      );
-    }
-  }, [allAccounts, allStashes, onUpdateType, stakingAccount, stashId, validateInfo]);
-
-  useEffect((): void => {
-    nominating && setActiveNoms(
-      nominating.filter((id): boolean => !inactiveNoms.includes(id))
-    );
-  }, [inactiveNoms, nominating]);
 
   return (
     <tr className={className}>
@@ -153,6 +70,7 @@ function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdat
             nominating={nominating}
             onClose={toggleNominate}
             stashId={stashId}
+            targets={targets}
             validators={validators}
           />
         )}
@@ -168,12 +86,14 @@ function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdat
             controllerId={controllerId}
             defaultDestination={destinationId}
             onClose={toggleRewardDestination}
+            stashId={stashId}
           />
         )}
         {isSetSessionOpen && controllerId && (
           <SetSessionKey
             controllerId={controllerId}
             onClose={toggleSetSession}
+            stashId={stashId}
           />
         )}
         {isUnbondOpen && (
@@ -215,32 +135,10 @@ function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdat
         : (
           <td className='all'>
             {isStashNominating && (
-              <>
-                {activeNoms.length !== 0 && (
-                  <Expander summary={t('Active nominations ({{count}})', { replace: { count: activeNoms.length } })}>
-                    {activeNoms.map((nomineeId, index): React.ReactNode => (
-                      <AddressMini
-                        key={index}
-                        value={nomineeId}
-                        withBalance={false}
-                        withBonded
-                      />
-                    ))}
-                  </Expander>
-                )}
-                {inactiveNoms.length !== 0 && (
-                  <Expander summary={t('Inactive nominations ({{count}})', { replace: { count: inactiveNoms.length } })}>
-                    {inactiveNoms.map((nomineeId, index): React.ReactNode => (
-                      <AddressMini
-                        key={index}
-                        value={nomineeId}
-                        withBalance={false}
-                        withBonded
-                      />
-                    ))}
-                  </Expander>
-                )}
-              </>
+              <ListNominees
+                nominating={nominating}
+                stashId={stashId}
+              />
             )}
           </td>
         )
@@ -284,7 +182,6 @@ function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdat
                         />
                       )
                     }
-                    <Button.Or key='nominate.or' />
                     <Button
                       icon='hand paper outline'
                       isDisabled={!isOwnController || isDisabled}
@@ -301,7 +198,7 @@ function Account ({ allStashes, className, isDisabled, isOwnStash, next, onUpdat
                 onClose={toggleSettings}
                 trigger={
                   <Button
-                    icon='setting'
+                    icon='ellipsis vertical'
                     isDisabled={isDisabled}
                     onClick={toggleSettings}
                   />

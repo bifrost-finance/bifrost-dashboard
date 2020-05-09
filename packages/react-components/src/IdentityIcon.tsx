@@ -19,19 +19,20 @@ export function getIdentityTheme (systemName: string): 'substrate' {
   return ((uiSettings.icon === 'default' && getSystemIcon(systemName)) || uiSettings.icon) as 'substrate';
 }
 
-function IdentityIcon ({ className, onCopy, prefix, size, theme, value }: Props): React.ReactElement<Props> {
+function IdentityIcon ({ className, onCopy, prefix, size = 24, theme, value }: Props): React.ReactElement<Props> {
   const { systemName } = useApi();
   const { t } = useTranslation();
   const { queueAction } = useContext(StatusContext);
   const validators = useContext(ValidatorsContext);
   const [isValidator, setIsValidator] = useState(false);
-  const [address] = useState(value?.toString());
+  const [address, setAddress] = useState(value?.toString());
   const thisTheme = theme || getIdentityTheme(systemName);
 
   useEffect((): void => {
     value && setIsValidator(
       validators.includes(value.toString())
     );
+    value && setAddress(value.toString());
   }, [value, validators]);
 
   const _onCopy = useCallback(

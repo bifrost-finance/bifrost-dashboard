@@ -7,7 +7,7 @@ import { Route } from '@polkadot/apps-routing/types';
 import React, { Suspense, useContext, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import routing from '@polkadot/apps-routing';
+import createRoutes from '@polkadot/apps-routing';
 import { ErrorBoundary, Spinner, StatusContext } from '@polkadot/react-components';
 import { useApi } from '@polkadot/react-hooks';
 
@@ -24,12 +24,10 @@ const NOT_FOUND: Route = {
   display: {
     needsApi: undefined
   },
-  i18n: {
-    defaultValue: 'Unknown'
-  },
   icon: 'cancel',
   isIgnored: false,
-  name: ''
+  name: 'unknown',
+  text: 'Unknown'
 };
 
 function Content ({ className }: Props): React.ReactElement<Props> {
@@ -40,11 +38,11 @@ function Content ({ className }: Props): React.ReactElement<Props> {
   const { Component, display: { needsApi }, name } = useMemo(
     (): Route => {
       const app = location.pathname.slice(1) || '';
-      const found = routing.routes.find((route) => !!(route && app.startsWith(route.name)));
+      const found = createRoutes(t).find((route) => !!(route && app.startsWith(route.name)));
 
       return found || NOT_FOUND;
     },
-    [location]
+    [location, t]
   );
 
   return (
@@ -80,15 +78,14 @@ function Content ({ className }: Props): React.ReactElement<Props> {
 
 export default React.memo(styled(Content)`
   background: #f5f5f5;
-  display: flex;
-  flex-direction: column;
   flex-grow: 1;
   height: 100%;
   min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: 0 1.5rem;
+  position: relative;
   width: 100%;
-  padding: 0 2rem;
 
   @media(max-width: 768px) {
     padding: 0 0.5rem;

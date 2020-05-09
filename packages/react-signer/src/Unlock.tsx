@@ -4,9 +4,9 @@
 
 import { KeyringPair } from '@polkadot/keyring/types';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Password } from '@polkadot/react-components';
+import { Modal, Password } from '@polkadot/react-components';
 import keyring from '@polkadot/ui-keyring';
 
 import { useTranslation } from './translate';
@@ -31,7 +31,11 @@ function getPair (address?: string | null): KeyringPair | null {
 
 function Unlock ({ className, error, onChange, onEnter, password, tabIndex, value }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
-  const [pair] = useState<KeyringPair | null>(getPair(value));
+  const [pair, setPair] = useState<KeyringPair | null>(null);
+
+  useEffect((): void => {
+    setPair(getPair(value));
+  }, [value]);
 
   if (!pair || !(pair.isLocked) || pair.meta.isInjected) {
     return null;
@@ -39,16 +43,23 @@ function Unlock ({ className, error, onChange, onEnter, password, tabIndex, valu
 
   return (
     <div className={`ui--signer-Signer-Unlock ${className}`}>
-      <Password
-        autoFocus
-        isError={!!error}
-        label={t('unlock account with password')}
-        labelExtra={error && <div className='errorLabel'>{t('wrong password supplied')}</div>}
-        onChange={onChange}
-        onEnter={onEnter}
-        tabIndex={tabIndex}
-        value={password}
-      />
+      <Modal.Columns>
+        <Modal.Column>
+          <Password
+            autoFocus
+            isError={!!error}
+            label={t('unlock account with password')}
+            labelExtra={error && <div className='errorLabel'>{t('wrong password supplied')}</div>}
+            onChange={onChange}
+            onEnter={onEnter}
+            tabIndex={tabIndex}
+            value={password}
+          />
+        </Modal.Column>
+        <Modal.Column>
+          <p>{t('Unlock the sending account to allow signing of this transaction.')}</p>
+        </Modal.Column>
+      </Modal.Columns>
     </div>
   );
 }

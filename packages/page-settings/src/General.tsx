@@ -5,9 +5,9 @@
 import { Option } from '@polkadot/apps-config/settings/types';
 
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { availableLanguages, availableSs58 } from '@polkadot/apps-config/settings';
+import { createLanguages, createSs58 } from '@polkadot/apps-config/settings';
 import { isLedgerCapable } from '@polkadot/react-api';
-import { Button, ButtonCancel, Dropdown } from '@polkadot/react-components';
+import { Button, ButtonCancel, Dropdown, Modal } from '@polkadot/react-components';
 import uiSettings, { SettingsStruct } from '@polkadot/ui-settings';
 
 import { useTranslation } from './translate';
@@ -27,18 +27,18 @@ function General ({ className, isModalContent, onClose }: Props): React.ReactEle
   // tri-state: null = nothing changed, false = no reload, true = reload required
   const [changed, setChanged] = useState<boolean | null>(null);
   const [settings, setSettings] = useState(uiSettings.get());
-  const iconOptions = useMemo((): Option[] => {
-    return uiSettings.availableIcons.map((o): Option => createIdenticon(t, o, ['default']));
-  }, [t]);
-  const prefixOptions = useMemo((): (Option | React.ReactNode)[] => {
-    return availableSs58.map((o): Option | React.ReactNode => createOption(t, o, ['default']));
-  }, [t]);
-  const translateLanguages = useMemo((): Option[] => {
-    return availableLanguages.map(({ text, value, withI18n }) => ({
-      text: withI18n ? t(text as string) : text,
-      value
-    }));
-  }, [t]);
+  const iconOptions = useMemo(
+    () => uiSettings.availableIcons.map((o): Option => createIdenticon(o, ['default'])),
+    []
+  );
+  const prefixOptions = useMemo(
+    () => createSs58(t).map((o): Option | React.ReactNode => createOption(o, ['default'])),
+    [t]
+  );
+  const translateLanguages = useMemo(
+    () => createLanguages(t),
+    [t]
+  );
 
   useEffect((): void => {
     const prev = uiSettings.get();
@@ -70,10 +70,21 @@ function General ({ className, isModalContent, onClose }: Props): React.ReactEle
   );
 
   const { i18nLang, icon, ledgerConn, prefix, uiMode } = settings;
+  const networkSelector = <SelectUrl onChange={_handleChange('apiUrl')} />;
 
   return (
     <div className={className}>
-      <SelectUrl onChange={_handleChange('apiUrl')} />
+      {isModalContent
+        ? (
+          <Modal.Columns>
+            <Modal.Column>{networkSelector}</Modal.Column>
+            <Modal.Column>
+              {t('The RPC node can be selected from the pre-defined list or manually entered, depending on the chain you wish to connect to.')}
+            </Modal.Column>
+          </Modal.Columns>
+        )
+        : networkSelector
+      }
       {!isModalContent && (
         <>
           <div className='ui--row'>
@@ -126,10 +137,7 @@ function General ({ className, isModalContent, onClose }: Props): React.ReactEle
       )}
       <Button.Group>
         {isModalContent && (
-          <>
-            <ButtonCancel onClick={onClose} />
-            <Button.Or />
-          </>
+          <ButtonCancel onClick={onClose} />
         )}
         <Button
           icon='save'

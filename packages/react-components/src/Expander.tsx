@@ -109,17 +109,16 @@ export default React.memo(styled(Expander)`
 
   .ui--Expander-summary {
     margin: 0;
-    min-width: 12rem;
+    min-width: 12.5rem;
     overflow: hidden;
 
     .ui--Expander-summary-header > .ui--FormatBalance {
-      min-width: 12rem;
+      min-width: 10rem;
     }
 
     > div {
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
     i.icon {

@@ -3,11 +3,14 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { ActiveEraInfo, EraIndex } from '@polkadot/types/interfaces';
+import { StakerState } from '@polkadot/react-hooks/types';
+import { SortedTargets } from '../types';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { Trans } from 'react-i18next';
+import BN from 'bn.js';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Table } from '@polkadot/react-components';
-import { useCall, useApi, useOwnStashes } from '@polkadot/react-hooks';
+import { useCall, useApi } from '@polkadot/react-hooks';
+import { FormatBalance } from '@polkadot/react-query';
 import { Option } from '@polkadot/types';
 
 import ElectionBanner from '../ElectionBanner';
@@ -16,75 +19,79 @@ import Account from './Account';
 import NewStake from './NewStake';
 
 interface Props {
-  allStashes?: string[];
   className?: string;
   isInElection?: boolean;
+  ownStashes?: StakerState[];
   next?: string[];
   validators?: string[];
+  targets: SortedTargets;
 }
 
-function Actions ({ allStashes, className, isInElection, next, validators }: Props): React.ReactElement<Props> {
+interface State {
+  bondedTotal?: BN;
+  foundStashes?: StakerState[];
+}
+
+function Actions ({ className, isInElection, next, ownStashes, targets, validators }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
   const activeEra = useCall<EraIndex | undefined>(api.query.staking?.activeEra, [], {
     transform: (activeEra: Option<ActiveEraInfo>) => activeEra.unwrapOr({ index: undefined }).index
   });
-  const ownStashes = useOwnStashes();
-  const [foundStashes, setFoundStashes] = useState<[string, boolean][] | null>(null);
-  const [stashTypes, setStashTypes] = useState<Record<string, number>>({});
+  const [{ bondedTotal, foundStashes }, setState] = useState<State>({});
 
   useEffect((): void => {
-    ownStashes && setFoundStashes(
-      ownStashes.sort((a, b): number =>
-        (stashTypes[a[0]] || 99) - (stashTypes[b[0]] || 99)
+    ownStashes && setState({
+      bondedTotal: ownStashes.reduce((total: BN, { stakingLedger }) =>
+        stakingLedger
+          ? total.add(stakingLedger.total.unwrap())
+          : total,
+      new BN(0)),
+      foundStashes: ownStashes.sort((a, b) =>
+        (a.isStashValidating ? 1 : (a.isStashNominating ? 5 : 99)) - (b.isStashValidating ? 1 : (b.isStashNominating ? 5 : 99))
       )
-    );
-  }, [ownStashes, stashTypes]);
+    });
+  }, [ownStashes]);
 
-  const _onUpdateType = useCallback(
-    (stashId: string, type: 'validator' | 'nominator' | 'started' | 'other'): void =>
-      setStashTypes((stashTypes: Record<string, number>) => ({
-        ...stashTypes,
-        [stashId]: type === 'validator'
-          ? 1
-          : type === 'nominator'
-            ? 5
-            : 9
-      })),
-    []
-  );
+  const header = useMemo(() => [
+    [t('stashes'), 'start'],
+    [t('controller'), 'address'],
+    [t('rewards'), 'number'],
+    [t('bonded'), 'number'],
+    [undefined, undefined, 2]
+  ], [t]);
+
+  const footer = useMemo(() => (
+    <tr>
+      <td colSpan={3} />
+      <td className='number'>
+        {bondedTotal && <FormatBalance value={bondedTotal} />}
+      </td>
+      <td colSpan={2} />
+    </tr>
+  ), [bondedTotal]);
 
   return (
     <div className={className}>
       <NewStake />
       <ElectionBanner isInElection={isInElection} />
       <Table
-        empty={t('No funds staked yet. Bond funds to validate or nominate a validator')}
-        header={[
-          [t('stashes'), 'start'],
-          [t('controller'), 'address'],
-          [t('rewards'), 'number'],
-          [t('bonded'), 'number'],
-          [undefined, undefined, 2]
-        ]}
+        empty={foundStashes && t('No funds staked yet. Bond funds to validate or nominate a validator')}
+        footer={footer}
+        header={header}
       >
-        {foundStashes?.map(([stashId, isOwnStash]): React.ReactNode => (
+        {foundStashes?.map((info): React.ReactNode => (
           <Account
             activeEra={activeEra}
-            allStashes={allStashes}
+            info={info}
             isDisabled={isInElection}
-            isOwnStash={isOwnStash}
-            key={stashId}
+            key={info.stashId}
             next={next}
-            onUpdateType={_onUpdateType}
-            stashId={stashId}
+            targets={targets}
             validators={validators}
           />
         ))}
       </Table>
-      {api.query.staking.activeEra && (
-        <Trans key='paymentMoved'>All applicable account payouts are now available on the <a href='#/staking/payout'>Payouts tab</a></Trans>
-      )}
     </div>
   );
 }

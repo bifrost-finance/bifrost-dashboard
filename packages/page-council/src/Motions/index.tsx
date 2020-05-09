@@ -5,7 +5,7 @@
 import { DeriveCollectiveProposals, DeriveCollectiveProposal } from '@polkadot/api-derive/types';
 import { AccountId } from '@polkadot/types/interfaces';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button, Table } from '@polkadot/react-components';
 import { useMembers } from '@polkadot/react-hooks';
 
@@ -25,6 +25,15 @@ function Proposals ({ className, motions, prime }: Props): React.ReactElement<Pr
   const { t } = useTranslation();
   const { isMember, members } = useMembers();
 
+  const header = useMemo(() => [
+    [t('motions'), 'start', 2],
+    [t('threshold')],
+    [t('voting end')],
+    [t('aye'), 'address'],
+    [t('nay'), 'address'],
+    [undefined, undefined, 2]
+  ], [t]);
+
   return (
     <div className={className}>
       <Button.Group>
@@ -32,12 +41,10 @@ function Proposals ({ className, motions, prime }: Props): React.ReactElement<Pr
           isMember={isMember}
           members={members}
         />
-        <Button.Or />
         <ProposeExternal
           isMember={isMember}
           members={members}
         />
-        <Button.Or />
         <Slashing
           isMember={isMember}
           members={members}
@@ -45,14 +52,7 @@ function Proposals ({ className, motions, prime }: Props): React.ReactElement<Pr
       </Button.Group>
       <Table
         empty={motions && t('No council motions')}
-        header={[
-          [t('motions'), 'start', 2],
-          [t('threshold')],
-          [t('voting end')],
-          [t('aye'), 'address'],
-          [t('nay'), 'address'],
-          [undefined, undefined, 2]
-        ]}
+        header={header}
       >
         {motions?.map((motion: DeriveCollectiveProposal): React.ReactNode => (
           <Motion

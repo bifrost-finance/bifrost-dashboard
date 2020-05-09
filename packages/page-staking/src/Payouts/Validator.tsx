@@ -6,12 +6,13 @@ import { PayoutValidator } from './types';
 
 import BN from 'bn.js';
 import React, { useEffect, useState } from 'react';
-import { AddressMini, Badge, Expander } from '@polkadot/react-components';
-import { FormatBalance } from '@polkadot/react-query';
+import { AddressMini, Expander } from '@polkadot/react-components';
+import { BlockToTime, FormatBalance } from '@polkadot/react-query';
 
 import { useTranslation } from '../translate';
 import PayButton from './PayButton';
 import { createErasString } from './util';
+import useEraBlocks from './useEraBlocks';
 
 interface Props {
   className?: string;
@@ -20,18 +21,20 @@ interface Props {
 }
 
 interface State {
-  eraStr: string;
+  eraStr: React.ReactNode;
   nominators: Record<string, BN>;
   numNominators: number;
+  oldestEra?: BN;
 }
 
-function Payout ({ className, isDisabled, payout }: Props): React.ReactElement<Props> {
+function Validator ({ className, isDisabled, payout }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
-  const [{ eraStr, nominators, numNominators }, setState] = useState<State>({
+  const [{ eraStr, nominators, numNominators, oldestEra }, setState] = useState<State>({
     eraStr: '',
     nominators: {},
     numNominators: 0
   });
+  const eraBlocks = useEraBlocks(oldestEra);
 
   useEffect((): void => {
     const eraStr = createErasString(payout.eras.map(({ era }) => era));
@@ -47,26 +50,22 @@ function Payout ({ className, isDisabled, payout }: Props): React.ReactElement<P
       return nominators;
     }, {});
 
-    setState({ eraStr, nominators, numNominators: Object.keys(nominators).length });
+    setState({ eraStr, nominators, numNominators: Object.keys(nominators).length, oldestEra: payout.eras[0]?.era });
   }, [payout]);
 
   return (
     <tr className={className}>
       <td className='address'><AddressMini value={payout.validatorId} /></td>
       <td className='start'>
-        <Badge
-          info={payout.eras.length}
-          isInline
-          type='counter'
-        />
         <span className='payout-eras'>{eraStr}</span>
       </td>
       <td className='number'><FormatBalance value={payout.available} /></td>
+      <td className='number'>{eraBlocks && <BlockToTime blocks={eraBlocks} />}</td>
       <td
         className='start'
         colSpan={2}
       >
-        <Expander summary={t('{{count}} stakers', { replace: { count: numNominators } })}>
+        <Expander summary={t('{{count}} own stashes', { replace: { count: numNominators } })}>
           {Object.entries(nominators).map(([stashId, balance]) =>
             <AddressMini
               balance={balance}
@@ -87,4 +86,4 @@ function Payout ({ className, isDisabled, payout }: Props): React.ReactElement<P
   );
 }
 
-export default React.memo(Payout);
+export default React.memo(Validator);

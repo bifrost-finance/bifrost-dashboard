@@ -14,15 +14,15 @@ import { useTranslation } from '../translate';
 
 interface Props {
   lastReward?: BN;
-  numNominators: number;
-  numValidators: number;
+  numNominators?: number;
+  numValidators?: number;
   totalStaked?: BN;
 }
 
 function Summary ({ lastReward, numNominators, numValidators, totalStaked }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
-  const totalIssuance = useCall<Balance>(api.query.balances.totalIssuance, []);
+  const totalIssuance = useCall<Balance>(api.query.balances?.totalIssuance, []);
   const [percentage, setPercentage] = useState<string | undefined>();
 
   useEffect((): void => {
@@ -59,9 +59,11 @@ function Summary ({ lastReward, numNominators, numValidators, totalStaked }: Pro
           {percentage}
         </CardSummary>
       )}
-      <CardSummary label={t('validators/nominators')}>
-        {numValidators}/{numNominators}
-      </CardSummary>
+      {numValidators && numNominators && (
+        <CardSummary label={t('validators/nominators')}>
+          {numValidators}/{numNominators}
+        </CardSummary>
+      )}
       {lastReward?.gtn(0) && (
         <CardSummary label={t('last reward')}>
           <FormatBalance

@@ -10,19 +10,21 @@ import useIsMountedRef from './useIsMountedRef';
 interface UseAccounts {
   allAddresses: string[];
   hasAddresses: boolean;
+  isAddress: (address: string) => boolean;
 }
 
 export default function useAccounts (): UseAccounts {
   const mountedRef = useIsMountedRef();
-  const [state, setState] = useState<UseAccounts>({ allAddresses: [], hasAddresses: false });
+  const [state, setState] = useState<UseAccounts>({ allAddresses: [], hasAddresses: false, isAddress: () => false });
 
   useEffect((): () => void => {
     const subscription = addressObservable.subject.subscribe((addresses): void => {
       if (mountedRef.current) {
         const allAddresses = addresses ? Object.keys(addresses) : [];
         const hasAddresses = allAddresses.length !== 0;
+        const isAddress = (address: string): boolean => allAddresses.includes(address.toString());
 
-        setState({ allAddresses, hasAddresses });
+        setState({ allAddresses, hasAddresses, isAddress });
       }
     });
 

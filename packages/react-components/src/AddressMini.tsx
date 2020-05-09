@@ -34,11 +34,12 @@ interface Props extends BareProps {
   withBalance?: boolean;
   withBonded?: boolean;
   withLockedVote?: boolean;
+  withSidebar?: boolean;
   withName?: boolean;
   withShrink?: boolean;
 }
 
-function AddressMini ({ balance, bonded, children, className, iconInfo, isPadded = true, label, labelBalance, noLookup, summary, value, withAddress = true, withBalance = false, withBonded = false, withLockedVote = false, withName = true, withShrink = false }: Props): React.ReactElement<Props> | null {
+function AddressMini ({ balance, bonded, children, className, iconInfo, isPadded = true, label, labelBalance, noLookup, summary, value, withAddress = true, withBalance = false, withBonded = false, withLockedVote = false, withName = true, withShrink = false, withSidebar = true }: Props): React.ReactElement<Props> | null {
   if (!value) {
     return null;
   }
@@ -49,10 +50,7 @@ function AddressMini ({ balance, bonded, children, className, iconInfo, isPadded
         <label className='ui--AddressMini-label'>{label}</label>
       )}
       <div className='ui--AddressMini-icon'>
-        <IdentityIcon
-          size={24}
-          value={value as Uint8Array}
-        />
+        <IdentityIcon value={value as Uint8Array} />
         {iconInfo && (
           <div className='ui--AddressMini-icon-info'>
             {iconInfo}
@@ -67,6 +65,7 @@ function AddressMini ({ balance, bonded, children, className, iconInfo, isPadded
                 <AccountName
                   noLookup={noLookup}
                   value={value}
+                  withSidebar={withSidebar}
                 />
               )
               : toShortAddress(value)

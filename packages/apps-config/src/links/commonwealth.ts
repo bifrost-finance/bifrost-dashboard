@@ -21,5 +21,6 @@ export default {
     proposal: 'proposal/democracyproposal',
     referendum: 'proposal/referendum',
     treasury: 'proposal/treasuryproposal'
-  }
+  },
+  url: 'https://commonwealth.im/'
 };

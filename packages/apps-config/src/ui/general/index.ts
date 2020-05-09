@@ -12,6 +12,7 @@ const chainBifrost = '#002cc3';
 
 const nodeCentrifuge = '#fcc367';
 const nodeEdgeware = '#0a95df';
+const nodeNodle = '#1ab394';
 const nodeBifrost = '#002cc3';
 
 // overrides based on the actual matched chain name
@@ -32,6 +33,7 @@ const chainColors: Record<string, any> = [
 const nodeColors: Record<string, any> = [
   ['centrifuge chain', nodeCentrifuge],
   ['edgeware node', nodeEdgeware],
+  ['nodle chain node', nodeNodle]
   ['bifrost node', nodeBifrost],
   // ['node template', emptyColor],
   // ['parity polkadot', emptyColor],
