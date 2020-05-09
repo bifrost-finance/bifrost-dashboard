@@ -23,7 +23,26 @@ if (process.env.WS_URL) {
 }
 
 // const LIVE: Option[] = [
-//
+//   {
+//     info: 'kusama',
+//     text: 'Kusama (Polkadot Canary, hosted by Parity)',
+//     value: 'wss://kusama-rpc.polkadot.io/'
+//   },
+//   {
+//     info: 'kusama',
+//     text: 'Kusama (Polkadot Canary, hosted by Web3 Foundation)',
+//     value: 'wss://cc3-5.kusama.network/'
+//   },
+//   {
+//     info: 'edgeware',
+//     text: 'Edgeware (Edgeware Mainnet, hosted by Commonwealth Labs)',
+//     value: 'wss://mainnet1.edgewa.re'
+//   },
+//   {
+//     info: 'substrate',
+//     text: 'Kulupu (Kulupu Mainnet, hosted by Kulupu)',
+//     value: 'wss://rpc.kulupu.network/ws'
+//   }
 // ];
 
 const TEST: Option[] = [
