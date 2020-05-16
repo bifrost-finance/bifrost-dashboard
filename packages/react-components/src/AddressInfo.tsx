@@ -2,9 +2,10 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { DeriveBalancesAll, DeriveStakingAccount } from '@polkadot/api-derive/types';
+import { DeriveBalancesAll, DeriveDemocracyLock, DeriveStakingAccount } from '@polkadot/api-derive/types';
 import { LockIdentifier, ValidatorPrefsTo145 } from '@polkadot/types/interfaces';
 import { BareProps } from './types';
+
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
@@ -14,6 +15,7 @@ import { withCalls, withMulti } from '@polkadot/react-api/hoc';
 import { useAccounts } from '@polkadot/react-hooks';
 import { FormatBalance } from '@polkadot/react-query';
 
+import DemocracyLocks from './DemocracyLocks';
 import StakingRedeemable from './StakingRedeemable';
 import StakingUnbonding from './StakingUnbonding';
 import CryptoType from './CryptoType';
@@ -47,6 +49,7 @@ interface Props extends BareProps {
   address: string;
   balancesAll?: DeriveBalancesAll;
   children?: React.ReactNode;
+  democracyLocks?: DeriveDemocracyLock[];
   extraInfo?: [string, string][];
   stakingInfo?: DeriveStakingAccount;
   withBalance?: boolean | BalanceActiveType;
@@ -213,8 +216,8 @@ function renderValidatorPrefs({ stakingInfo, withValidatorPrefs = false }: Props
   );
 }
 
-function renderBalances(props: Props, allAccounts: string[], t: (key: string) => string): React.ReactNode {
-  const { address, balancesAll, BNC, stakingInfo, withBalance = true, withBalanceToggle = false } = props;
+function renderBalances (props: Props, allAccounts: string[], t: (key: string) => string): React.ReactNode {
+  const { address, balancesAll, democracyLocks, BNC, stakingInfo, withBalance = true, withBalanceToggle = false } = props;
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
     : withBalance || false;
@@ -231,6 +234,7 @@ function renderBalances(props: Props, allAccounts: string[], t: (key: string) =>
     'staking ': t('via Staking/Bond'),
     'vesting ': t('via Vesting')
   };
+
   const allItems = (
     <>
       {!withBalanceToggle && balancesAll && balanceDisplay.total && (
@@ -328,7 +332,15 @@ function renderBalances(props: Props, allAccounts: string[], t: (key: string) =>
         <>
           <Label label={t('unbonding')} />
           <div className='result'>
-            <StakingUnbonding stakingInfo={stakingInfo} />
+            <StakingUnbonding value={stakingInfo} />
+          </div>
+        </>
+      )}
+      {balanceDisplay.unlocking && democracyLocks && (democracyLocks.length !== 0) && (
+        <>
+          <Label label={t('democracy')} />
+          <div className='result'>
+            <DemocracyLocks value={democracyLocks} />
           </div>
         </>
       )}
@@ -371,7 +383,7 @@ function renderBalances(props: Props, allAccounts: string[], t: (key: string) =>
   );
 }
 
-function AddressInfo(props: Props): React.ReactElement<Props> {
+function AddressInfo (props: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { allAccounts } = useAccounts();
   const { children, className, extraInfo, withBalanceToggle, withHexSessionId } = props;
@@ -446,7 +458,7 @@ export default withMulti(
       }
 
       &:not(.column--expander) {
-            flex: 1;
+        flex: 1;
         display: grid;
         opacity: 1;
 
@@ -482,6 +494,11 @@ export default withMulti(
     ['derive.staking.account', {
       paramName: 'address',
       propName: 'stakingInfo',
+      skipIf: skipStakingIf
+    }],
+    ['derive.democracy.locks', {
+      paramName: 'address',
+      propName: 'democracyLocks',
       skipIf: skipStakingIf
     }]
   )

@@ -126,9 +126,10 @@ function Overview ({ className, onStatusChange }: Props): React.ReactElement<Pro
     [t('parent'), 'address'],
     [t('type')],
     [t('tags'), 'start'],
-    [t('transactions')],
+    [t('transactions'), 'ui--media-1500'],
     [t('balances')],
-    [undefined, undefined, 2]
+    [undefined, undefined],
+    [undefined, 'ui--media-1400']
   ], [t]);
 
   const footer = useMemo(() => (
@@ -212,11 +213,12 @@ function Overview ({ className, onStatusChange }: Props): React.ReactElement<Pro
         />
       </Button.Group>
       <Table
-        empty={t('no accounts yet, create or import an existing')}
+        empty={t("You don't have any accounts. Some features are currently hidden and will only become available once you have accounts.")}
         filter={filter}
         footer={footer}
         header={header}
       >
+        {}
         {sortedAccounts.map(({ account, isFavorite }): React.ReactNode => (
           <Account
             account={account}
