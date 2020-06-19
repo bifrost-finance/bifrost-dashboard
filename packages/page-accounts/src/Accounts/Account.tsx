@@ -12,6 +12,7 @@ import BN from 'bn.js';
 import React, { useCallback, useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ApiPromise } from '@polkadot/api';
+import Api from '@polkadot/api/promise';
 import { getLedger } from '@polkadot/react-api';
 import { AddressInfo, AddressMini, AddressSmall, Badge, Button, ChainLock, CryptoType, Forget, Icon, IdentityIcon, LinkExternal, Menu, Popup, StatusContext, Tag } from '@polkadot/react-components';
 import { useAccountInfo, useApi, useCall, useIncrement, useToggle } from '@polkadot/react-hooks';
@@ -41,7 +42,7 @@ interface DemocracyUnlockable {
   ids: BN[];
 }
 
-function calcVisible (filter: string, name: string, tags: string[]): boolean {
+function calcVisible(filter: string, name: string, tags: string[]): boolean {
   if (filter.length === 0) {
     return true;
   }
@@ -53,7 +54,7 @@ function calcVisible (filter: string, name: string, tags: string[]): boolean {
   }, name.toLowerCase().includes(_filter));
 }
 
-function createClearDemocracyTx (api: ApiPromise, address: string, unlockableIds: BN[]): SubmittableExtrinsic<'promise'> {
+function createClearDemocracyTx(api: ApiPromise, address: string, unlockableIds: BN[]): SubmittableExtrinsic<'promise'> {
   return api.tx.utility.batch(
     unlockableIds
       .map((id) => api.tx.democracy.removeVote(id))
@@ -61,7 +62,7 @@ function createClearDemocracyTx (api: ApiPromise, address: string, unlockableIds
   );
 }
 
-function Account ({ account: { address, meta }, className, filter, isFavorite, setBalance, toggleFavorite }: Props): React.ReactElement<Props> | null {
+function Account({ account: { address, meta }, className, filter, isFavorite, setBalance, toggleFavorite }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const { queueExtrinsic } = useContext(StatusContext);
   const api = useApi();
@@ -82,6 +83,7 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, s
   const { flags: { isDevelopment, isExternal, isHardware, isInjected, isMultisig }, genesisHash, name: accName, onSetGenesisHash, tags } = useAccountInfo(address);
   const [{ democracyUnlockTx }, setUnlockableIds] = useState<DemocracyUnlockable>({ democracyUnlockTx: null, ids: [] });
   const [isVisible, setIsVisible] = useState(true);
+  const [otherBalance, setotherBalance] = useState(null);
   const [isBackupOpen, toggleBackup] = useToggle();
   const [isDeriveOpen, toggleDerive] = useToggle();
   const [isForgetOpen, toggleForget] = useToggle();
@@ -113,6 +115,36 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, s
   useEffect((): void => {
     balancesAll && setBalance(address, balancesAll.freeBalance);
   }, [address, balancesAll, setBalance]);
+
+  useEffect((): void => {
+    let DOT, vDOT, KSM, vKSM, EOS, vEOS;
+    (async () => {
+      await api.api.query.assets.accountAssets([0, 'Token', address], (res) => {
+        DOT = Number(res['balance']);
+
+      })
+      await api.api.query.assets.accountAssets([0, 'vToken', address], (res) => {
+        vDOT = Number(res['balance']);
+      })
+      await api.api.query.assets.accountAssets([1, 'Token', address], (res) => {
+        KSM = Number(res['balance']);
+      })
+      await api.api.query.assets.accountAssets([1, 'vToken', address], (res) => {
+        vKSM = Number(res['balance']);
+      })
+      await api.api.query.assets.accountAssets([2, 'Token', address], (res) => {
+        EOS = Number(res['balance']);
+      })
+      await api.api.query.assets.accountAssets([2, 'vToken', address], (res) => {
+        vEOS = Number(res['balance']);
+      })
+      setotherBalance(
+        { DOT, vDOT, KSM, vKSM, EOS, vEOS }
+      );
+    })();
+  }, []);
+
+
 
   useEffect((): void => {
     setIsVisible(
@@ -348,6 +380,7 @@ function Account ({ account: { address, meta }, className, filter, isFavorite, s
           withBalanceToggle
           withExtended={false}
           BNC={BNC}
+          otherBalance={otherBalance || {}}
         />
       </td>
       <td className='button'>

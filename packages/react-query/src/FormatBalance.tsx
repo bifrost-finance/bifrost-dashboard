@@ -51,9 +51,14 @@ function format(value: Compact<any> | BN | string, currency: string, BNC?: boole
 //   return <>{prefix}.<span className='balance-postfix'>{`000${postfix || ''}`.slice(-3)}</span>{unit === '-' ? '' : unit}</>;
 // }
 
-function FormatBalance({ children, className, isShort, label, BNC, labelPost, value, withSi }: Props): React.ReactElement<Props> {
+function FormatBalance({ children, className, isShort, label, BNC, labelPost, value, withSi,currency}: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
-  const [currency] = useState(formatBalance.getDefaults().unit);
+  let inputcurrency;
+  if (currency) {
+    inputcurrency = currency;
+  } else {
+    [inputcurrency] = useState(formatBalance.getDefaults().unit);
+  }
 
   return (
     <div className={`ui--FormatBalance ${className}`}>
@@ -63,7 +68,7 @@ function FormatBalance({ children, className, isShort, label, BNC, labelPost, va
         value
           ? value === 'all'
             ? t('everything')
-            : BNC ? format(value, currency, BNC, withSi, isShort) : format(value, currency, withSi, isShort)
+            : BNC ? format(value, inputcurrency, BNC, withSi, isShort) : format(value, inputcurrency, withSi, isShort)
           : '-'
       }</span>{labelPost}{children}
     </div>

@@ -217,7 +217,9 @@ function renderValidatorPrefs({ stakingInfo, withValidatorPrefs = false }: Props
 }
 
 function renderBalances (props: Props, allAccounts: string[], t: (key: string) => string): React.ReactNode {
-  const { address, balancesAll, democracyLocks, BNC, stakingInfo, withBalance = true, withBalanceToggle = false } = props;
+  const { address, balancesAll, democracyLocks, BNC, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance } = props;
+  console.log('*******' + JSON.stringify(otherBalance));
+  const { DOT = 0, vDOT = 0,KSM =0,vKSM = 0,EOS =0,vEOS = 0 }= otherBalance;
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
     : withBalance || false;
@@ -351,23 +353,33 @@ function renderBalances (props: Props, allAccounts: string[], t: (key: string) =
     return (
       <>
         <Expander
-          summary={<FormatBalance value={balancesAll?.votingBalance} />}
-          BNCsummary={<FormatBalance
-            label={<>
-              <Icon
-                data-for={`${address}-info circle`}
-                data-tip
-                name='info circle'
-              />
+          summary={
+            <>
+              <FormatBalance value={balancesAll?.votingBalance} />
+              <FormatBalance
+                label={<>
+                  <Icon
+                    data-for={`${address}-info circle`}
+                    data-tip
+                    name='info circle'
+                  />
 
-              <Tooltip
-                text={'TIPS：主网凭证，不可交易，Bifrost 主网上线时可 1:1 兑换'}
-                trigger={`${address}-info circle`} />
+                  <Tooltip
+                    text={'TIPS：主网凭证，不可交易，Bifrost 主网上线时可 1:1 兑换'}
+                    trigger={`${address}-info circle`} />
+                </>
+                }
+                value={BNC?.toJSON()} BNC
+              />
+              <FormatBalance value={DOT} currency='DOT' />
+              <FormatBalance value={vDOT} currency='vDOT' />
+              <FormatBalance value={KSM}  currency='KSM' />
+              <FormatBalance value={vKSM}  currency='vKSM' />
+              <FormatBalance value={EOS}  currency='EOS' />
+              <FormatBalance value={vEOS}  currency='vEOS' />
             </>
-            }
-            value={BNC?.toJSON()} BNC
-          />
-          }>
+          }
+          >
           <div className='body column'>
             {allItems}
           </div>

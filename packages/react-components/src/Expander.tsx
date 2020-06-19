@@ -113,6 +113,7 @@ export default React.memo(styled(Expander)`
     overflow: hidden;
 
     .ui--Expander-summary-header > .ui--FormatBalance {
+      display:block;
       min-width: 10rem;
     }
 
