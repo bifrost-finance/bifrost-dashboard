@@ -117,29 +117,32 @@ function Account({ account: { address, meta }, className, filter, isFavorite, se
   }, [address, balancesAll, setBalance]);
 
   useEffect((): void => {
-    let DOT, vDOT, KSM, vKSM, EOS, vEOS;
+    let aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
     (async () => {
-      await api.api.query.assets.accountAssets([0, 'Token', address], (res) => {
-        DOT = Number(res['balance']);
-
+      await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
+        aUSD = Number(res['balance']);
       })
-      await api.api.query.assets.accountAssets([0, 'vToken', address], (res) => {
+
+      await api.api.query.assets.accountAssets(['DOT', address], (res) => {
+        DOT = Number(res['balance']);
+      })
+      await api.api.query.assets.accountAssets(['vDOT', address], (res) => {
         vDOT = Number(res['balance']);
       })
-      await api.api.query.assets.accountAssets([1, 'Token', address], (res) => {
+      await api.api.query.assets.accountAssets(['KSM', address], (res) => {
         KSM = Number(res['balance']);
       })
-      await api.api.query.assets.accountAssets([1, 'vToken', address], (res) => {
+      await api.api.query.assets.accountAssets(['vKSM', address], (res) => {
         vKSM = Number(res['balance']);
       })
-      await api.api.query.assets.accountAssets([2, 'Token', address], (res) => {
+      await api.api.query.assets.accountAssets(['EOS', address], (res) => {
         EOS = Number(res['balance']);
       })
-      await api.api.query.assets.accountAssets([2, 'vToken', address], (res) => {
+      await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
         vEOS = Number(res['balance']);
       })
       setotherBalance(
-        { DOT, vDOT, KSM, vKSM, EOS, vEOS }
+        { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
       );
     })();
   }, []);
