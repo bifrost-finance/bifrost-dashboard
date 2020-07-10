@@ -109,7 +109,7 @@ function SideBar ({ className, collapse, handleResize, isCollapsed, isMenuOpen, 
             <Menu.Item className='apps--SideBar-Item'>
               <a
                 className='apps--SideBar-Item-NavLink'
-                href='https://github.com/bifrost-codes'
+                href='https://github.com/bifrost-finance'
                 rel='noopener noreferrer'
                 target='_blank'
               >
