@@ -51,11 +51,11 @@ function FormatBalance ({ children, className = '', isShort, label, BNC, labelPo
       {BNC ? value
         ? label : '' : (label || '')}
       <span className='ui--FormatBalance-value'>{
-        value
-          ? value === 'all'
-            ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
-            : BNC ? format(value, BNC,currency, withSi, isShort, labelPost)
-          : `-${labelPost || ''}`
+          value
+              ? value === 'all'
+              ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
+              : BNC ? format(value, currency, BNC, withSi, isShort, labelPost) : format(value, currency, withSi, isShort, labelPost)
+              : `-${labelPost || ''}`
       }</span>
     </div>
   );
