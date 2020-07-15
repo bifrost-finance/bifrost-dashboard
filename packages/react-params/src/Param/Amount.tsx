@@ -1,4 +1,4 @@
-// Copyright 2017-2020 @polkadot/react-components authors & contributors
+// Copyright 2017-2020 @polkadot/react-params authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
@@ -13,13 +13,13 @@ import { bnToBn, formatNumber } from '@polkadot/util';
 
 import Bare from './Bare';
 
-function Amount ({ className, defaultValue: { value }, isDisabled, isError, label, onChange, onEnter, style, withLabel }: Props): React.ReactElement<Props> {
+function Amount ({ className = '', defaultValue: { value }, isDisabled, isError, label, onChange, onEnter, withLabel }: Props): React.ReactElement<Props> {
   const [defaultValue] = useState(
     isDisabled
       ? (
         value instanceof ClassOf(registry, 'AccountIndex')
           ? value.toString()
-          : formatNumber(value)
+          : formatNumber(value as number)
       )
       : bnToBn((value as number) || 0).toString()
   );
@@ -34,10 +34,7 @@ function Amount ({ className, defaultValue: { value }, isDisabled, isError, labe
   );
 
   return (
-    <Bare
-      className={className}
-      style={style}
-    >
+    <Bare className={className}>
       <Input
         className='full'
         defaultValue={defaultValue}

@@ -7,7 +7,8 @@ import { SortedTargets } from '../types';
 
 import React, { useCallback, useState } from 'react';
 import { Button, Modal, TxButton } from '@polkadot/react-components';
-import { useToggle } from '@polkadot/react-hooks';
+import { useApi, useToggle } from '@polkadot/react-hooks';
+import { isFunction } from '@polkadot/util';
 
 import { useTranslation } from '../translate';
 import BondPartial from './partials/Bond';
@@ -25,10 +26,12 @@ const NUM_STEPS = 2;
 
 function NewNominator ({ isInElection, next, targets, validators }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
+  const { api } = useApi();
   const [isVisible, toggleVisible] = useToggle();
   const [{ bondOwnTx, bondTx, controllerId, controllerTx, stashId }, setBondInfo] = useState<BondInfo>({});
   const [{ nominateTx }, setNominateInfo] = useState<NominateInfo>({});
   const [step, setStep] = useState(1);
+  const isDisabled = isInElection || !isFunction(api.tx.utility?.batch);
 
   const _nextStep = useCallback(
     () => setStep((step) => step + 1),
@@ -53,15 +56,15 @@ function NewNominator ({ isInElection, next, targets, validators }: Props): Reac
   return (
     <>
       <Button
-        icon='add'
-        isDisabled={isInElection}
+        icon='plus'
+        isDisabled={isDisabled}
         key='new-nominator'
-        label={t('Nominator')}
+        label={t<string>('Nominator')}
         onClick={_toggle}
       />
       {isVisible && (
         <Modal
-          header={t('Setup Nominator {{step}}/{{NUM_STEPS}}', {
+          header={t<string>('Setup Nominator {{step}}/{{NUM_STEPS}}', {
             replace: {
               NUM_STEPS,
               step
@@ -87,19 +90,19 @@ function NewNominator ({ isInElection, next, targets, validators }: Props): Reac
           </Modal.Content>
           <Modal.Actions onCancel={_toggle}>
             <Button
-              icon='step backward'
+              icon='step-backward'
               isDisabled={step === 1}
-              label={t('prev')}
+              label={t<string>('prev')}
               onClick={_prevStep}
             />
             {step === NUM_STEPS
               ? (
                 <TxButton
                   accountId={stashId}
-                  icon='sign-in'
+                  icon='sign-in-alt'
                   isDisabled={!bondTx || !nominateTx || !stashId || !controllerId}
                   isPrimary
-                  label={t('Bond & Nominate')}
+                  label={t<string>('Bond & Nominate')}
                   onStart={_toggle}
                   params={[
                     stashId === controllerId
@@ -111,10 +114,10 @@ function NewNominator ({ isInElection, next, targets, validators }: Props): Reac
               )
               : (
                 <Button
-                  icon='step forward'
+                  icon='step-forward'
                   isDisabled={!bondTx}
                   isPrimary
-                  label={t('next')}
+                  label={t<string>('next')}
                   onClick={_nextStep}
                 />
               )

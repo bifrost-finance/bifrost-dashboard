@@ -4,16 +4,22 @@
 
 import centrifugeChain from './centrifuge-chain';
 import edgeware from './edgeware';
-import encointerNode from './encointer-node';
+import encointerNodeNotee from './encointer-node-notee';
+import encointerNodeTeeproxy from './encointer-node-teeproxy';
 import kulupu from './kulupu';
 import nodeTemplate from './node-template';
+import stablePoc from './stable-poc';
 import bifrost from './bifrost';
 
 export default {
   'centrifuge-chain': centrifugeChain,
   edgeware,
-  'encointer-node': encointerNode,
+  'encointer-node': encointerNodeNotee,
+  'encointer-node-notee': encointerNodeNotee,
+  'encointer-node-teeproxy': encointerNodeTeeproxy,
   kulupu,
   'node-template': nodeTemplate,
+  'stable-poc': stablePoc,
+  stable_poc: stablePoc,
   'bifrost': bifrost
 };

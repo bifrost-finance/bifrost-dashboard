@@ -25,13 +25,13 @@ function Proposals ({ className }: Props): React.ReactElement<Props> {
     [t('proposer'), 'address'],
     [t('locked'), 'ui--media-1200'],
     [undefined, undefined, 2],
-    [undefined, 'ui--media-1000']
+    [undefined, 'mini ui--media-1000']
   ], [t]);
 
   return (
     <Table
       className={className}
-      empty={proposals && t('No active proposals')}
+      empty={proposals && t<string>('No active proposals')}
       header={header}
     >
       {proposals?.map((proposal): React.ReactNode => (

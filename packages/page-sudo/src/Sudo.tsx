@@ -3,24 +3,28 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ComponentProps as Props } from './types';
 
 import BN from 'bn.js';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Icon, Extrinsic, Toggle, TxButton, InputNumber } from '@polkadot/react-components';
 import { useApi, useToggle } from '@polkadot/react-hooks';
+import { BN_ZERO } from '@polkadot/util';
 
 import { useTranslation } from './translate';
 
-const ZERO = new BN(0);
+interface Props {
+  className?: string;
+  isMine: boolean;
+  sudoKey?: string;
+}
 
-function Propose ({ className, isMine, sudoKey }: Props): React.ReactElement<Props> {
+function Sudo ({ className, isMine, sudoKey }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api, apiDefaultTxSudo } = useApi();
   const [withWeight, toggleWithWeight] = useToggle();
   const [method, setMethod] = useState<SubmittableExtrinsic<'promise'> | null>(null);
-  const [weight, setWeight] = useState<BN>(ZERO);
+  const [weight, setWeight] = useState<BN>(BN_ZERO);
 
   const _onChangeExtrinsic = useCallback(
     (method: SubmittableExtrinsic<'promise'> | null = null) =>
@@ -29,7 +33,7 @@ function Propose ({ className, isMine, sudoKey }: Props): React.ReactElement<Pro
   );
 
   const _onChangeWeight = useCallback(
-    (weight: BN = ZERO) => setWeight(weight),
+    (weight: BN = BN_ZERO) => setWeight(weight),
     []
   );
 
@@ -38,16 +42,16 @@ function Propose ({ className, isMine, sudoKey }: Props): React.ReactElement<Pro
       <section className={className}>
         <Extrinsic
           defaultValue={apiDefaultTxSudo}
-          label={t('submit the following change')}
+          label={t<string>('submit the following change')}
           onChange={_onChangeExtrinsic}
         />
         <br />
         {withWeight && (
           <InputNumber
-            help={t('The unchecked weight as specified for the sudoUncheckedWeight call.')}
-            isError={weight.eq(ZERO)}
+            help={t<string>('The unchecked weight as specified for the sudoUncheckedWeight call.')}
+            isError={weight.eq(BN_ZERO)}
             isZeroable={false}
-            label={t('unchecked weight for this call')}
+            label={t<string>('unchecked weight for this call')}
             onChange={_onChangeWeight}
             value={weight}
           />
@@ -57,8 +61,8 @@ function Propose ({ className, isMine, sudoKey }: Props): React.ReactElement<Pro
             className='sudoToggle'
             label={
               withWeight
-                ? t('sudo with unchecked weight parameter')
-                : t('sudo without unchecked weight parameter')
+                ? t<string>('sudo with unchecked weight parameter')
+                : t<string>('sudo without unchecked weight parameter')
             }
             onChange={toggleWithWeight}
             value={withWeight}
@@ -67,9 +71,9 @@ function Propose ({ className, isMine, sudoKey }: Props): React.ReactElement<Pro
         <Button.Group>
           <TxButton
             accountId={sudoKey}
-            icon='sign-in'
-            isDisabled={!method || (withWeight ? weight.eq(ZERO) : false)}
-            label={t('Submit Sudo')}
+            icon='sign-in-alt'
+            isDisabled={!method || (withWeight ? weight.eq(BN_ZERO) : false)}
+            label={t<string>('Submit Sudo')}
             params={
               withWeight
                 ? [method, weight]
@@ -87,14 +91,14 @@ function Propose ({ className, isMine, sudoKey }: Props): React.ReactElement<Pro
     : (
       <article className='error padded'>
         <div>
-          <Icon name='ban' />
-          {t('You do not have access to the current sudo key')}
+          <Icon icon='ban' />
+          {t<string>('You do not have access to the current sudo key')}
         </div>
       </article>
     );
 }
 
-export default React.memo(styled(Propose)`
+export default React.memo(styled(Sudo)`
   .sudoToggle {
     width: 100%;
     text-align: right;

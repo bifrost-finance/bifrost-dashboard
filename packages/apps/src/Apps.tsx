@@ -7,6 +7,7 @@ import { BareProps as Props } from '@polkadot/react-components/types';
 import React, { useCallback, useMemo, useState } from 'react';
 import store from 'store';
 import styled from 'styled-components';
+import AccountSidebar from '@polkadot/app-accounts/Sidebar';
 import { getSystemChainColor } from '@polkadot/apps-config/ui';
 import { defaultColor } from '@polkadot/apps-config/ui/general';
 import GlobalStyle from '@polkadot/react-components/styles';
@@ -29,10 +30,10 @@ interface SidebarState {
 export const PORTAL_ID = 'portals';
 
 function saveSidebar (sidebar: SidebarState): SidebarState {
-  return store.set('sidebar', sidebar);
+  return store.set('sidebar', sidebar) as SidebarState;
 }
 
-function Apps ({ className }: Props): React.ReactElement<Props> {
+function Apps ({ className = '' }: Props): React.ReactElement<Props> {
   const { systemChain, systemName } = useApi();
   const [sidebar, setSidebar] = useState<SidebarState>({
     isCollapsed: false,
@@ -75,23 +76,25 @@ function Apps ({ className }: Props): React.ReactElement<Props> {
   return (
     <>
       <GlobalStyle uiHighlight={defaultColor || uiHighlight} />
-      <div className={`apps--Wrapper ${isCollapsed ? 'collapsed' : 'expanded'} ${isMenu && 'fixed'} ${isMenuOpen && 'menu-open'} theme--default ${className}`}>
-        <div
-          className={`apps--Menu-bg ${isMenuOpen ? 'open' : 'closed'}`}
-          onClick={_handleResize}
-        />
-        <SideBar
-          collapse={_collapse}
-          handleResize={_handleResize}
-          isCollapsed={isCollapsed}
-          isMenuOpen={isMenuOpen}
-          toggleMenu={_toggleMenu}
-        />
-        <Signer>
-          <Content />
-        </Signer>
-        <ConnectingOverlay />
-        <div id={PORTAL_ID} />
+      <div className={`apps--Wrapper ${isCollapsed ? 'collapsed' : 'expanded'}${isMenu ? ' fixed' : ''}${isMenuOpen ? ' menu-open' : ''} theme--default ${className}`}>
+        <AccountSidebar>
+          <div
+            className={`apps--Menu-bg ${isMenuOpen ? 'open' : 'closed'}`}
+            onClick={_handleResize}
+          />
+          <SideBar
+            collapse={_collapse}
+            handleResize={_handleResize}
+            isCollapsed={isCollapsed}
+            isMenuOpen={isMenuOpen}
+            toggleMenu={_toggleMenu}
+          />
+          <Signer>
+            <Content />
+          </Signer>
+          <ConnectingOverlay />
+          <div id={PORTAL_ID} />
+        </AccountSidebar>
       </div>
       <WarmUp />
     </>
@@ -106,7 +109,7 @@ export default React.memo(styled(Apps)`
 
   &.theme--default {
     a.apps--SideBar-Item-NavLink {
-      color: #f5f5f5;
+      color: #f5f4f3;
       display: block;
       padding: 0.75em 0.75em;
       white-space: nowrap;
@@ -120,13 +123,13 @@ export default React.memo(styled(Apps)`
     }
 
     a.apps--SideBar-Item-NavLink-active {
-      background: #f5f5f5;
+      background: #f5f4f3;
       border-radius: 0.28571429rem 0 0 0.28571429rem;
       /* border-bottom: 2px solid transparent; */
       color: #3f3f3f;
 
       &:hover {
-        background: #f5f5f5;
+        background: #f5f4f3;
         color: #3f3f3f;
         margin-right: 0;
       }

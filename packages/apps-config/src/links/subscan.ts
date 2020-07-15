@@ -6,7 +6,12 @@ import BN from 'bn.js';
 
 export default {
   chains: {
-    Bifrost: 'bifrost',
+    Edgeware: 'edgeware',
+    Kulupu: 'kulupu',
+    Kusama: 'kusama',
+    'Kusama CC3': 'kusama',
+    'Polkadot CC1': 'polkadot-cc1',
+    Westend: 'westend'
   },
   create: (chain: string, path: string, data: BN | number | string): string =>
     `https://${chain}.subscan.io/${path}/${data.toString()}`,

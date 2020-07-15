@@ -5,39 +5,49 @@
 import { KeyedEvent } from './types';
 
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { Table } from '@polkadot/react-components';
+import { formatNumber } from '@polkadot/util';
 
 import Event from './Event';
 import { useTranslation } from './translate';
 
 interface Props {
+  className?: string;
   emptyLabel?: React.ReactNode;
   events?: KeyedEvent[];
   eventClassName?: string;
   label?: React.ReactNode;
 }
 
-function Events ({ emptyLabel, eventClassName, events, label }: Props): React.ReactElement<Props> {
+function Events ({ className = '', emptyLabel, eventClassName, events, label }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
 
   const header = useMemo(() => [
-    [label || t('recent events'), 'start']
+    [label || t<string>('recent events'), 'start']
   ], [label, t]);
 
   return (
     <Table
-      empty={emptyLabel || t('No events available')}
+      className={className}
+      empty={emptyLabel || t<string>('No events available')}
       header={header}
     >
       {events && events
         .filter(({ record: { event: { method, section } } }) => !!method && !!section)
-        .map(({ key, record }): React.ReactNode => (
+        .map(({ blockHash, blockNumber, index, key, record }): React.ReactNode => (
           <tr
             className={eventClassName}
             key={key}
           >
             <td className='overflow'>
               <Event value={record} />
+              {blockNumber && (
+                <Link
+                  className='event-link'
+                  to={`/explorer/query/${blockHash || ''}`}>{formatNumber(blockNumber)}-{index}</Link>
+              )}
             </td>
           </tr>
         ))
@@ -46,4 +56,14 @@ function Events ({ emptyLabel, eventClassName, events, label }: Props): React.Re
   );
 }
 
-export default React.memo(Events);
+export default React.memo(styled(Events)`
+  td.overflow {
+    position: relative;
+
+    .event-link {
+      position: absolute;
+      right: 0.75rem;
+      top: 0.5rem;
+    }
+  }
+`);

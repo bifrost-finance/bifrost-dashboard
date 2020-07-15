@@ -1,4 +1,4 @@
-// Copyright 2017-2020 @polkadot/react-components authors & contributors
+// Copyright 2017-2020 @polkadot/react-params authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
@@ -10,8 +10,8 @@ import keyring from '@polkadot/ui-keyring';
 
 import Bare from './Bare';
 
-function Account ({ className, defaultValue: { value }, isDisabled, isError, label, onChange, style, withLabel }: Props): React.ReactElement<Props> {
-  const [defaultValue] = useState(value?.toString());
+function Account ({ className = '', defaultValue: { value }, isDisabled, isError, isInOption, label, onChange, withLabel }: Props): React.ReactElement<Props> {
+  const [defaultValue] = useState((value as string)?.toString());
 
   const _onChange = useCallback(
     (value?: string | null): void => {
@@ -36,13 +36,11 @@ function Account ({ className, defaultValue: { value }, isDisabled, isError, lab
   );
 
   return (
-    <Bare
-      className={className}
-      style={style}
-    >
+    <Bare className={className}>
       <InputAddress
         className='full'
         defaultValue={defaultValue}
+        hideAddress={isInOption}
         isDisabled={isDisabled}
         isError={isError}
         isInput

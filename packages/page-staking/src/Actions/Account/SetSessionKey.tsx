@@ -22,7 +22,7 @@ function SetSessionKey ({ controllerId, onClose, stashId }: Props): React.ReactE
 
   return (
     <Modal
-      header={t('Set Session Key')}
+      header={t<string>('Set Session Key')}
       size='large'
     >
       <Modal.Content>
@@ -37,10 +37,10 @@ function SetSessionKey ({ controllerId, onClose, stashId }: Props): React.ReactE
         <TxButton
           accountId={controllerId}
           extrinsic={sessionTx}
-          icon='sign-in'
+          icon='sign-in-alt'
           isDisabled={!sessionTx}
           isPrimary
-          label={t('Set Session Key')}
+          label={t<string>('Set Session Key')}
           onStart={onClose}
         />
       </Modal.Actions>

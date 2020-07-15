@@ -17,7 +17,7 @@ type SortedAddress = { address: string; isFavorite: boolean };
 
 const STORE_FAVS = 'accounts:favorites';
 
-function Overview ({ className, onStatusChange }: Props): React.ReactElement<Props> {
+function Overview ({ className = '', onStatusChange }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { allAddresses } = useAddresses();
   const [isCreateOpen, toggleCreate] = useToggle(false);
@@ -44,8 +44,8 @@ function Overview ({ className, onStatusChange }: Props): React.ReactElement<Pro
     [t('tags'), 'start'],
     [t('transactions'), 'ui--media-1500'],
     [t('balances')],
-    [undefined, undefined],
-    [undefined, 'ui--media-1400']
+    [],
+    [undefined, 'mini ui--media-1400']
   ], [t]);
 
   const filter = useMemo(() => (
@@ -53,7 +53,7 @@ function Overview ({ className, onStatusChange }: Props): React.ReactElement<Pro
       <Input
         autoFocus
         isFull
-        label={t('filter by name or tags')}
+        label={t<string>('filter by name or tags')}
         onChange={setFilter}
         value={filterOn}
       />
@@ -64,8 +64,8 @@ function Overview ({ className, onStatusChange }: Props): React.ReactElement<Pro
     <div className={className}>
       <Button.Group>
         <Button
-          icon='add'
-          label={t('Add contact')}
+          icon='plus'
+          label={t<string>('Add contact')}
           onClick={toggleCreate}
         />
       </Button.Group>
@@ -76,7 +76,7 @@ function Overview ({ className, onStatusChange }: Props): React.ReactElement<Pro
         />
       )}
       <Table
-        empty={t('no addresses saved yet, add any existing address')}
+        empty={t<string>('no addresses saved yet, add any existing address')}
         filter={filter}
         header={header}
       >

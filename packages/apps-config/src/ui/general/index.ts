@@ -6,7 +6,8 @@ const defaultColor = undefined; // '#f19135'
 const emptyColor = '#999';
 
 const chainKulupu = '#003366';
-const chainKusama = '#d32e79';
+const chainPolkadot = '#e6007a';
+const chainKusama = '#000'; // '#d32e79';
 const chainWestend = '#da68a7';
 const chainBifrost = '#002cc3';
 
@@ -18,10 +19,12 @@ const nodeBifrost = '#002cc3';
 // overrides based on the actual matched chain name
 const chainColors: Record<string, any> = [
   ['Kulupu', chainKulupu],
-  ['Kusama', chainKusama], // new name after CC3
+  ['Kusama', chainKusama],
   ['Kusama CC1', chainKusama],
   ['Kusama CC2', chainKusama],
   ['Kusama CC3', chainKusama],
+  ['Polkadot', chainPolkadot],
+  ['Polkadot CC1', chainPolkadot],
   ['Westend', chainWestend],
   ['Bifrost', chainBifrost]
 ].reduce((colors, [chain, color]): Record<string, any> => ({

@@ -36,7 +36,7 @@ function Seconding ({ depositors, image, proposalId }: Props): React.ReactElemen
     <>
       {isSecondingOpen && (
         <Modal
-          header={t('Second proposal')}
+          header={t<string>('Second proposal')}
           size='large'
         >
           <Modal.Content>
@@ -48,31 +48,31 @@ function Seconding ({ depositors, image, proposalId }: Props): React.ReactElemen
                 />
               </Modal.Column>
               <Modal.Column>
-                <p>{t('The proposal is in the queue for future referendums. One proposal from this list will move forward to voting.')}</p>
+                <p>{t<string>('The proposal is in the queue for future referendums. One proposal from this list will move forward to voting.')}</p>
               </Modal.Column>
             </Modal.Columns>
             <Modal.Columns>
               <Modal.Column>
                 <InputAddress
-                  help={t('Select the account you wish to second with. This will lock your funds until the proposal is either approved or rejected')}
-                  label={t('second with account')}
+                  help={t<string>('Select the account you wish to second with. This will lock your funds until the proposal is either approved or rejected')}
+                  label={t<string>('second with account')}
                   onChange={setAccountId}
                   type='account'
                   withLabel
                 />
               </Modal.Column>
               <Modal.Column>
-                <p>{t('Seconding a proposal that indicates your backing for the proposal. Proposals with greater interest moves up the queue for potential next referendums.')}</p>
+                <p>{t<string>('Seconding a proposal that indicates your backing for the proposal. Proposals with greater interest moves up the queue for potential next referendums.')}</p>
               </Modal.Column>
             </Modal.Columns>
           </Modal.Content>
           <Modal.Actions onCancel={toggleSeconding}>
             <TxButton
               accountId={accountId}
-              icon='sign-in'
+              icon='sign-in-alt'
               isDisabled={!accountId || isDepositor}
               isPrimary
-              label={t('Second')}
+              label={t<string>('Second')}
               onStart={toggleSeconding}
               params={
                 api.tx.democracy.second.meta.args.length === 2
@@ -85,8 +85,8 @@ function Seconding ({ depositors, image, proposalId }: Props): React.ReactElemen
         </Modal>
       )}
       <Button
-        icon='toggle off'
-        label={t('Second')}
+        icon='toggle-off'
+        label={t<string>('Second')}
         onClick={toggleSeconding}
       />
     </>

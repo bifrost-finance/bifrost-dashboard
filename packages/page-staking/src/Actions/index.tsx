@@ -12,6 +12,7 @@ import { Button, Table } from '@polkadot/react-components';
 import { useCall, useApi } from '@polkadot/react-hooks';
 import { FormatBalance } from '@polkadot/react-query';
 import { Option } from '@polkadot/types';
+import { BN_ZERO } from '@polkadot/util';
 
 import ElectionBanner from '../ElectionBanner';
 import { useTranslation } from '../translate';
@@ -34,7 +35,22 @@ interface State {
   foundStashes?: StakerState[];
 }
 
-function Actions ({ className, isInElection, next, ownStashes, targets, validators }: Props): React.ReactElement<Props> {
+function sortStashes (a: StakerState, b: StakerState): number {
+  return (a.isStashValidating ? 1 : (a.isStashNominating ? 5 : 99)) - (b.isStashValidating ? 1 : (b.isStashNominating ? 5 : 99));
+}
+
+function extractState (ownStashes: StakerState[]): State {
+  return {
+    bondedTotal: ownStashes.reduce((total: BN, { stakingLedger }) =>
+      stakingLedger
+        ? total.add(stakingLedger.total.unwrap())
+        : total,
+    BN_ZERO),
+    foundStashes: ownStashes.sort(sortStashes)
+  };
+}
+
+function Actions ({ className = '', isInElection, next, ownStashes, targets, validators }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
   const activeEra = useCall<EraIndex | undefined>(api.query.staking?.activeEra, [], {
@@ -43,16 +59,7 @@ function Actions ({ className, isInElection, next, ownStashes, targets, validato
   const [{ bondedTotal, foundStashes }, setState] = useState<State>({});
 
   useEffect((): void => {
-    ownStashes && setState({
-      bondedTotal: ownStashes.reduce((total: BN, { stakingLedger }) =>
-        stakingLedger
-          ? total.add(stakingLedger.total.unwrap())
-          : total,
-      new BN(0)),
-      foundStashes: ownStashes.sort((a, b) =>
-        (a.isStashValidating ? 1 : (a.isStashNominating ? 5 : 99)) - (b.isStashValidating ? 1 : (b.isStashNominating ? 5 : 99))
-      )
-    });
+    ownStashes && setState(extractState(ownStashes));
   }, [ownStashes]);
 
   const header = useMemo(() => [
@@ -87,7 +94,7 @@ function Actions ({ className, isInElection, next, ownStashes, targets, validato
       </Button.Group>
       <ElectionBanner isInElection={isInElection} />
       <Table
-        empty={foundStashes && t('No funds staked yet. Bond funds to validate or nominate a validator')}
+        empty={foundStashes && t<string>('No funds staked yet. Bond funds to validate or nominate a validator')}
         footer={footer}
         header={header}
       >

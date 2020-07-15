@@ -31,9 +31,9 @@ interface Selected {
 }
 
 function autoPick (targets: SortedTargets): string[] {
-  return (targets.validators || []).reduce((result: string[], { key, numNominators }): string[] => {
+  return (targets.validators || []).reduce((result: string[], { isElected, isFavorite, key, numNominators, rewardPayout }): string[] => {
     if (result.length < MAX_NOMINATIONS) {
-      if (numNominators && (numNominators < MAX_PAYOUTS)) {
+      if (numNominators && (numNominators < MAX_PAYOUTS) && (isElected || isFavorite) && !rewardPayout.isZero()) {
         result.push(key);
       }
     }
@@ -53,7 +53,7 @@ function initialPick (targets: SortedTargets): Selected {
   };
 }
 
-function Nominate ({ className, controllerId, next, nominating, onChange, stashId, targets, validators, withSenders }: Props): React.ReactElement<Props> {
+function Nominate ({ className = '', controllerId, next, nominating, onChange, stashId, targets, validators, withSenders }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
   const [favorites] = useFavorites(STORE_FAVS_BASE);
@@ -114,16 +114,16 @@ function Nominate ({ className, controllerId, next, nominating, onChange, stashI
             <InputAddress
               defaultValue={stashId}
               isDisabled
-              label={t('stash account')}
+              label={t<string>('stash account')}
             />
             <InputAddress
               defaultValue={controllerId}
               isDisabled
-              label={t('controller account')}
+              label={t<string>('controller account')}
             />
           </Modal.Column>
           <Modal.Column>
-            <p>{t('The stash that is to be affected. The transaction will be sent from the associated controller account.')}</p>
+            <p>{t<string>('The stash that is to be affected. The transaction will be sent from the associated controller account.')}</p>
           </Modal.Column>
         </Modal.Columns>
       )}
@@ -133,28 +133,30 @@ function Nominate ({ className, controllerId, next, nominating, onChange, stashI
             ? (
               <>
                 <Static
-                  label={t('auto-selected targets for nomination')}
+                  label={t<string>('auto-selected targets for nomination')}
                   value={
                     selected.map((validatorId) => (
                       <AddressMini
+                        className='addressStatic'
+                        isHighlight={favorites.includes(validatorId)}
                         key={validatorId}
                         value={validatorId}
                       />
                     ))
                   }
                 />
-                <article className='warning'>{t('The auto-selection is done on the current profitability of the validators taking your favorites into account. It is adjusted based on the commission and current range of backing for the validator. The calculation may and will change over time, so it is rather a selection based on the current state of the network, not a predictor of future profitability.')}</article>
+                <article className='warning'>{t<string>('The auto-selection is done on the current profitability of the validators taking your favorites into account. It is adjusted based on the commission and current range of backing for the validator. The calculation may and will change over time, so it is rather a selection based on the current state of the network, not a predictor of future profitability.')}</article>
               </>
             )
             : (
               <InputAddressMulti
                 available={available}
-                availableLabel={t('candidate accounts')}
+                availableLabel={t<string>('candidate accounts')}
                 defaultValue={nominating}
-                help={t('Filter available candidates based on name, address or short account index.')}
+                help={t<string>('Filter available candidates based on name, address or short account index.')}
                 maxCount={MAX_NOMINATIONS}
                 onChange={_setSelected}
-                valueLabel={t('nominated accounts')}
+                valueLabel={t<string>('nominated accounts')}
               />
             )
           }
@@ -164,8 +166,8 @@ function Nominate ({ className, controllerId, next, nominating, onChange, stashI
               isDisabled={!targets.validators?.length}
               label={
                 isAutoSelect
-                  ? t('Use an automatic selection of the currently most profitable validators')
-                  : t('Select targets manually (no auto-selection based on current profitability)')
+                  ? t<string>('Use an automatic selection of the currently most profitable validators')
+                  : t<string>('Select targets manually (no auto-selection based on current profitability)')
               }
               onChange={_toggleAutoSelect}
               value={isAutoSelect}
@@ -173,8 +175,8 @@ function Nominate ({ className, controllerId, next, nominating, onChange, stashI
           )}
         </Modal.Column>
         <Modal.Column>
-          <p>{t('Nominators can be selected automatically based on the current on-chain conditions or supplied manually as selected from the list of all currently available validators. In both cases, your favorites appear for the selection.')}</p>
-          <p>{t('Once transmitted the new selection will only take effect in 2 eras since the selection criteria for the next era was done at the end of the previous era. Until then, the nominations will show as inactive.')}</p>
+          <p>{t<string>('Nominators can be selected automatically based on the current on-chain conditions or supplied manually as selected from the list of all currently available validators. In both cases, your favorites appear for the selection.')}</p>
+          <p>{t<string>('Once transmitted the new selection will only take effect in 2 eras since the selection criteria for the next era was done at the end of the previous era. Until then, the nominations will show as inactive.')}</p>
         </Modal.Column>
       </Modal.Columns>
     </div>
@@ -192,8 +194,13 @@ export default React.memo(styled(Nominate)`
     width: 100%;
   }
 
-  .ui--Static .ui--AddressMini.padded {
+  .ui--Static .ui--AddressMini.padded.addressStatic {
     padding-top: 0.5rem;
+
+    .ui--AddressMini-address {
+      min-width: 10rem;
+      max-width: 10rem;
+    }
   }
 
   .shortlist {

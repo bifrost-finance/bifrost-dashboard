@@ -6,7 +6,8 @@ import { BondInfo, SessionInfo, ValidateInfo } from './partials/types';
 
 import React, { useCallback, useState } from 'react';
 import { Button, Modal, TxButton } from '@polkadot/react-components';
-import { useToggle } from '@polkadot/react-hooks';
+import { useApi, useToggle } from '@polkadot/react-hooks';
+import { isFunction } from '@polkadot/util';
 
 import { useTranslation } from '../translate';
 import BondPartial from './partials/Bond';
@@ -21,12 +22,13 @@ const NUM_STEPS = 2;
 
 function NewValidator ({ isInElection }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
+  const { api } = useApi();
   const [isVisible, toggleVisible] = useToggle();
   const [{ bondOwnTx, bondTx, controllerId, controllerTx, stashId }, setBondInfo] = useState<BondInfo>({});
   const [{ sessionTx }, setSessionInfo] = useState<SessionInfo>({});
   const [{ validateTx }, setValidateInfo] = useState<ValidateInfo>({});
-
   const [step, setStep] = useState(1);
+  const isDisabled = isInElection || !isFunction(api.tx.utility?.batch);
 
   const _nextStep = useCallback(
     () => setStep((step) => step + 1),
@@ -52,15 +54,15 @@ function NewValidator ({ isInElection }: Props): React.ReactElement<Props> {
   return (
     <>
       <Button
-        icon='add'
-        isDisabled={isInElection}
+        icon='plus'
+        isDisabled={isDisabled}
         key='new-validator'
-        label={t('Validator')}
+        label={t<string>('Validator')}
         onClick={_toggle}
       />
       {isVisible && (
         <Modal
-          header={t('Setup Validator {{step}}/{{NUM_STEPS}}', {
+          header={t<string>('Setup Validator {{step}}/{{NUM_STEPS}}', {
             replace: {
               NUM_STEPS,
               step
@@ -89,19 +91,19 @@ function NewValidator ({ isInElection }: Props): React.ReactElement<Props> {
           </Modal.Content>
           <Modal.Actions onCancel={_toggle}>
             <Button
-              icon='step backward'
+              icon='step-backward'
               isDisabled={step === 1}
-              label={t('prev')}
+              label={t<string>('prev')}
               onClick={_prevStep}
             />
             {step === NUM_STEPS
               ? (
                 <TxButton
                   accountId={stashId}
-                  icon='sign-in'
+                  icon='sign-in-alt'
                   isDisabled={!bondTx || !sessionTx || !validateTx}
                   isPrimary
-                  label={t('Bond & Validate')}
+                  label={t<string>('Bond & Validate')}
                   onStart={_toggle}
                   params={[
                     controllerId === stashId
@@ -113,10 +115,10 @@ function NewValidator ({ isInElection }: Props): React.ReactElement<Props> {
               )
               : (
                 <Button
-                  icon='step forward'
+                  icon='step-forward'
                   isDisabled={!bondTx}
                   isPrimary
-                  label={t('next')}
+                  label={t<string>('next')}
                   onClick={_nextStep}
                 />
               )}
