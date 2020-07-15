@@ -3481,7 +3481,6 @@ __metadata:
   linkType: hard
 
 "@polkadot/react-params@0.50.0-beta.10, @polkadot/react-params@workspace:packages/react-params":
-"@polkadot/react-params@0.42.0-beta.133, @polkadot/react-params@workspace:packages/react-params":
   version: 0.0.0-use.local
   resolution: "@polkadot/react-params@workspace:packages/react-params"
   dependencies:
