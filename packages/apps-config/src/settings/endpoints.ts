@@ -84,17 +84,17 @@ function createTest (t: TFunction): LinkOption[] {
   return [
     {
         info: 'bifrost',
-        text: t<string>('rpc.bifrost', 'Asgard CC2 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+        text: t<string>('rpc.bifrost.n1', 'Asgard CC2 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
         value: 'wss://n1.testnet.liebi.com'
     },
     {
         info: 'bifrost',
-        text: t<string>('rpc.bifrost', 'Asgard CC2 (n2.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+        text: t<string>('rpc.bifrost.n2', 'Asgard CC2 (n2.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
         value: 'wss://n2.testnet.liebi.com'
     },
     {
         info: 'bifrost',
-        text: t<string>('rpc.bifrost', 'Asgard CC2 (n3.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+        text: t<string>('rpc.bifrost.n3', 'Asgard CC2 (n3.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
         value: 'wss://n3.testnet.liebi.com'
     },
   ];
