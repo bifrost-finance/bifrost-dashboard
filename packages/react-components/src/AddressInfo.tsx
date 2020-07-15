@@ -392,7 +392,6 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
                 }
                 value={BNC} currency='BNC'
               />
-
               {/*<FormatBalance value={aUSD} currency='aUSD' />*/}
               {/*<FormatBalance value={DOT} currency='DOT' />*/}
               {/*<FormatBalance value={vDOT} currency='vDOT' />*/}
