@@ -54,7 +54,6 @@ interface Props {
   stakingInfo?: DeriveStakingAccount;
   withBalance?: boolean | BalanceActiveType;
   withBalanceToggle?: false;
-  BNC?: any;
   withExtended?: boolean | CryptoActiveType;
   withHexSessionId?: (string | null)[];
   withValidatorPrefs?: boolean | ValidatorPrefsType;
@@ -217,9 +216,19 @@ function renderValidatorPrefs ({ stakingInfo, withValidatorPrefs = false }: Prop
 }
 
 function renderBalances (props: Props, allAccounts: string[], t: <T = string> (key: string) => T): React.ReactNode {
-  const { address, balancesAll, democracyLocks, BNC, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance } = props;
-  console.log('*******' + JSON.stringify(otherBalance));
-  const { aUSD = 0, DOT = 0, vDOT = 0, KSM =0, vKSM = 0, EOS = 0, vEOS = 0 }= otherBalance;
+  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance } = props;
+  const { BNC = 0, aUSD = 0, DOT = 0, vDOT = 0, KSM = 0, vKSM = 0, EOS = 0, vEOS = 0 } = otherBalance;
+  console.log('===========>');
+  console.log('BNC ' + BNC);
+  console.log('aUSD ' + aUSD);
+  console.log('DOT ' + DOT);
+  console.log('vDOT ' + vDOT);
+  console.log('KSM ' + KSM);
+  console.log('vKSM ' + vKSM);
+  console.log('EOS ' + EOS);
+  console.log('vEOS ' + vEOS);
+    console.log('<===========');
+
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
     : withBalance || false;
@@ -369,27 +378,27 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
             <>
               <FormatBalance value={balancesAll?.votingBalance} />
               <FormatBalance
-                label={<>
-                  <Icon
-                    data-for={`${address}-info circle`}
-                    data-tip
-                    name='info circle'
-                  />
-
-                  <Tooltip
-                    text={'BNC mainnet voucher, not tradable, exchanged 1:1 when the mainnet is launch'}
-                    trigger={`${address}-info circle`} />
-                </>
+                label={
+                  <>
+                      <Icon
+                        icon='info-circle'
+                        tooltip={`${address}-vested-trigger`}
+                      />
+                      <Tooltip
+                          text={'BNC mainnet voucher, not tradable, exchanged 1:1 when the mainnet is launch'}
+                          trigger={`${address}-vested-trigger`}
+                      />
+                  </>
                 }
-                value={BNC?.toJSON()} BNC
+                value={BNC} currency='BNC'
               />
-              <FormatBalance value={aUSD} currency='aUSD' />
-              <FormatBalance value={DOT} currency='DOT' />
-              <FormatBalance value={vDOT} currency='vDOT' />
-              <FormatBalance value={KSM}  currency='KSM' />
-              <FormatBalance value={vKSM}  currency='vKSM' />
-              <FormatBalance value={EOS}  currency='EOS' />
-              <FormatBalance value={vEOS}  currency='vEOS' />
+              {/*<FormatBalance value={aUSD} currency='aUSD' />*/}
+              {/*<FormatBalance value={DOT} currency='DOT' />*/}
+              {/*<FormatBalance value={vDOT} currency='vDOT' />*/}
+              {/*<FormatBalance value={KSM}  currency='KSM' />*/}
+              {/*<FormatBalance value={vKSM}  currency='vKSM' />*/}
+              {/*<FormatBalance value={EOS}  currency='EOS' />*/}
+              {/*<FormatBalance value={vEOS}  currency='vEOS' />*/}
             </>
           }
           >

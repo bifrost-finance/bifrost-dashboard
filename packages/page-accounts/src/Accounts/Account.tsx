@@ -80,7 +80,6 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   const bestNumber = useCall<BN>(api.api.derive.chain.bestNumber, []);
   const balancesAll = useCall<DeriveBalancesAll>(api.api.derive.balances.all, [address]);
   const democracyLocks = useCall<DeriveDemocracyLock[]>(api.api.derive.democracy?.locks, [address]);
-  const BNC = useCall<DeriveBalancesAll>(api.api.query.voucher.balancesVoucher, [address]);
   const recoveryInfo = useCall<RecoveryConfig | null>(api.api.query.recovery?.recoverable, [address], {
     transform: (opt: Option<RecoveryConfig>) => opt.unwrapOr(null)
   });
@@ -134,32 +133,37 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   }, [address, api, balancesAll, setBalance]);
 
   useEffect((): void => {
-    let aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
+    let BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
     (async () => {
-      await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
-        aUSD = Number(res['balance']);
-      })
+      // await api.api.query.voucher.balancesVoucher([address], (res) => {
+      //   BNC = Number(res?.toJSON());
+      // })
+      // await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
+      //   aUSD = Number(res['balance']);
+      // })
+      // await api.api.query.assets.accountAssets(['DOT', address], (res) => {
+      //   DOT = Number(res['balance']);
+      // })
+      // await api.api.query.assets.accountAssets(['vDOT', address], (res) => {
+      //   vDOT = Number(res['balance']);
+      // })
+      // await api.api.query.assets.accountAssets(['KSM', address], (res) => {
+      //   KSM = Number(res['balance']);
+      // })
+      // await api.api.query.assets.accountAssets(['vKSM', address], (res) => {
+      //   vKSM = Number(res['balance']);
+      // })
+      // await api.api.query.assets.accountAssets(['EOS', address], (res) => {
+      //   EOS = Number(res['balance']);
+      // })
+      // await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
+      //   vEOS = Number(res['balance']);
+      // })
 
-      await api.api.query.assets.accountAssets(['DOT', address], (res) => {
-        DOT = Number(res['balance']);
-      })
-      await api.api.query.assets.accountAssets(['vDOT', address], (res) => {
-        vDOT = Number(res['balance']);
-      })
-      await api.api.query.assets.accountAssets(['KSM', address], (res) => {
-        KSM = Number(res['balance']);
-      })
-      await api.api.query.assets.accountAssets(['vKSM', address], (res) => {
-        vKSM = Number(res['balance']);
-      })
-      await api.api.query.assets.accountAssets(['EOS', address], (res) => {
-        EOS = Number(res['balance']);
-      })
-      await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
-        vEOS = Number(res['balance']);
-      })
+        DOT = 100000000000000000
+
       setotherBalance(
-        { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
+        { BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
       );
     })();
   }, []);
@@ -443,7 +447,6 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
           withBalance
           withBalanceToggle
           withExtended={false}
-          BNC={BNC}
           otherBalance={otherBalance || {}}
         />
       </td>
