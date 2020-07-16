@@ -216,18 +216,8 @@ function renderValidatorPrefs ({ stakingInfo, withValidatorPrefs = false }: Prop
 }
 
 function renderBalances (props: Props, allAccounts: string[], t: <T = string> (key: string) => T): React.ReactNode {
-  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance } = props;
+  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance = {} } = props;
   const { BNC = 0, aUSD = 0, DOT = 0, vDOT = 0, KSM = 0, vKSM = 0, EOS = 0, vEOS = 0 } = otherBalance;
-  console.log('===========>');
-  console.log('BNC ' + BNC);
-  console.log('aUSD ' + aUSD);
-  console.log('DOT ' + DOT);
-  console.log('vDOT ' + vDOT);
-  console.log('KSM ' + KSM);
-  console.log('vKSM ' + vKSM);
-  console.log('EOS ' + EOS);
-  console.log('vEOS ' + vEOS);
-    console.log('<===========');
 
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
@@ -392,6 +382,7 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
                 }
                 value={BNC} currency='BNC'
               />
+
               {/*<FormatBalance value={aUSD} currency='aUSD' />*/}
               {/*<FormatBalance value={DOT} currency='DOT' />*/}
               {/*<FormatBalance value={vDOT} currency='vDOT' />*/}

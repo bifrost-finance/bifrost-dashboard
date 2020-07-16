@@ -134,38 +134,35 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
 
   useEffect((): void => {
     let BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
-    (async () => {
-      // await api.api.query.voucher.balancesVoucher([address], (res) => {
-      //   BNC = Number(res?.toJSON());
-      // })
-      // await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
-      //   aUSD = Number(res['balance']);
-      // })
-      // await api.api.query.assets.accountAssets(['DOT', address], (res) => {
-      //   DOT = Number(res['balance']);
-      // })
-      // await api.api.query.assets.accountAssets(['vDOT', address], (res) => {
-      //   vDOT = Number(res['balance']);
-      // })
-      // await api.api.query.assets.accountAssets(['KSM', address], (res) => {
-      //   KSM = Number(res['balance']);
-      // })
-      // await api.api.query.assets.accountAssets(['vKSM', address], (res) => {
-      //   vKSM = Number(res['balance']);
-      // })
-      // await api.api.query.assets.accountAssets(['EOS', address], (res) => {
-      //   EOS = Number(res['balance']);
-      // })
-      // await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
-      //   vEOS = Number(res['balance']);
-      // })
-
-        DOT = 100000000000000000
-
-      setotherBalance(
-        { BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
-      );
-    })();
+      (async () => {
+          await api.api.query.voucher.balancesVoucher([address], (res) => {
+              BNC = Number(res?.toJSON());
+          })
+          await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
+              aUSD = Number(res['balance']);
+          })
+          await api.api.query.assets.accountAssets(['DOT', address], (res) => {
+              DOT = Number(res['balance']);
+          })
+          await api.api.query.assets.accountAssets(['vDOT', address], (res) => {
+              vDOT = Number(res['balance']);
+          })
+          await api.api.query.assets.accountAssets(['KSM', address], (res) => {
+              KSM = Number(res['balance']);
+          })
+          await api.api.query.assets.accountAssets(['vKSM', address], (res) => {
+              vKSM = Number(res['balance']);
+          })
+          await api.api.query.assets.accountAssets(['EOS', address], (res) => {
+              EOS = Number(res['balance']);
+          })
+          await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
+              vEOS = Number(res['balance']);
+          })
+          setotherBalance(
+              { BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
+          );
+      })();
   }, []);
 
 
