@@ -119,7 +119,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   //   } else if (nickname) {
   //     setAccName(nickname);
   //   }
-  // }, [api, info]);
+  // }, [api, info]) ;
 
   useEffect((): void => {
     if (balancesAll) {
