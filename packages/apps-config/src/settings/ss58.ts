@@ -12,14 +12,9 @@ import { Option } from './types';
 export default function create (t: TFunction): Option[] {
   return [
     {
-      info: 'default',
-      text: t<string>('ss58.default', 'Default for the connected node', { ns: 'apps-config' }),
-      value: -1
-    },
-    {
-      info: 'substrate',
-      text: t<string>('ss58.substrate', 'Substrate (generic)', { ns: 'apps-config' }),
-      value: 42
+        info: 'bifrost',
+        text: t<string>('ss58.bifrost', 'Bifrost (ss58 prefix 6)', { ns: 'apps-config' }),
+        value: -1
     },
     {
       info: 'polkadot',
@@ -30,16 +25,6 @@ export default function create (t: TFunction): Option[] {
       info: 'kusama',
       text: t<string>('ss58.kusama', 'Kusama (canary)', { ns: 'apps-config' }),
       value: 2
-    },
-    {
-      info: 'edgeware',
-      text: t<string>('ss58.edgeware', 'Edgeware (live)', { ns: 'apps-config' }),
-      value: 7
-    },
-    {
-      info: 'centrifuge',
-      text: t<string>('ss58.centrifuge', 'Centrifuge (live)', { ns: 'apps-config' }),
-      value: 36
     }
   ];
 }
