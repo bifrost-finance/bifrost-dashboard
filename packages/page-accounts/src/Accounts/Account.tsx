@@ -83,6 +83,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   const recoveryInfo = useCall<RecoveryConfig | null>(api.api.query.recovery?.recoverable, [address], {
     transform: (opt: Option<RecoveryConfig>) => opt.unwrapOr(null)
   });
+  const BNC = useCall<DeriveBalancesAll>(api.api.query.voucher.balancesVoucher,[address]);
   const multiInfos = useMultisigApprovals(address);
   const proxyInfo = useProxies(address);
   const { flags: { isDevelopment, isExternal, isHardware, isInjected, isMultisig, isProxied }, genesisHash, identity, name: accName, onSetGenesisHash, tags } = useAccountInfo(address);
@@ -133,11 +134,11 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   }, [address, api, balancesAll, setBalance]);
 
   useEffect((): void => {
-    let BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
+    let aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
       (async () => {
-          await api.api.query.voucher.balancesVoucher([address], (res) => {
-              BNC = Number(res?.toJSON());
-          })
+          // await api.api.query.voucher.balancesVoucher([address], (res) => {
+          //     BNC = Number(res?.toJSON());
+          // })
           await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
               aUSD = Number(res['balance']);
           })
@@ -160,8 +161,19 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
               vEOS = Number(res['balance']);
           })
           setotherBalance(
-              { BNC, aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
-          );
+            { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
+          )
+
+          /**setotherBalance({
+            BNC:10000000000000000,
+            aUSD:10000000000000,
+            DOT:10000000000000,
+            vDOT:10000000000000,
+            KSM:10000000000000,
+            vKSM:10000000000000,
+            EOS:10000000000000,
+            vEOS:10000000000000,
+          });*/
       })();
   }, []);
 
@@ -445,6 +457,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
           withBalanceToggle
           withExtended={false}
           otherBalance={otherBalance || {}}
+          BNCVal={BNC || 0}
         />
       </td>
       <td className='button'>
