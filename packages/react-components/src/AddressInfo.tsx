@@ -216,9 +216,8 @@ function renderValidatorPrefs ({ stakingInfo, withValidatorPrefs = false }: Prop
 }
 
 function renderBalances (props: Props, allAccounts: string[], t: <T = string> (key: string) => T): React.ReactNode {
-  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance = {} } = props;
-  const { BNC = 0, aUSD = 0, DOT = 0, vDOT = 0, KSM = 0, vKSM = 0, EOS = 0, vEOS = 0 } = otherBalance;
-
+  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance = {},BNCVal=0 } = props;
+  const { aUSD = 0, DOT = 0, vDOT = 0, KSM = 0, vKSM = 0, EOS = 0, vEOS = 0 } = otherBalance;
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
     : withBalance || false;
@@ -247,6 +246,101 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
           />
         </>
       )}
+      {
+        aUSD ?(
+            <FormatBalance
+            currency="aUSD"
+            className='result'
+            value={aUSD}
+          />
+        ): (
+          <FormatBalance
+            currency="aUSD"
+            className='result'
+            value={0}
+          />
+        )
+      }
+
+      {
+        DOT ? (
+            <FormatBalance
+            currency="DOT"
+            className='result'
+            value={DOT}
+          />
+        ):(
+          <FormatBalance
+            currency="DOT"
+            className='result'
+            value={0}
+          />
+        )
+      }
+
+      {
+        KSM ? (
+            <FormatBalance
+            currency="KSM"
+            className='result'
+            value={KSM}
+          />
+        ): (
+          <FormatBalance
+            currency="KSM"
+            className='result'
+            value={0}
+          />
+        )
+      }
+
+      {
+        vKSM ? (
+            <FormatBalance
+            currency="vKSM"
+            className='result'
+            value={vKSM }
+          />
+        ): (
+          <FormatBalance
+            currency="vKSM"
+            className='result'
+            value={0 }
+          />
+        )
+      }
+
+      {
+        EOS ? (
+            <FormatBalance
+            currency="EOS"
+            className='result'
+            value={EOS }
+          />
+        ):(
+          <FormatBalance
+          currency="EOS"
+          className='result'
+          value={0}
+        />
+        )
+      }
+
+      {
+        vEOS ? (
+            <FormatBalance
+            currency="vEOS"
+            className='result'
+            value={vEOS }
+            />
+        ):(
+           <FormatBalance
+            currency="vEOS"
+            className='result'
+            value={0}
+          />
+        )
+      }
       {balancesAll && balanceDisplay.available && (
         <>
           <Label label={t<string>('transferrable')} />
@@ -380,16 +474,16 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
                       />
                   </>
                 }
-                value={BNC} currency='BNC'
+                value={BNCVal} currency='BNC'
               />
 
-              {/*<FormatBalance value={aUSD} currency='aUSD' />*/}
-              {/*<FormatBalance value={DOT} currency='DOT' />*/}
-              {/*<FormatBalance value={vDOT} currency='vDOT' />*/}
-              {/*<FormatBalance value={KSM}  currency='KSM' />*/}
-              {/*<FormatBalance value={vKSM}  currency='vKSM' />*/}
-              {/*<FormatBalance value={EOS}  currency='EOS' />*/}
-              {/*<FormatBalance value={vEOS}  currency='vEOS' />*/}
+              {/* <FormatBalance value={aUSD} currency='aUSD' /> */}
+              {/* <FormatBalance value={DOT} currency='DOT' /> */}
+              {/* <FormatBalance value={vDOT} currency='vDOT' /> */}
+              {/* <FormatBalance value={KSM}  currency='KSM' /> */}
+              {/* <FormatBalance value={vKSM}  currency='vKSM' /> */}
+              {/* <FormatBalance value={EOS}  currency='EOS' /> */}
+              {/* <FormatBalance value={vEOS}  currency='vEOS' /> */}
             </>
           }
           >

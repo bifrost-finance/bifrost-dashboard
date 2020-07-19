@@ -53,7 +53,7 @@ function FormatBalance ({ className = '', isShort, label, labelPost, value, with
                 ? value === 'all'
                 ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
                 : format(value, inputcurrency, withSi, isShort, labelPost)
-                : `-${labelPost || ''}`
+                : `0${labelPost || ''} ${inputcurrency || ''}`
         }</span>
         </div>
     );
