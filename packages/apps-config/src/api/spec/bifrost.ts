@@ -134,6 +134,8 @@ export default {
     "Price": "u64",
     "AccountAsset": {
         "balance": "Balance",
+        "locked": "Balance",
+        "available": "Balance",
         "cost": "Cost",
         "income": "Income"
     },
