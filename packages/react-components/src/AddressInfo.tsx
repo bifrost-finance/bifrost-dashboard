@@ -279,6 +279,22 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
       }
 
       {
+          vDOT ? (
+              <FormatBalance
+                  currency="vDOT"
+                  className='result'
+                  value={vDOT}
+              />
+          ):(
+              <FormatBalance
+                  currency="DOT"
+                  className='result'
+                  value={0}
+              />
+          )
+      }
+
+      {
         KSM ? (
             <FormatBalance
             currency="KSM"
@@ -299,13 +315,13 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
             <FormatBalance
             currency="vKSM"
             className='result'
-            value={vKSM }
+            value={vKSM}
           />
         ): (
           <FormatBalance
             currency="vKSM"
             className='result'
-            value={0 }
+            value={0}
           />
         )
       }
