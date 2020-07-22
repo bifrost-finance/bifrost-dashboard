@@ -164,7 +164,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
             { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
           )
 
-          /**setotherBalance({
+          /*setotherBalance({
             BNC:10000000000000000,
             aUSD:10000000000000,
             DOT:10000000000000,
