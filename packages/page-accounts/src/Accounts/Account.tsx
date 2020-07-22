@@ -155,10 +155,10 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
               vKSM = Number(res['balance']);
           })
           await api.api.query.assets.accountAssets(['EOS', address], (res) => {
-              EOS = Number(res['balance']);
+              EOS = Number(res['balance']) * 100000000;
           })
           await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
-              vEOS = Number(res['balance']);
+              vEOS = Number(res['balance']) * 100000000;
           })
           setotherBalance(
             { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
