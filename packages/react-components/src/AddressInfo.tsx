@@ -279,19 +279,19 @@ function renderBalances (props: Props, allAccounts: string[], t: <T = string> (k
       }
 
       {
-          vDOT ? (
-              <FormatBalance
-                  currency="vDOT"
-                  className='result'
-                  value={vDOT}
-              />
-          ):(
-              <FormatBalance
-                  currency="DOT"
-                  className='result'
-                  value={0}
-              />
-          )
+        vDOT ? (
+            <FormatBalance
+                currency="vDOT"
+                className='result'
+                value={vDOT}
+            />
+        ):(
+            <FormatBalance
+                currency="vDOT"
+                className='result'
+                value={0}
+            />
+        )
       }
 
       {
