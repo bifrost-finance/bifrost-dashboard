@@ -16,13 +16,15 @@ import { Api } from '@polkadot/react-api';
 import Queue from '@polkadot/react-components/Status/Queue';
 import { BlockAuthors, Events } from '@polkadot/react-query';
 import settings from '@polkadot/ui-settings';
-
+import ReactGA from 'react-ga';
 import Apps from './Apps';
 
 const rootId = 'root';
 const rootElement = document.getElementById(rootId);
 const theme = { theme: settings.uiTheme };
 
+ReactGA.initialize('UA-143666394-2');
+ReactGA.pageview(window.location.pathname + window.location.search);
 if (!rootElement) {
   throw new Error(`Unable to find element with id '${rootId}'`);
 }
