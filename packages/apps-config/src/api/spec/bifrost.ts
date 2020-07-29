@@ -57,9 +57,14 @@ export default {
         "data": "[u8;33]"
     },
     "UnsignedInt": "u32",
-    "SignedBlockHeader": {
-        "block_header": "BlockHeader"
-    },
+	"Signature": {
+    	"type_": "UnsignedInt",
+    	"data": "[u8;65]"
+  	},
+  	"SignedBlockHeader": {
+    	"block_header": "BlockHeader",
+    	"producer_signature": "Signature"
+  	},
     "BlockHeader": {
         "timestamp": "BlockTimestamp",
         "producer": "AccountName",
