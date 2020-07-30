@@ -90,7 +90,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   const [{ democracyUnlockTx }, setUnlockableIds] = useState<DemocracyUnlockable>({ democracyUnlockTx: null, ids: [] });
   const [vestingVestTx, setVestingTx] = useState<SubmittableExtrinsic<'promise'> | null>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [otherBalance, setotherBalance] = useState(null);
+  const [otherBalance, setotherBalance] = useState({});
   const [isBackupOpen, toggleBackup] = useToggle();
   const [isDeriveOpen, toggleDerive] = useToggle();
   const [isForgetOpen, toggleForget] = useToggle();
@@ -134,46 +134,92 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   }, [address, api, balancesAll, setBalance]);
 
   useEffect((): void => {
-    let aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS;
+    let aUSD:any, DOT:any, vDOT:any, KSM:any, vKSM:any, EOS:any, vEOS:any;
       (async () => {
           // await api.api.query.voucher.balancesVoucher([address], (res) => {
           //     BNC = Number(res?.toJSON());
           // })
-          await api.api.query.assets.accountAssets(['aUSD', address], (res) => {
+          // console.log('能获取到state吗？' + JSON.stringify(otherBalance))
+          let otherBalanceCopy:any;
+          await api.api.query.assets.accountAssets(['aUSD', address], (res:any) => {
               aUSD = Number(res['balance']);
-          })
-          await api.api.query.assets.accountAssets(['DOT', address], (res) => {
+              // console.log('********aUSD' + aUSD);
+              // console.log('能获取到state吗2？' + JSON.stringify(otherBalance))
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {aUSD});
+              } else {
+                otherBalanceCopy = Object.assign({}, {aUSD});
+              }
+              setotherBalance(otherBalanceCopy);
+          });
+          await api.api.query.assets.accountAssets(['DOT', address], (res:any) => {
               DOT = Number(res['balance']);
+              // console.log('********DOT' + DOT + 'otherBalance**' + otherBalance);
+              // console.log('能获取到state吗3？' + JSON.stringify(otherBalance))
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {DOT});
+              } else {
+                otherBalanceCopy = Object.assign({}, {DOT});
+              }
+              setotherBalance(otherBalanceCopy);
           })
-          await api.api.query.assets.accountAssets(['vDOT', address], (res) => {
+          await api.api.query.assets.accountAssets(['vDOT', address], (res:any) => {
+            // console.log('能获取到state吗4？' + JSON.stringify(otherBalance))
               vDOT = Number(res['balance']);
+              // console.log('********vDOT' + vDOT);
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {vDOT});
+              } else {
+                otherBalanceCopy = Object.assign({}, {vDOT});
+              }
+              setotherBalance(otherBalanceCopy);
           })
-          await api.api.query.assets.accountAssets(['KSM', address], (res) => {
+          await api.api.query.assets.accountAssets(['KSM', address], (res:any) => {
               KSM = Number(res['balance']);
+              // console.log('********KSM' + KSM);
+              // console.log('能获取到state吗5？' + JSON.stringify(otherBalance))
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {KSM});
+              } else {
+                otherBalanceCopy = Object.assign({}, {KSM});
+              }
+              setotherBalance(otherBalanceCopy);
           })
-          await api.api.query.assets.accountAssets(['vKSM', address], (res) => {
+          await api.api.query.assets.accountAssets(['vKSM', address], (res:any) => {
               vKSM = Number(res['balance']);
+              // console.log('********vKSM' + vKSM);
+              // console.log('能获取到state吗6？' + JSON.stringify(otherBalance))
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {vKSM});
+              } else {
+                otherBalanceCopy = Object.assign({}, {vKSM});
+              }
+              setotherBalance(otherBalanceCopy);
           })
-          await api.api.query.assets.accountAssets(['EOS', address], (res) => {
+          await api.api.query.assets.accountAssets(['EOS', address], (res:any) => {
               EOS = Number(res['balance']);
+              // console.log('********EOS' + EOS);
+              // console.log('能获取到state吗7？' + JSON.stringify(otherBalance))
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {EOS});
+              } else {
+                otherBalanceCopy = Object.assign({}, {EOS});
+              }
+              setotherBalance(otherBalanceCopy);
           })
-          await api.api.query.assets.accountAssets(['vEOS', address], (res) => {
+          await api.api.query.assets.accountAssets(['vEOS', address], (res:any) => {
               vEOS = Number(res['balance']);
+              // console.log('能获取到state吗8？' + JSON.stringify(otherBalance))
+              if (otherBalance) {
+                otherBalanceCopy = Object.assign(otherBalance, {vEOS});
+              } else {
+                otherBalanceCopy = Object.assign({}, {vEOS});
+              }
+              setotherBalance(otherBalanceCopy);
           })
-          setotherBalance(
-            { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
-          )
-
-          /**setotherBalance({
-            BNC:10000000000000000,
-            aUSD:10000000000000,
-            DOT:10000000000000,
-            vDOT:10000000000000,
-            KSM:10000000000000,
-            vKSM:10000000000000,
-            EOS:10000000000000,
-            vEOS:10000000000000,
-          });*/
+          // setotherBalance(
+          //   { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
+          // )
       })();
   }, []);
 
@@ -451,14 +497,18 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
         {balancesAll?.accountNonce.gt(BN_ZERO) && formatNumber(balancesAll.accountNonce)}
       </td>
       <td className='number'>
-        <AddressInfo
-          address={address}
-          withBalance
-          withBalanceToggle
-          withExtended={false}
-          otherBalance={otherBalance || {}}
-          BNCVal={BNC || 0}
-        />
+        {
+          otherBalance &&  otherBalance['aUSD'] && otherBalance['DOT'] && otherBalance['vDOT']
+            && otherBalance['KSM'] && otherBalance['vKSM'] && otherBalance['EOS'] &&  otherBalance['vEOS'] &&
+              <AddressInfo
+              address={address}
+              withBalance
+              withBalanceToggle
+              withExtended={false}
+              otherBalance={otherBalance}
+              BNCVal={BNC || 0}
+            />
+        }
       </td>
       <td className='button'>
         <Button
