@@ -91,6 +91,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
   const [vestingVestTx, setVestingTx] = useState<SubmittableExtrinsic<'promise'> | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [otherBalance, setotherBalance] = useState({});
+  const [finishBalance,setFinishBalance] = useState(false);
   const [isBackupOpen, toggleBackup] = useToggle();
   const [isDeriveOpen, toggleDerive] = useToggle();
   const [isForgetOpen, toggleForget] = useToggle();
@@ -216,6 +217,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
                 otherBalanceCopy = Object.assign({}, {vEOS});
               }
               setotherBalance(otherBalanceCopy);
+              setFinishBalance(true);
           })
           // setotherBalance(
           //   { aUSD, DOT, vDOT, KSM, vKSM, EOS, vEOS }
@@ -498,14 +500,20 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
       </td>
       <td className='number'>
         {
-          otherBalance &&  otherBalance['aUSD'] && otherBalance['DOT'] && otherBalance['vDOT']
-            && otherBalance['KSM'] && otherBalance['vKSM'] && otherBalance['EOS'] &&  otherBalance['vEOS'] &&
+          otherBalance && finishBalance ?
               <AddressInfo
               address={address}
               withBalance
               withBalanceToggle
               withExtended={false}
               otherBalance={otherBalance}
+              BNCVal={BNC || 0}
+            />:
+            <AddressInfo
+              address={address}
+              withBalance
+              withBalanceToggle
+              withExtended={false}
               BNCVal={BNC || 0}
             />
         }
