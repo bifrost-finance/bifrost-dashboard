@@ -29,7 +29,7 @@ function format (value: Compact<any> | BN | string, currency: string, withSi?: b
 
     if (prefix.length > M_LENGTH) {
         // TODO Format with balance-postfix
-        return `${formatBalance(value)}${labelPost || ''}`;
+        return `${formatBalance(value).substr(0,formatBalance(value).indexOf('ASG'))}${currency}${labelPost || ''}`;
     }
 
     return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && (<><span className='ui--FormatBalance-postfix'>{`000${postfix || ''}`.slice(-3)}</span></>)} {`${currency}${labelPost || ''}`}</>;
