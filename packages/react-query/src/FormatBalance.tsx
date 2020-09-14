@@ -3,7 +3,7 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import BN from 'bn.js';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Compact } from '@polkadot/types';
 import { formatBalance } from '@polkadot/util';
@@ -11,52 +11,58 @@ import { formatBalance } from '@polkadot/util';
 import { useTranslation } from './translate';
 
 interface Props {
-    className?: string;
-    isShort?: boolean;
-    label?: React.ReactNode;
-    labelPost?: string;
-    value?: Compact<any> | BN | string | null | 'all';
-    withSi?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  isShort?: boolean;
+  label?: React.ReactNode;
+  labelPost?: string;
+  value?: Compact<any> | BN | string | null | 'all';
+  withCurrency?: boolean;
+  withSi?: boolean;
 }
 
 // for million, 2 * 3-grouping + comma
 const M_LENGTH = 6 + 1;
 const K_LENGTH = 3 + 1;
 
-function format (value: Compact<any> | BN | string, currency: string, withSi?: boolean, _isShort?: boolean, labelPost?: string): React.ReactNode {
-    const [prefix, postfix] = formatBalance(value, { forceUnit: '-', withSi: false }).split('.');
-    const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
+function format (value: Compact<any> | BN | string, withCurrency = true, withSi?: boolean, _isShort?: boolean, labelPost?: string): React.ReactNode {
+  const [prefix, postfix] = formatBalance(value, { forceUnit: '-', withSi: false }).split('.');
+  const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
+  const unitPost = withCurrency ? ` ${formatBalance.getDefaults().unit}` : '';
 
-    if (prefix.length > M_LENGTH) {
-        // TODO Format with balance-postfix
-        return `${formatBalance(value)}${labelPost || ''}`;
-    }
+  if (prefix.length > M_LENGTH) {
+    const [major, rest] = formatBalance(value, { withUnit: false }).split('.');
+    const minor = rest.substr(0, 3);
+    const unit = rest.substr(3);
 
-    return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && (<><span className='ui--FormatBalance-postfix'>{`000${postfix || ''}`.slice(-3)}</span></>)} {`${currency}${labelPost || ''}`}</>;
+    return <>{major}.<span className='ui--FormatBalance-postfix'>{minor}</span><span className='ui--FormatBalance-unit'>{unit}{unitPost}</span>{labelPost || ''}</>;
+  }
+
+  return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && <span className='ui--FormatBalance-postfix'>{`000${postfix || ''}`.slice(-3)}</span>}<span className='ui--FormatBalance-unit'>{unitPost}</span>{labelPost || ''}</>;
 }
 
-function FormatBalance ({ className = '', isShort, label, labelPost, value, withSi, currency }: Props): React.ReactElement<Props> {
-    const { t } = useTranslation();
+function FormatBalance ({ children, className = '', isShort, label, labelPost, value, withCurrency, withSi }: Props): React.ReactElement<Props> {
+  const { t } = useTranslation();
 
     let inputcurrency;
-    if (currency) {
-        inputcurrency = currency;
+    if (withCurrency) {
+        inputcurrency = withCurrency;
     } else {
         [inputcurrency] = useState(formatBalance.getDefaults().unit);
     }
 
-    // labelPost here looks messy, however we ensure we have one less text node
-    return (
-        <div className={`ui--FormatBalance ${className}`}>
-            {label || ''}<span className='ui--FormatBalance-value'>{
-            value
-                ? value === 'all'
-                ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
-                : format(value, inputcurrency, withSi, isShort, labelPost)
-                : `0${labelPost || ''} ${inputcurrency || ''}`
-        }</span>
-        </div>
-    );
+  // labelPost here looks messy, however we ensure we have one less text node
+  return (
+    <div className={`ui--FormatBalance ${className}`}>
+      {label || ''}<span className='ui--FormatBalance-value'>{
+        value
+          ? value === 'all'
+            ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
+            : format(value, inputcurrency, withSi, isShort, labelPost)
+          : `-${labelPost || ''} ${inputcurrency || ''}`
+      }</span>{children}
+    </div>
+  );
 }
 
 export default React.memo(styled(FormatBalance)`
@@ -75,19 +81,27 @@ export default React.memo(styled(FormatBalance)`
     vertical-align: baseline;
   }
 
+  .ui--FormatBalance-unit {
+    font-size: 0.85em;
+  }
+
   .ui--FormatBalance-value {
     text-align: right;
 
     > .ui--FormatBalance-postfix {
       font-weight: 100;
-      opacity: 0.75;
+      opacity: 0.7;
       vertical-align: baseline;
     }
   }
 
+  > .ui--Button {
+    margin-left: 0.25rem;
+  }
+
   .ui--Icon {
-    margin-top: 0.25rem;
     margin-bottom: -0.25rem;
+    margin-top: 0.25rem;
   }
 
   .ui--Icon+.ui--FormatBalance-value {

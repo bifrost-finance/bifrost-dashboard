@@ -190,8 +190,8 @@ function Status ({ className = '' }: Props): React.ReactElement<Props> | null {
         <div className='dismiss'>
           <Button
             icon='times'
+            isBasic
             isFull
-            isPrimary
             label={t<string>('Dismiss all notifications')}
             onClick={_onDismiss}
           />
@@ -206,8 +206,8 @@ function Status ({ className = '' }: Props): React.ReactElement<Props> | null {
 export default React.memo(styled(Status)`
   display: inline-block;
   position: fixed;
-  right: 0.25rem;
-  top: 0.25rem;
+  right: 0.75rem;
+  top: 0.75rem;
   width: 23rem;
   z-index: 1001;
 

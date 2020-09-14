@@ -11,6 +11,7 @@ import { Option } from './types';
 //   value: The actual ss5Format value (as registered)
 export default function create (t: TFunction): Option[] {
   return [
+    // base defaults
     {
         info: 'bifrost',
         text: t<string>('ss58.bifrost', 'Bifrost (ss58 prefix 6)', { ns: 'apps-config' }),
@@ -25,6 +26,32 @@ export default function create (t: TFunction): Option[] {
       info: 'kusama',
       text: t<string>('ss58.kusama', 'Kusama (canary)', { ns: 'apps-config' }),
       value: 2
+    },
+    {
+      info: 'substrate',
+      text: t<string>('ss58.substrate', 'Substrate (generic)', { ns: 'apps-config' }),
+      value: 42
+    },
+    // alphabetical extended chains
+    {
+      info: 'centrifuge',
+      text: t<string>('ss58.centrifuge', 'Centrifuge (live)', { ns: 'apps-config' }),
+      value: 36
+    },
+    {
+      info: 'edgeware',
+      text: t<string>('ss58.edgeware', 'Edgeware (live)', { ns: 'apps-config' }),
+      value: 7
+    },
+    {
+      info: 'plasm',
+      text: t<string>('ss58.plasm', 'Plasm (live)', { ns: 'apps-config' }),
+      value: 5
+    },
+    {
+      info: 'subsocial',
+      text: t<string>('ss58.subsocial', 'Subsocial (live)', { ns: 'apps-config' }),
+      value: 28
     }
   ];
 }

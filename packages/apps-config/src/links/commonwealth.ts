@@ -4,6 +4,8 @@
 
 import BN from 'bn.js';
 
+import { externalLogos } from '../ui/logos';
+
 const HASH_PATHS = ['proposal/councilmotion'];
 
 export default {
@@ -16,6 +18,7 @@ export default {
   create: (chain: string, path: string, data: BN | number | string, hash?: string): string =>
     `https://commonwealth.im/${chain}/${path}/${HASH_PATHS.includes(path) ? (hash || '') : data.toString()}`,
   isActive: true,
+  logo: externalLogos.commonwealth as string,
   paths: {
     council: 'proposal/councilmotion',
     proposal: 'proposal/democracyproposal',
