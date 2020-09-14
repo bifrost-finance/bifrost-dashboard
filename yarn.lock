@@ -19939,7 +19939,7 @@ __metadata:
   peerDependencies:
     prop-types: ^15.6.0
     react: ^15.6.2 || ^16.0
-  checksum: 3/c1941f97b81a85c2f62b5407ea679b704385bdd287cb2a698f9bfdd001c684e08c69a441cdfe9ed5b3e994644f7018783c666bbffa027a16e084e1a9ba7fb9d2
+  checksum: c1941f97b81a85c2f62b5407ea679b704385bdd287cb2a698f9bfdd001c684e08c69a441cdfe9ed5b3e994644f7018783c666bbffa027a16e084e1a9ba7fb9d2
   languageName: node
   linkType: hard
 

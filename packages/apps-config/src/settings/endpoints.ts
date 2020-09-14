@@ -126,50 +126,19 @@ function createLiveNetworks (t: TFunction): LinkOption[] {
 
 function createTestNetworks (t: TFunction): LinkOption[] {
   return [
-    // polkadot test relays
-    {
-      dnslink: 'rococo',
-      info: 'rococo',
-      text: t<string>('rpc.rococo', 'Rococo (Polkadot Testnet, hosted by Parity)', { ns: 'apps-config' }),
-      value: 'wss://rococo-rpc.polkadot.io'
-    },
-    {
-      info: 'rococoTick',
-      isChild: true,
-      text: t<string>('rpc.rococo.tick', 'Tick (Polkadot Testpara, hosted by Parity)', { ns: 'apps-config' }),
-      value: 'wss://tick-rpc.polkadot.io'
-    },
-    {
-      info: 'rococoTrick',
-      isChild: true,
-      text: t<string>('rpc.rococo.trick', 'Trick (Polkadot Testpara, hosted by Parity)', { ns: 'apps-config' }),
-      value: 'wss://trick-rpc.polkadot.io'
-    },
-    {
-      info: 'rococoTrack',
-      isChild: true,
-      text: t<string>('rpc.rococo.track', 'Track (Polkadot Testpara, hosted by Parity)', { ns: 'apps-config' }),
-      value: 'wss://track-rpc.polkadot.io'
-    },
-    {
-      info: 'rococoAcala',
-      isChild: true,
-      text: t<string>('rpc.rococo.acala', 'Mandala PC1 (Acala Testpara, hosted by Acala)', { ns: 'apps-config' }),
-      value: 'wss://rococo-1.acala.laminar.one'
-    },
     {
         info: 'bifrost',
-        text: t<string>('rpc.bifrost.n1', 'Asgard CC2 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+        text: t<string>('rpc.bifrost.n1', 'Asgard CC3 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
         value: 'wss://n1.testnet.liebi.com'
     },
     {
         info: 'bifrost',
-        text: t<string>('rpc.bifrost.n2', 'Asgard CC2 (n2.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+        text: t<string>('rpc.bifrost.n2', 'Asgard CC3 (n2.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
         value: 'wss://n2.testnet.liebi.com'
     },
     {
         info: 'bifrost',
-        text: t<string>('rpc.bifrost.n3', 'Asgard CC2 (n3.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+        text: t<string>('rpc.bifrost.n3', 'Asgard CC3 (n3.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
         value: 'wss://n3.testnet.liebi.com'
     },
   ];

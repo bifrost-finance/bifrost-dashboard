@@ -55,11 +55,7 @@ const chainLogos: Record<string, any> = [
   ['Kusama CC1', chainKusama],
   ['Kusama CC2', chainKusama],
   ['Kusama CC3', chainKusama],
-  ['Bifrost', chainBifrost],
-  ['Rococo', chainRococo],
-  ['Tick', chainRococoTick],
-  ['Track', chainRococoTrack],
-  ['Trick', chainRococoTrick]
+  ['Bifrost', chainBifrost]
 ].reduce((logos, [chain, logo]): Record<string, any> => ({
   ...logos,
   [(chain as string).toLowerCase()]: logo
@@ -113,15 +109,11 @@ const namedLogos: Record<string, any> = {
   phala: nodePhala,
   plasm: nodePlasm,
   polkadot: nodePolkadot,
-  rococo: chainRococo,
   rococoAcala: nodeAcala,
   rococoDarwinia: nodeDarwinia,
   rococoLaminar: nodeLaminar,
   rococoPlasm: nodePlasm,
   rococoRobonomics: nodeRobonomics,
-  rococoTick: chainRococoTick,
-  rococoTrack: chainRococoTrack,
-  rococoTrick: chainRococoTrick,
   subsocial: nodeSubsocial,
   substrate: nodeSubstrate,
   westend: nodePolkadot,
