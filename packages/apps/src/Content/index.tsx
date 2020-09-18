@@ -11,9 +11,10 @@ import createRoutes from '@polkadot/apps-routing';
 import { ErrorBoundary, Spinner, StatusContext } from '@polkadot/react-components';
 import { useApi } from '@polkadot/react-hooks';
 
-import Status from './Status';
+import { findMissingApis } from '../endpoint';
 import { useTranslation } from '../translate';
 import NotFound from './NotFound';
+import Status from './Status';
 
 interface Props {
   className?: string;
@@ -24,6 +25,7 @@ const NOT_FOUND: Route = {
   display: {
     needsApi: undefined
   },
+  group: 'settings',
   icon: 'times',
   isIgnored: false,
   name: 'unknown',
@@ -33,17 +35,19 @@ const NOT_FOUND: Route = {
 function Content ({ className }: Props): React.ReactElement<Props> {
   const location = useLocation();
   const { t } = useTranslation();
-  const { isApiConnected, isApiReady } = useApi();
+  const { api, isApiConnected, isApiReady } = useApi();
   const { queueAction } = useContext(StatusContext);
+
   const { Component, display: { needsApi }, name } = useMemo(
     (): Route => {
       const app = location.pathname.slice(1) || '';
-      const found = createRoutes(t).find((route) => !!(route && app.startsWith(route.name)));
 
-      return found || NOT_FOUND;
+      return createRoutes(t).find((route) => !!(route && app.startsWith(route.name))) || NOT_FOUND;
     },
     [location, t]
   );
+
+  const missingApis = findMissingApis(api, needsApi);
 
   return (
     <div className={className}>
@@ -57,11 +61,23 @@ function Content ({ className }: Props): React.ReactElement<Props> {
           <>
             <Suspense fallback='...'>
               <ErrorBoundary trigger={name}>
-                <Component
-                  basePath={`/${name}`}
-                  location={location}
-                  onStatusChange={queueAction}
-                />
+                {missingApis.length
+                  ? (
+                    <NotFound
+                      basePath={`/${name}`}
+                      location={location}
+                      missingApis={missingApis}
+                      onStatusChange={queueAction}
+                    />
+                  )
+                  : (
+                    <Component
+                      basePath={`/${name}`}
+                      location={location}
+                      onStatusChange={queueAction}
+                    />
+                  )
+                }
               </ErrorBoundary>
             </Suspense>
             <Status />
@@ -73,13 +89,10 @@ function Content ({ className }: Props): React.ReactElement<Props> {
 }
 
 export default React.memo(styled(Content)`
-  background: #f5f4f3;
   flex-grow: 1;
-  height: 100%;
-  min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem 1rem;
   position: relative;
   width: 100%;
 

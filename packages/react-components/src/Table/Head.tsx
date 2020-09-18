@@ -10,11 +10,15 @@ type HeaderDef = [React.ReactNode?, string?, number?, (() => void)?];
 interface Props {
   className?: string;
   filter?: React.ReactNode;
-  header: (null | undefined | HeaderDef)[];
+  header?: (null | undefined | HeaderDef)[];
   isEmpty: boolean;
 }
 
-function Head ({ className = '', filter, header, isEmpty }: Props): React.ReactElement<Props> {
+function Head ({ className = '', filter, header, isEmpty }: Props): React.ReactElement<Props> | null {
+  if (!header?.length) {
+    return null;
+  }
+
   return (
     <thead className={className}>
       {filter && (
@@ -44,11 +48,13 @@ function Head ({ className = '', filter, header, isEmpty }: Props): React.ReactE
 }
 
 export default React.memo(styled(Head)`
+  position: relative;
+  z-index: 1;
+
   th {
-    color: rgba(78, 78, 78, .66);
     font-family: sans-serif;
     font-weight: 100;
-    padding: 0.75rem 1rem 0.25rem;
+    padding: 0.75rem 1rem 0.5rem;
     text-align: right;
     vertical-align: baseline;
     white-space: nowrap;
@@ -81,11 +87,53 @@ export default React.memo(styled(Head)`
   }
 
   tr {
-    background: transparent;
+    background: white; // rgba(255, 254, 253, 1);
     text-transform: lowercase;
 
-    &.filter th {
-      padding: 0;
+    &:first-child {
+      th {
+        &:first-child {
+          border-top-left-radius: 0.25rem;
+        }
+
+        &:last-child {
+          border-top-rights-radius: 0.25rem;
+        }
+      }
+    }
+
+    &:not(.filter) {
+      th {
+        color: rgba(78, 78, 78, 0.66);
+
+        &:first-child {
+          border-left: 1px solid #eeecea;
+        }
+
+        &:last-child {
+          border-right: 1px solid #eeecea;
+        }
+      }
+
+      &:first-child {
+        th {
+          border-top: 1px solid #eeecea;
+        }
+      }
+    }
+
+    &.filter {
+      .ui.input {
+        background: transparent;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+
+      th {
+        padding: 0;
+      }
     }
   }
 `);

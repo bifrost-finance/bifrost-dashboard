@@ -57,9 +57,14 @@ export default {
         "data": "[u8;33]"
     },
     "UnsignedInt": "u32",
-    "SignedBlockHeader": {
-        "block_header": "BlockHeader"
-    },
+	"Signature": {
+    	"type_": "UnsignedInt",
+    	"data": "[u8;65]"
+  	},
+  	"SignedBlockHeader": {
+    	"block_header": "BlockHeader",
+    	"producer_signature": "Signature"
+  	},
     "BlockHeader": {
         "timestamp": "BlockTimestamp",
         "producer": "AccountName",
@@ -99,7 +104,7 @@ export default {
         "multi_sig": "MultiSig",
         "action": "Action",
         "from": "AccountId",
-        "token_type": "TokenSymbol"
+        "token_symbol": "TokenSymbol"
     },
     "Processing": {
         "tx_id": "Vec<u8>",
@@ -134,6 +139,8 @@ export default {
     "Price": "u64",
     "AccountAsset": {
         "balance": "Balance",
+        "locked": "Balance",
+        "available": "Balance",
         "cost": "Cost",
         "income": "Income"
     },
@@ -166,10 +173,10 @@ export default {
     "InvariantValue": "Balance",
     "PoolWeight": "Balance",
     "AssetConfig": {
-        "redeem_duration": "u16",
+        "redeem_duration": "BlockNumber",
         "min_reward_per_block": "Balance"
     },
-    "ValidatorRegister": {
+    "ProxyValidatorRegister": {
         "last_block": "BlockNumber",
         "deposit": "Balance",
         "need": "Balance",

@@ -8,7 +8,7 @@ A Portal into the Polkadot and Substrate networks. Provides a view and interacti
 
 This can be accessed as a hosted application via https://polkadot.js.org/apps/ or you can access the IPFS hosted version via https://polkadot.js.org/apps/ipfs (via hash) or https://dotapps.io (via ipns) to explore any of the supported Polkadot and Substrate chains.
 
-If you run one or more IPFS node(s), pinning the UI (which only getes updated on releases) will make it faster for you and others. You can find details about that below in the IPFS chapter below.
+If you run one or more IPFS node(s), pinning the UI (which only gets updated on releases) will make it faster for you and others. You can find details about that below in the IPFS chapter below.
 
 **Important** If you are a chain developer and would like to add support for your chain to the UI, all the local configuration (API types, settings, logos) can be customized in [the apps-config package](packages/apps-config#README.md), complete with instructions of what goes where.
 
@@ -148,3 +148,18 @@ QmfGBgFe2aqf83Wv21m9k5DH2ew89CDj4tydoxJWdK6NNL 1552    runtime.3d77e510.js
 QmYPa8jcHH7gfopMALr5XTW4i1QM2xgVBe3NeP11y3tErA -       static/
 QmeYBC5EgbccC8NEwXC2rvbd93YiHtTM5xYzqCDohXerDf 859984  vendor.8b793a81.js
 ```
+
+## Desktop App
+
+The main advantage of using Desktop App is that it by default stores encrypted accounts on the filesystem instead of browser's local storage.
+Local storage is susceptible to attacks using XSS (Cross-Site Scripting). There's no such risk when with files stored on disk.
+
+The desktop app uses the [Electron](https://www.electronjs.org/) framework. It provides the same features as web app, the only difference
+being different account storage.
+
+The accounts are stored in the following directories:
+* Mac: `~/Library/Application Support/polkadot-apps/polkadot-accounts`
+* Linux: `~/.config/polkadot-apps/polkadot-accounts` (or `$XDG_CONFIG_HOME/polkadot-apps/polkadot-accounts` if `$XDG_CONFIG_HOME` is defined)
+* Windows: `%APPDATA%\polkadot-apps\polkadot-accounts`
+
+For more details on the desktop app, head over to [Electron package README](https://github.com/polkadot-js/apps/blob/master/packages/apps-electron/README.md).
