@@ -130,7 +130,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
             // console.log('能获取到state吗？' + JSON.stringify(otherBalance))
             let otherBalanceCopy:any;
             await api.api.query.assets.accountAssets(['aUSD', address], (res:any) => {
-                aUSD = Number(res['balance']);
+                aUSD = new BN(Number(res['balance']).toString());
                 // console.log('********aUSD' + aUSD);
                 // console.log('能获取到state吗2？' + JSON.stringify(otherBalance))
                 if (otherBalance) {
@@ -141,7 +141,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
                 setotherBalance(otherBalanceCopy);
             });
             await api.api.query.assets.accountAssets(['DOT', address], (res:any) => {
-                DOT = Number(res['balance']);
+                DOT = new BN(Number(res['balance']).toString());
                 // console.log('********DOT' + DOT + 'otherBalance**' + otherBalance);
                 // console.log('能获取到state吗3？' + JSON.stringify(otherBalance))
                 if (otherBalance) {
@@ -153,7 +153,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
             })
             await api.api.query.assets.accountAssets(['vDOT', address], (res:any) => {
                 // console.log('能获取到state吗4？' + JSON.stringify(otherBalance))
-                vDOT = Number(res['balance']);
+                vDOT = new BN(Number(res['balance']).toString());
                 // console.log('********vDOT' + vDOT);
                 if (otherBalance) {
                     otherBalanceCopy = Object.assign(otherBalance, {vDOT});
@@ -163,7 +163,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
                 setotherBalance(otherBalanceCopy);
             })
             await api.api.query.assets.accountAssets(['KSM', address], (res:any) => {
-                KSM = Number(res['balance']);
+                KSM = new BN(Number(res['balance']).toString());
                 // console.log('********KSM' + KSM);
                 // console.log('能获取到state吗5？' + JSON.stringify(otherBalance))
                 if (otherBalance) {
@@ -174,7 +174,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
                 setotherBalance(otherBalanceCopy);
             })
             await api.api.query.assets.accountAssets(['vKSM', address], (res:any) => {
-                vKSM = Number(res['balance']);
+                vKSM = new BN(Number(res['balance']).toString());
                 // console.log('********vKSM' + vKSM);
                 // console.log('能获取到state吗6？' + JSON.stringify(otherBalance))
                 if (otherBalance) {
@@ -185,7 +185,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
                 setotherBalance(otherBalanceCopy);
             })
             await api.api.query.assets.accountAssets(['EOS', address], (res:any) => {
-                EOS = Number(res['balance']);
+               EOS = new BN(Number(res['balance']).toString());
                 // console.log('********EOS' + EOS);
                 // console.log('能获取到state吗7？' + JSON.stringify(otherBalance))
                 if (otherBalance) {
@@ -196,7 +196,7 @@ function Account ({ account: { address, meta }, className = '', delegation, filt
                 setotherBalance(otherBalanceCopy);
             })
             await api.api.query.assets.accountAssets(['vEOS', address], (res:any) => {
-                vEOS = Number(res['balance']);
+               vEOS = new BN(Number(res['balance']).toString());
                 // console.log('能获取到state吗8？' + JSON.stringify(otherBalance))
                 if (otherBalance) {
                     otherBalanceCopy = Object.assign(otherBalance, {vEOS});

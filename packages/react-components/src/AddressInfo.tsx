@@ -295,21 +295,6 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
         )
       }
 
-      {
-        vDOT ? (
-            <FormatBalance
-                currency="vDOT"
-                className='result'
-                value={vDOT}
-            />
-        ):(
-            <FormatBalance
-                currency="vDOT"
-                className='result'
-                value={0}
-            />
-        )
-      }
 
       {
         KSM ? (
