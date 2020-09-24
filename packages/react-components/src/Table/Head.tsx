@@ -1,6 +1,5 @@
 // Copyright 2017-2020 @polkadot/react-components authors & contributors
-// This software may be modified and distributed under the terms
-// of the Apache-2.0 license. See the LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import styled from 'styled-components';
@@ -35,7 +34,7 @@ function Head ({ className = '', filter, header, isEmpty }: Props): React.ReactE
             onClick={onClick}
           >
             {index === 0
-              ? <h1>{label}</h1>
+              ? <h1 className='highlight--color'>{label}</h1>
               : isEmpty
                 ? ''
                 : label
@@ -54,13 +53,21 @@ export default React.memo(styled(Head)`
   th {
     font-family: sans-serif;
     font-weight: 100;
-    padding: 0.75rem 1rem 0.5rem;
+    padding: 0.75rem 1rem 0.25rem;
     text-align: right;
     vertical-align: baseline;
     white-space: nowrap;
 
     h1, h2 {
       font-size: 1.75rem;
+    }
+
+    &:first-child {
+      border-left: 1px solid #eeecea;
+    }
+
+    &:last-child {
+      border-right: 1px solid #eeecea;
     }
 
     &.address {
@@ -70,6 +77,10 @@ export default React.memo(styled(Head)`
 
     &.badge {
       padding: 0;
+    }
+
+    &.expand {
+      text-align: right;
     }
 
     &.isClickable {
@@ -87,38 +98,18 @@ export default React.memo(styled(Head)`
   }
 
   tr {
-    background: white; // rgba(255, 254, 253, 1);
+    background: white;
     text-transform: lowercase;
 
     &:first-child {
       th {
-        &:first-child {
-          border-top-left-radius: 0.25rem;
-        }
-
-        &:last-child {
-          border-top-rights-radius: 0.25rem;
-        }
+        border-top: 1px solid #eeecea;
       }
     }
 
     &:not(.filter) {
       th {
         color: rgba(78, 78, 78, 0.66);
-
-        &:first-child {
-          border-left: 1px solid #eeecea;
-        }
-
-        &:last-child {
-          border-right: 1px solid #eeecea;
-        }
-      }
-
-      &:first-child {
-        th {
-          border-top: 1px solid #eeecea;
-        }
       }
     }
 
@@ -127,7 +118,7 @@ export default React.memo(styled(Head)`
         background: transparent;
 
         &:first-child {
-          margin-top: 0;
+          margin-top: -1px;
         }
       }
 

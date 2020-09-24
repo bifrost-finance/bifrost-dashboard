@@ -1,6 +1,5 @@
 // Copyright 2017-2020 @polkadot/app-calendar authors & contributors
-// This software may be modified and distributed under the terms
-// of the Apache-2.0 license. See the LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
 
 import { DateState } from './types';
 
@@ -146,14 +145,12 @@ export default React.memo(styled(CalendarApp)`
     flex-wrap: nowrap;
 
     > div {
+      background-color: #fff;
+      border: 1px solid #eeecea;
+      border-radius: 0.25rem;
+
       &+div {
         margin-left: 1.5rem;
-      }
-
-      > div {
-        background-color: #fff;
-        border: 1px solid #eeecea;
-        border-radius: 0.25rem;
       }
 
       .ui--Button-Group {
@@ -165,7 +162,7 @@ export default React.memo(styled(CalendarApp)`
       align-items: center;
       display: flex;
       justify-content: space-between;
-      padding: 0 0 0 1rem;
+      padding: 0.5rem 0.5rem 0 1rem;
 
       .ui--Button {
         font-size: 1rem;

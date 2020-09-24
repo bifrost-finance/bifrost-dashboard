@@ -1,6 +1,5 @@
 // Copyright 2017-2020 @polkadot/react-components authors & contributors
-// This software may be modified and distributed under the terms
-// of the Apache-2.0 license. See the LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
 
 import { createGlobalStyle } from 'styled-components';
 
@@ -15,10 +14,24 @@ interface Props {
   uiHighlight?: string;
 }
 
-const defaultHighlight = '#f19135'; // #999
+const BRIGHTNESS = 128 + 32;
+const FACTORS = [0.2126, 0.7152, 0.0722];
+const PARTS = [0, 2, 4];
 
-const getHighlight = (props: Props): string =>
-  (props.uiHighlight || defaultHighlight);
+const defaultHighlight = '#f19135'; // '#f19135'; // #999
+
+function getHighlight (props: Props): string {
+  return (props.uiHighlight || defaultHighlight);
+}
+
+function getContrast (props: Props): string {
+  const hc = getHighlight(props).replace('#', '').toLowerCase();
+  const brightness = PARTS.reduce((b, p, index) => b + (parseInt(hc.substr(p, 2), 16) * FACTORS[index]), 0);
+
+  return brightness > BRIGHTNESS
+    ? 'rgba(45, 43, 41, 0.875)'
+    : 'rgba(255, 253, 251, 0.875)';
+}
 
 export default createGlobalStyle<Props>`
   .highlight--all {
@@ -39,6 +52,11 @@ export default createGlobalStyle<Props>`
     background: ${getHighlight} !important;
   }
 
+  .highlight--bg-contrast {
+    background: ${getContrast};
+  }
+
+  .highlight--bg-faint,
   .highlight--bg-light {
     background: white;
     position: relative;
@@ -48,12 +66,19 @@ export default createGlobalStyle<Props>`
       bottom: 0;
       content: ' ';
       left: 0;
-      opacity: 0.09;
       position: absolute;
       right: 0;
       top: 0;
       z-index: -1;
     }
+  }
+
+  .highlight--bg-faint:before {
+    opacity: 0.025;
+  }
+
+  .highlight--bg-light:before {
+    opacity: 0.125;
   }
 
   .highlight--border {
@@ -62,6 +87,10 @@ export default createGlobalStyle<Props>`
 
   .highlight--color {
     color: ${getHighlight} !important;
+  }
+
+  .highlight--color-contrast {
+    color: ${getContrast};
   }
 
   .highlight--fill {
@@ -99,7 +128,7 @@ export default createGlobalStyle<Props>`
     &.withoutLink:not(.isDisabled) {
       .ui--Icon {
         background: ${getHighlight};
-        color: #f5f5f4;
+        color: ${getContrast};
       }
     }
 
@@ -120,7 +149,7 @@ export default createGlobalStyle<Props>`
     &:hover:not(.isDisabled):not(.isReadOnly),
     &.isSelected {
       background: ${getHighlight};
-      color: #f5f5f4;
+      color: ${getContrast};
       text-shadow: none;
 
       &:not(.isIcon),
@@ -137,7 +166,7 @@ export default createGlobalStyle<Props>`
     &.withoutLink:not(.isDisabled) {
       &:hover {
         .ui--Icon {
-          color: #f5f5f4;
+          color: ${getContrast};
         }
       }
 
