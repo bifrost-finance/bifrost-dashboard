@@ -57,14 +57,14 @@ export default {
         "data": "[u8;33]"
     },
     "UnsignedInt": "u32",
-	"Signature": {
-    	"type_": "UnsignedInt",
-    	"data": "[u8;65]"
-  	},
-  	"SignedBlockHeader": {
-    	"block_header": "BlockHeader",
-    	"producer_signature": "Signature"
-  	},
+    "Signature": {
+        "type_": "UnsignedInt",
+        "data": "[u8;65]"
+    },
+    "SignedBlockHeader": {
+        "block_header": "BlockHeader",
+        "producer_signature": "Signature"
+    },
     "BlockHeader": {
         "timestamp": "BlockTimestamp",
         "producer": "AccountName",
@@ -81,11 +81,6 @@ export default {
     "IncrementalMerkle": {
         "_node_count": "u64",
         "_active_nodes": "Vec<Checksum256>"
-    },
-    "BalanceDuration": {
-        "last_block": "BlockNumber",
-        "last_balance": "Balance",
-        "value": "Duration"
     },
     "FlatMap": {
         "map": "Vec<(ActionName, u64)>"
@@ -133,6 +128,9 @@ export default {
     "InVariantPool": "Balance",
     "TokenSymbol": {
         "_enum": ["aUSD", "DOT", "vDOT", "KSM", "vKSM", "EOS", "vEOS"]
+    },
+    "TrxStatus": {
+        "_enum": ["Initial", "Generated", "Signed", "Processing", "Success", "Fail"]
     },
     "Cost": "u128",
     "Income": "u128",

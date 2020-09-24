@@ -69,7 +69,7 @@ const nodeColors: Record<string, any> = [
   ['kilt node', nodeKilt],
   ['nodle chain node', nodeNodle],
   ['Stafi node', nodeStafi],
-  ['subsocial node', nodeSubsocial]
+  ['subsocial node', nodeSubsocial],
   ['bifrost node', nodeBifrost]
   // ['node template', emptyColor],
   // ['parity polkadot', emptyColor],

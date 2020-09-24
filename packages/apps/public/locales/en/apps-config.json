@@ -1,9 +1,9 @@
 {
   "lng.detect": "Default browser language (auto-detect)",
   "rpc.beresheet": "Beresheet (Edgeware Testnet, hosted by Commonwealth Labs)",
-  "rpc.bifrost.n1": "Asgard CC2 (n1.testnet.liebi.com, hosted by Liebi)",
-  "rpc.bifrost.n2": "Asgard CC2 (n2.testnet.liebi.com, hosted by Liebi)",
-  "rpc.bifrost.n3": "Asgard CC2 (n3.testnet.liebi.com, hosted by Liebi)",
+  "rpc.bifrost.n1": "Asgard CC3 (n1.testnet.liebi.com, hosted by Liebi)",
+  "rpc.bifrost.n2": "Asgard CC3 (n2.testnet.liebi.com, hosted by Liebi)",
+  "rpc.bifrost.n3": "Asgard CC3 (n3.testnet.liebi.com, hosted by Liebi)",
   "rpc.custom": "Custom environment",
   "rpc.edgeware": "Edgeware (Edgeware Mainnet, hosted by Commonwealth Labs)",
   "rpc.flamingfir": "Flaming Fir (Substrate Testnet, hosted by Parity)",
