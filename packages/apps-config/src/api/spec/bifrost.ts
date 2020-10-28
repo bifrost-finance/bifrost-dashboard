@@ -15,6 +15,11 @@ export default {
         "authorization": "Vec<PermissionLevel>",
         "data": "Vec<u8>"
     },
+    "IostAction": {
+        "contract": "Vec<u8>",
+        "action_name": "Vec<u8>",
+        "data": "Vec<u8>"
+    },
     "PermissionLevel": {
         "actor": "AccountName",
         "permission": "PermissionName"
@@ -33,7 +38,8 @@ export default {
     "BlockchainType": {
         "_enum": [
             "BIFROST",
-            "EOS"
+            "EOS",
+            "IOST"
         ]
     },
     "Precision": "u32",
@@ -105,10 +111,19 @@ export default {
         "tx_id": "Vec<u8>",
         "multi_sig_tx": "MultiSigTx"
     },
+    "Sent": {
+        "tx_id": "Vec<u8>",
+        "from": "AccountId",
+        "token_symbol": "TokenSymbol"
+    },
     "Fail": {
         "tx_id": "Vec<u8>",
         "reason": "Vec<u8>",
         "tx": "MultiSigTx"
+    },
+    "Failure": {
+        "tx_id": "Vec<u8>",
+        "reason": "Vec<u8>"
     },
     "TxOut": {
         "_enum": {
@@ -120,6 +135,16 @@ export default {
             "Fail": "Fail"
         }
     },
+    "TxOutV1": {
+        "_enum": {
+            "Initialized": "MultiSigTx",
+            "Created": "MultiSigTx",
+            "CompleteSigned": "MultiSigTx",
+            "Sent": "Sent",
+            "Succeeded": "Vec<u8>",
+            "Failure": "Failure"
+        }
+    },
     "ConvertPrice": "u128",
     "RatePerBlock": "u64",
     "Fee": "u64",
@@ -127,7 +152,7 @@ export default {
     "VTokenPool": "Balance",
     "InVariantPool": "Balance",
     "TokenSymbol": {
-        "_enum": ["aUSD", "DOT", "vDOT", "KSM", "vKSM", "EOS", "vEOS"]
+        "_enum": ["aUSD", "DOT", "vDOT", "KSM", "vKSM", "EOS", "vEOS", "IOST", "vIOST"]
     },
     "TrxStatus": {
         "_enum": ["Initial", "Generated", "Signed", "Processing", "Success", "Fail"]
