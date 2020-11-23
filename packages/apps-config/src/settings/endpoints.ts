@@ -19,7 +19,7 @@ interface EnvWindow {
   }
 }
 
-function createOwn (t: TFunction): LinkOption[] {
+function createOwn(t: TFunction): LinkOption[] {
   try {
     const storedItems = localStorage.getItem(CUSTOM_ENDPOINT_KEY);
 
@@ -39,7 +39,7 @@ function createOwn (t: TFunction): LinkOption[] {
   return [];
 }
 
-function createDev (t: TFunction): LinkOption[] {
+function createDev(t: TFunction): LinkOption[] {
   return [
     {
       dnslink: 'local',
@@ -50,7 +50,7 @@ function createDev (t: TFunction): LinkOption[] {
   ];
 }
 
-function createLiveNetworks (t: TFunction): LinkOption[] {
+function createLiveNetworks(t: TFunction): LinkOption[] {
   return [
     // fixed, polkadot
     {
@@ -128,27 +128,32 @@ function createLiveNetworks (t: TFunction): LinkOption[] {
   ];
 }
 
-function createTestNetworks (t: TFunction): LinkOption[] {
+function createTestNetworks(t: TFunction): LinkOption[] {
   return [
     {
-        info: 'bifrost',
-        text: t<string>('rpc.bifrost.n1', 'Asgard CC3 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
-        value: 'wss://n1.testnet.liebi.com'
+      info: 'bifrost',
+      text: t<string>('rpc.bifrost.n0', 'Asgard CC3 (testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+      value: 'wss://testnet.liebi.com'
     },
     {
-        info: 'bifrost',
-        text: t<string>('rpc.bifrost.n2', 'Asgard CC3 (n2.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
-        value: 'wss://n2.testnet.liebi.com'
+      info: 'bifrost',
+      text: t<string>('rpc.bifrost.n1', 'Asgard CC3 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+      value: 'wss://n1.testnet.liebi.com'
     },
     {
-        info: 'bifrost',
-        text: t<string>('rpc.bifrost.n3', 'Asgard CC3 (n3.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
-        value: 'wss://n3.testnet.liebi.com'
+      info: 'bifrost',
+      text: t<string>('rpc.bifrost.n2', 'Asgard CC3 (n2.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+      value: 'wss://n2.testnet.liebi.com'
+    },
+    {
+      info: 'bifrost',
+      text: t<string>('rpc.bifrost.n3', 'Asgard CC3 (n3.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
+      value: 'wss://n3.testnet.liebi.com'
     },
   ];
 }
 
-function createCustom (t: TFunction): LinkOption[] {
+function createCustom(t: TFunction): LinkOption[] {
   const WS_URL = (
     (typeof process !== 'undefined' ? process.env?.WS_URL : undefined) ||
     (typeof window !== 'undefined' ? (window as EnvWindow).process_env?.WS_URL : undefined)
@@ -175,7 +180,7 @@ function createCustom (t: TFunction): LinkOption[] {
 //   info: The chain logo name as defined in ../logos, specifically in namedLogos
 //   text: The text to display on the dropdown
 //   value: The actual hosted secure websocket endpoint
-export default function create (t: TFunction): LinkOption[] {
+export default function create(t: TFunction): LinkOption[] {
   return [
     ...createCustom(t),
     // {
