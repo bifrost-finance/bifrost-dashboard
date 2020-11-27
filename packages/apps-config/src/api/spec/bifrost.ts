@@ -140,6 +140,7 @@ export default {
   KeyWeight: { key: 'PublicKey', weight: 'u16' },
   InvariantValue: 'Balance',
   PoolWeight: 'Balance',
+  PoolId: 'u32',
   AssetConfig: { redeem_duration: 'BlockNumber', min_reward_per_block: 'Balance' },
   ProxyValidatorRegister: {
     last_block: 'BlockNumber',
