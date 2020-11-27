@@ -132,11 +132,6 @@ function createTestNetworks(t: TFunction): LinkOption[] {
   return [
     {
       info: 'bifrost',
-      text: t<string>('rpc.bifrost.n0', 'Asgard CC3 (testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
-      value: 'wss://testnet.liebi.com'
-    },
-    {
-      info: 'bifrost',
       text: t<string>('rpc.bifrost.n1', 'Asgard CC3 (n1.testnet.liebi.com, hosted by Liebi)', { ns: 'apps-config' }),
       value: 'wss://n1.testnet.liebi.com'
     },
