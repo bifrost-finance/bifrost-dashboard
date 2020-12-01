@@ -3,6 +3,8 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 export default {
+  Address: 'MultiAddress',
+  LookupSource: 'MultiAddress',
   Token: { symbol: 'Vec<u8>', precision: 'u16', totalSupply: 'u128' },
   VersionId: 'u32',
   Action: {
