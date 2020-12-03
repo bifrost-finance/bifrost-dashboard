@@ -1,10 +1,10 @@
 // Copyright 2017-2020 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { DeriveStakingOverview } from '@polkadot/api-derive/types';
-
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+
+import type { DeriveStakingOverview } from '@polkadot/api-derive/types';
 import SummarySession from '@polkadot/app-explorer/SummarySession';
 import { CardSummary, IdentityIcon, SummaryBox } from '@polkadot/react-components';
 import { BlockAuthorsContext } from '@polkadot/react-query';
@@ -13,13 +13,14 @@ import { useTranslation } from '../translate';
 
 interface Props {
   className?: string;
+  inflation: number;
   isVisible: boolean;
   next?: string[];
   nominators?: string[];
   stakingOverview?: DeriveStakingOverview;
 }
 
-function Summary ({ className = '', isVisible, next, nominators, stakingOverview }: Props): React.ReactElement<Props> {
+function Summary ({ className = '', inflation, isVisible, next, nominators, stakingOverview }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { lastBlockAuthors, lastBlockNumber } = useContext(BlockAuthorsContext);
 
@@ -45,6 +46,14 @@ function Summary ({ className = '', isVisible, next, nominators, stakingOverview
             label={t<string>('nominators')}
           >
             {nominators.length}
+          </CardSummary>
+        )}
+        {(inflation > 0) && (
+          <CardSummary
+            className='media--1200'
+            label={t<string>('inflation')}
+          >
+            {inflation.toFixed(1)}%
           </CardSummary>
         )}
       </section>

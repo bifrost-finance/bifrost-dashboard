@@ -1,32 +1,32 @@
 // Copyright 2017-2020 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { DeriveStakingOverview } from '@polkadot/api-derive/types';
-import { AppProps as Props } from '@polkadot/react-components/types';
-import { ElectionStatus } from '@polkadot/types/interfaces';
-
 import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+
+import type { DeriveStakingOverview } from '@polkadot/api-derive/types';
+import type { AppProps as Props, ThemeProps } from '@polkadot/react-components/types';
+import type { ElectionStatus } from '@polkadot/types/interfaces';
 import { HelpOverlay } from '@polkadot/react-components';
 import Tabs from '@polkadot/react-components/Tabs';
 import { useAccounts, useApi, useAvailableSlashes, useCall, useFavorites, useOwnStashInfos, useStashIds } from '@polkadot/react-hooks';
 import { isFunction } from '@polkadot/util';
 
-import basicMd from './md/basic.md';
 import Actions from './Actions';
+import { STORE_FAVS_BASE } from './constants';
+import basicMd from './md/basic.md';
 import Overview from './Overview';
+import Summary from './Overview/Summary';
 import Payouts from './Payouts';
 import Query from './Query';
-import Summary from './Overview/Summary';
 import Slashes from './Slashes';
 import Targets from './Targets';
-import { STORE_FAVS_BASE } from './constants';
 import { useTranslation } from './translate';
 import useSortedTargets from './useSortedTargets';
 
-const HIDDEN_ACC = ['actions', 'payouts'];
+const HIDDEN_ACC = ['actions', 'payout'];
 
 const transformElection = {
   transform: (status: ElectionStatus) => status.isOpen
@@ -114,6 +114,7 @@ function StakingApp ({ basePath, className = '' }: Props): React.ReactElement<Pr
         />
       </header>
       <Summary
+        inflation={targets.inflation.inflation}
         isVisible={pathname === basePath}
         next={next}
         nominators={targets.nominators}
@@ -175,7 +176,7 @@ function StakingApp ({ basePath, className = '' }: Props): React.ReactElement<Pr
   );
 }
 
-export default React.memo(styled(StakingApp)`
+export default React.memo(styled(StakingApp)(({ theme }: ThemeProps) => `
   .staking--hidden {
     display: none;
   }
@@ -193,7 +194,9 @@ export default React.memo(styled(StakingApp)`
   }
 
   .staking--optionsBar {
-    text-align: right;
+    margin: 0.5rem 0 1rem;
+    text-align: center;
+    white-space: normal;
 
     .staking--buttonToggle {
       display: inline-block;
@@ -204,7 +207,7 @@ export default React.memo(styled(StakingApp)`
 
   .ui--Expander.stakeOver {
     .ui--Expander-summary {
-      color: darkred;
+      color: ${theme.colorError};
     }
   }
-`);
+`));

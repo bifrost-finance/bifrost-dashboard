@@ -4,6 +4,7 @@
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
+
 import { useBlockTime } from '@polkadot/react-hooks';
 
 interface Props {
@@ -43,6 +44,6 @@ export default React.memo(styled(BlockToTime)`
   }
 
   span.timeUnits {
-    font-size: 0.85em;
+    font-size: 0.825em;
   }
 `);
