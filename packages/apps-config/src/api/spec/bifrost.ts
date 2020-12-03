@@ -3,8 +3,6 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 export default {
-  Address: 'MultiAddress',
-  LookupSource: 'MultiAddress',
   Token: { symbol: 'Vec<u8>', precision: 'u16', totalSupply: 'u128' },
   VersionId: 'u32',
   Action: {
@@ -67,33 +65,31 @@ export default {
     from: 'AccountId',
     token_symbol: 'TokenSymbol'
   },
-  Processing: { tx_id: 'Vec<u8>', multi_sig_tx: 'MultiSigTx' },
   Sent: { tx_id: 'Vec<u8>', from: 'AccountId', token_symbol: 'TokenSymbol' },
-  Fail: { tx_id: 'Vec<u8>', reason: 'Vec<u8>', tx: 'MultiSigTx' },
-  Failure: { tx_id: 'Vec<u8>', reason: 'Vec<u8>' },
+  Succeeded: { tx_id: 'Vec<u8>' },
+  Failed: { tx_id: 'Vec<u8>', reason: 'Vec<u8>' },
   TxOut: {
-    _enum: {
-      Initial: 'MultiSigTx',
-      Generated: 'MultiSigTx',
-      Signed: 'MultiSigTx',
-      Processing: 'Processing',
-      Success: 'Vec<u8>',
-      Fail: 'Fail'
-    }
-  },
-  TxOutV1: {
     _enum: {
       Initialized: 'MultiSigTx',
       Created: 'MultiSigTx',
-      CompleteSigned: 'MultiSigTx',
+      SignComplete: 'MultiSigTx',
       Sent: 'Sent',
-      Succeeded: 'Vec<u8>',
-      Failure: 'Failure'
+      Succeeded: 'Succeeded',
+      Failed: 'Failed'
     }
   },
+  RewardRecord: { account_id: 'AccountId', record_amount: 'Balance' },
   ConvertPrice: 'u128',
   RatePerBlock: 'u64',
   Fee: 'u64',
+  PoolId: 'u32',
+  Nonce: 'u32',
+  PoolDetails: { owner: 'AccountId', swap_fee_rate: 'Fee', active: 'bool' },
+  PoolCreateTokenDetails: {
+    token_id: 'TokenSymbol',
+    token_balance: 'Balance',
+    token_weight: 'PoolWeight'
+  },
   TokenPool: 'Balance',
   VTokenPool: 'Balance',
   InVariantPool: 'Balance',
@@ -106,14 +102,14 @@ export default {
       'vIOST'
     ]
   },
-  TrxStatus: {
+  TransactionStatus: {
     _enum: [
-      'Initial',
-      'Generated',
-      'Signed',
-      'Processing',
-      'Success',
-      'Fail'
+      'Initialized',
+      'Created',
+      'SignComplete',
+      'Sent',
+      'Succeeded',
+      'Failed'
     ]
   },
   Cost: 'u128',
@@ -142,7 +138,6 @@ export default {
   KeyWeight: { key: 'PublicKey', weight: 'u16' },
   InvariantValue: 'Balance',
   PoolWeight: 'Balance',
-  PoolId: 'u32',
   AssetConfig: { redeem_duration: 'BlockNumber', min_reward_per_block: 'Balance' },
   ProxyValidatorRegister: {
     last_block: 'BlockNumber',
