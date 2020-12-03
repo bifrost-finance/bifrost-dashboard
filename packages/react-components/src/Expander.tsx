@@ -102,7 +102,6 @@ function Expander ({ children, className = '', help, helpIcon, isOpen, isPadded,
             <div className='ui--Expander-summary-header-sub'>{headerSub}</div>
           )}
         </div>
-        {BNCheaderMain || t('Details')}
         <Icon
           color={hasContent ? undefined : 'transparent'}
           icon={
