@@ -1,20 +1,21 @@
 // Copyright 2017-2020 @polkadot/app-storage authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { QueryableStorageEntry } from '@polkadot/api/types';
-import { StorageEntryTypeLatest } from '@polkadot/types/interfaces';
-import { TypeDef, TypeDefInfo } from '@polkadot/types/types';
-import { RawParams } from '@polkadot/react-params/types';
-import { ComponentProps as Props } from '../types';
-
 import React, { useCallback, useState } from 'react';
-import ApiPromise from '@polkadot/api/promise';
+
+import type { QueryableStorageEntry } from '@polkadot/api/types';
+import type { RawParams } from '@polkadot/react-params/types';
+import type { StorageEntryTypeLatest } from '@polkadot/types/interfaces';
+import type { TypeDef } from '@polkadot/types/types';
+import { ApiPromise } from '@polkadot/api';
 import { Button, InputStorage } from '@polkadot/react-components';
 import { useApi } from '@polkadot/react-hooks';
 import Params from '@polkadot/react-params';
 import { getTypeDef } from '@polkadot/types';
+import { TypeDefInfo } from '@polkadot/types/types';
 import { isNull, isUndefined } from '@polkadot/util';
 
+import type { ComponentProps as Props } from '../types';
 import { useTranslation } from '../translate';
 
 interface TypeDefExt extends TypeDef {
@@ -38,9 +39,9 @@ interface ValState {
 function areParamsValid ({ creator: { meta: { type } } }: QueryableStorageEntry<'promise'>, values: RawParams): boolean {
   return values.reduce((isValid: boolean, value): boolean => {
     return isValid &&
-    !isUndefined(value) &&
-    !isUndefined(value.value) &&
-    value.isValid;
+      !isUndefined(value) &&
+      !isUndefined(value.value) &&
+      value.isValid;
   }, (
     type.isDoubleMap
       ? values.length === 2
@@ -71,16 +72,12 @@ function expandParams (st: StorageEntryTypeLatest, isIterable: boolean): ParamsT
   });
 }
 
-function checkIterable (api: ApiPromise, type: StorageEntryTypeLatest): boolean {
-  let def;
-
-  if (!api.rpc.state.queryStorageAt) {
-    return type.isMap && type.asMap.linked.isTrue;
-  } else if (type.isMap) {
-    def = getTypeDef(type.asMap.key.toString());
-  } else if (type.isDoubleMap) {
-    def = getTypeDef(type.asDoubleMap.key2.toString());
-  }
+function checkIterable (type: StorageEntryTypeLatest): boolean {
+  const def = type.isMap
+    ? getTypeDef(type.asMap.key.toString())
+    : type.isDoubleMap
+      ? getTypeDef(type.asDoubleMap.key2.toString())
+      : null;
 
   // in the case of Option<type> keys, we don't allow map iteration, in this case
   // we would have option for the iterable and then option for the key value
@@ -89,7 +86,7 @@ function checkIterable (api: ApiPromise, type: StorageEntryTypeLatest): boolean 
 
 function expandKey (api: ApiPromise, key: QueryableStorageEntry<'promise'>): KeyState {
   const { creator: { meta: { type }, section } } = key;
-  const isIterable = checkIterable(api, type);
+  const isIterable = checkIterable(type);
 
   return {
     defaultValues: section === 'session' && type.isDoubleMap

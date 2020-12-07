@@ -3,9 +3,11 @@
 
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { useAccountInfo, useToggle } from '@polkadot/react-hooks';
-import { colorLink } from '@polkadot/react-components/styles/theme';
+
+import type { ThemeProps } from '@polkadot/react-components/types';
 import { AccountName, Button, Icon, IdentityIcon, Input, LinkExternal, Sidebar, Tags } from '@polkadot/react-components';
+import { colorLink } from '@polkadot/react-components/styles/theme';
+import { useAccountInfo, useToggle } from '@polkadot/react-hooks';
 
 import Transfer from '../modals/Transfer';
 import { useTranslation } from '../translate';
@@ -159,15 +161,15 @@ function FullSidebar ({ address, className = '', onClose, onUpdateName }: Props)
   );
 }
 
-export default React.memo(styled(FullSidebar)`
+export default React.memo(styled(FullSidebar)(({ theme }: ThemeProps) => `
   input {
     width: auto !important;
   }
 
   .ui--AddressMenu-header {
     align-items: center;
-    background: white;
-    border-bottom: 1px solid #e6e6e6;
+    background: ${theme.bgTabs};
+    border-bottom: 1px solid ${theme.borderTable};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -176,7 +178,7 @@ export default React.memo(styled(FullSidebar)`
   }
 
   .ui--AddressMenu-addr {
-    font-family: monospace;
+    font: ${theme.fontMono};
     margin: 0.5rem 0;
     overflow: hidden;
     text-align: center;
@@ -195,7 +197,7 @@ export default React.memo(styled(FullSidebar)`
 
     .ui--AddressMenu-sectionHeader {
       display: inline-flex;
-      color: #aaa;
+      color: ${theme.color};
       margin-bottom: 0.4rem;
       width: 100%;
 
@@ -216,7 +218,7 @@ export default React.memo(styled(FullSidebar)`
         width: 100%;
 
         .th {
-          font-weight: bold;
+          font-weight: 400;
           text-align: right;
           flex-basis: 20%;
 
@@ -299,4 +301,4 @@ export default React.memo(styled(FullSidebar)`
       }
     }
   }
-`);
+`));
