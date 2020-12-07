@@ -60,7 +60,7 @@ function formatMeta (meta?: Meta): React.ReactNode | null {
   return <>{parts.map((part, index) => index % 2 ? <em key={index}>[{part}]</em> : <span key={index}>{part}</span>)}&nbsp;</>;
 }
 
-function Expander ({ children, className = '', help, helpIcon, isOpen, isPadded, onClick, renderChildren, summary, summaryHead, summaryMeta, summarySub, withHidden }: Props): React.ReactElement<Props> {
+function Expander ({ BNCsummary, children, className = '', help, helpIcon, isOpen, isPadded, onClick, renderChildren, summary, summaryHead, summaryMeta, summarySub, withHidden }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const [isExpanded, toggleExpanded] = useToggle(isOpen, onClick);
 
@@ -73,6 +73,12 @@ function Expander ({ children, className = '', help, helpIcon, isOpen, isPadded,
     () => summary || formatMeta(summaryMeta),
     [summary, summaryMeta]
   );
+
+  const BNCheaderMain = useMemo(
+    () => (BNCsummary),
+    [BNCsummary]
+  );
+
   const headerSub = useMemo(
     () => summary ? (formatMeta(summaryMeta) || summarySub) : null,
     [summary, summaryMeta, summarySub]
@@ -98,6 +104,7 @@ function Expander ({ children, className = '', help, helpIcon, isOpen, isPadded,
           )}
           {summaryHead}
           {headerMain || t<string>('Details')}
+          {BNCheaderMain || t('Details')}
           {headerSub && (
             <div className='ui--Expander-summary-header-sub'>{headerSub}</div>
           )}
