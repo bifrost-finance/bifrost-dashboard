@@ -195,22 +195,23 @@ function createTestNetworks(t: TFunction): LinkOption[] {
   return [
     {
       info: 'bifrost',
-      text: t<string>('rpc.bifrost.n1', 'Asgard CC3 n1', { ns: 'apps-config' }),
-      value: 'wss://n1.testnet.liebi.com',
-      textBy: t('rpc.hosted.by', 'hosted by {{host}}', { ns: 'apps-config', replace: { host: 'Liebe' } }),
+      text: t('rpc.bifrost', 'Bifrost Asgard n1', { ns: 'apps-config' }),
+      textBy: t('rpc.hosted.by', 'hosted by {{host}}', { ns: 'apps-config', replace: { host: 'Bifrost' } }),
+      value: 'wss://n1.testnet.liebi.com'
     },
     {
       info: 'bifrost',
-      text: t<string>('rpc.bifrost.n2', 'Asgard CC3 n2', { ns: 'apps-config' }),
-      value: 'wss://n2.testnet.liebi.com',
-      textBy: t('rpc.hosted.by', 'hosted by {{host}}', { ns: 'apps-config', replace: { host: 'Liebe' } }),
+      text: t('rpc.bifrost', 'Bifrost Asgard n2', { ns: 'apps-config' }),
+      textBy: t('rpc.hosted.by', 'hosted by {{host}}', { ns: 'apps-config', replace: { host: 'Bifrost' } }),
+      value: 'wss://n2.testnet.liebi.com'
     },
     {
       info: 'bifrost',
-      text: t<string>('rpc.bifrost.n3', 'Asgard CC3 n3', { ns: 'apps-config' }),
-      value: 'wss://n3.testnet.liebi.com',
-      textBy: t('rpc.hosted.by', 'hosted by {{host}}', { ns: 'apps-config', replace: { host: 'Liebe' } }),
-    },
+      text: t('rpc.bifrost', 'Bifrost Asgard n3', { ns: 'apps-config' }),
+      textBy: t('rpc.hosted.by', 'hosted by {{host}}', { ns: 'apps-config', replace: { host: 'Bifrost' } }),
+      value: 'wss://n3.testnet.liebi.com'
+    }
+
   ];
 }
 

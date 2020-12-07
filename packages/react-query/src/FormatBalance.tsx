@@ -33,35 +33,36 @@ function format (value: Compact<any> | BN | string, currency: string, withCurren
 
   if (prefix.length > M_LENGTH) {
     const [major, rest] = formatBalance(value, { withUnit: false }).split('.');
-    const minor = rest.substr(0, 4);
-    const unit = rest.substr(4);
+    const minor = rest.substr(0, 3);
+    const unit = rest.substr(3);
 
-    return <>{major}.<span className='ui--FormatBalance-postfix'>{minor}</span><span className='ui--FormatBalance-unit'>{unit}{unit ? unitPost : ` ${unitPost}`}</span>{labelPost || ''}</>;
+    return `${formatBalance(value).substr(0, formatBalance(value).indexOf('ASG'))}${currency}${labelPost || ''}`;
   }
 
-  return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && <span className='ui--FormatBalance-postfix'>{`0000${postfix || ''}`.slice(-4)}</span>}<span className='ui--FormatBalance-unit'> {unitPost}</span>{labelPost || ''}</>;
+  return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && (<><span className='ui--FormatBalance-postfix'>{`000${postfix || ''}`.slice(-3)}</span></>)} {`${currency}${labelPost || ''}`}</>;
 }
 
-function FormatBalance ({ children, className = '', isShort, label, labelPost, value, withCurrency, withSi,currency }: Props): React.ReactElement<Props> {
+function FormatBalance ({ children, className = '', currency, isShort, label, labelPost, value, withCurrency, withSi }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
 
   let inputcurrency;
+
   if (currency) {
-      inputcurrency = currency;
+    inputcurrency = currency;
   } else {
-      [inputcurrency] = useState(formatBalance.getDefaults().unit);
+    [inputcurrency] = useState(formatBalance.getDefaults().unit);
   }
 
   // labelPost here looks messy, however we ensure we have one less text node
   return (
     <div className={`ui--FormatBalance ${className}`}>
-      {label ? <>{label}&nbsp;</> : ''}<span className='ui--FormatBalance-value'>{
+      {label || ''}<span className='ui--FormatBalance-value'>{
         value
           ? value === 'all'
             ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
-            : format(value, withCurrency, withSi, isShort, labelPost)
-          : `-${labelPost || ''}`
-      }</span>{children}
+            : format(value, inputcurrency, withSi, isShort, labelPost)
+          : `0${labelPost || ''} ${inputcurrency || ''}`
+      }</span>
     </div>
   );
 }
