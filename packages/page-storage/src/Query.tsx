@@ -1,19 +1,20 @@
 // Copyright 2017-2020 @polkadot/app-storage authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { QueryableStorageEntry } from '@polkadot/api/types';
-import { RenderFn, DefaultProps, ComponentRenderer } from '@polkadot/react-api/hoc/types';
-import { ConstValue } from '@polkadot/react-components/InputConsts/types';
-import { QueryTypes, StorageModuleQuery } from './types';
-
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { unwrapStorageType } from '@polkadot/types/primitive/StorageKey';
-import { Button, Labelled } from '@polkadot/react-components';
+
+import type { QueryableStorageEntry } from '@polkadot/api/types';
+import type { ComponentRenderer, DefaultProps, RenderFn } from '@polkadot/react-api/hoc/types';
+import type { ConstValue } from '@polkadot/react-components/InputConsts/types';
+import type { Option, Raw } from '@polkadot/types';
 import { withCallDiv } from '@polkadot/react-api/hoc';
+import { Button, Labelled } from '@polkadot/react-components';
 import valueToText from '@polkadot/react-params/valueToText';
-import { Compact, Option, Raw } from '@polkadot/types';
-import { isU8a, u8aToHex, u8aToString } from '@polkadot/util';
+import { unwrapStorageType } from '@polkadot/types/primitive/StorageKey';
+import { compactStripLength, isU8a, u8aToHex, u8aToString } from '@polkadot/util';
+
+import type { QueryTypes, StorageModuleQuery } from './types';
 
 interface Props {
   className?: string;
@@ -39,7 +40,7 @@ function keyToName (isConst: boolean, _key: Uint8Array | QueryableStorageEntry<'
   const key = _key as Uint8Array | QueryableStorageEntry<'promise'>;
 
   if (isU8a(key)) {
-    const u8a = Compact.stripLengthPrefix(key);
+    const [, u8a] = compactStripLength(key);
 
     // If the string starts with `:`, handle it as a pure string
     return u8a[0] === 0x3a
@@ -104,22 +105,14 @@ function getCachedComponent (query: QueryTypes): CacheInstance {
             ? 1
             : 2;
 
-        if ((values.length === allCount) || (type.isMap && type.asMap.linked.isTrue)) {
-          // render function to create an element for the query results which is plugged to the api
-          renderHelper = withCallDiv('subscribe', {
-            paramName: 'params',
-            paramValid: true,
-            params: [key, ...values],
-            withIndicator: true
-          });
-        } else {
-          renderHelper = withCallDiv('subscribe', {
-            paramName: 'params',
-            paramValid: true,
-            params: [key.entries, ...values],
-            withIndicator: true
-          });
-        }
+        renderHelper = withCallDiv('subscribe', {
+          paramName: 'params',
+          paramValid: true,
+          params: values.length === allCount
+            ? [key, ...values]
+            : [key.entries, ...values],
+          withIndicator: true
+        });
       }
 
       type = key.creator && key.creator.meta

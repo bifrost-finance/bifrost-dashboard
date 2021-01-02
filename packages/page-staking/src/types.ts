@@ -1,15 +1,22 @@
 // Copyright 2017-2020 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { AccountId, Balance, BlockNumber, Exposure, Hash, SessionIndex, ValidatorPrefs, ValidatorPrefsTo196 } from '@polkadot/types/interfaces';
-
 import BN from 'bn.js';
+
+import type { Inflation } from '@polkadot/react-hooks/types';
+import type { AccountId, Balance, BlockNumber, EraIndex, Exposure, Hash, SessionIndex, ValidatorPrefs, ValidatorPrefsTo196 } from '@polkadot/types/interfaces';
 
 export type Nominators = Record<string, string[]>;
 
 export type AccountFilter = 'all' | 'controller' | 'session' | 'stash' | 'unbonded';
 
 export type ValidatorFilter = 'all' | 'hasNominators' | 'noNominators' | 'hasWarnings' | 'noWarnings' | 'iNominated' | 'nextSet';
+
+export interface NominatedBy {
+  index: number;
+  nominatorId: string;
+  submittedIn: EraIndex;
+}
 
 export interface Slash {
   accountId: AccountId;
@@ -46,16 +53,18 @@ export interface ValidatorInfo extends ValidatorInfoRank {
   bondTotal: Balance;
   commissionPer: number;
   exposure: Exposure;
-  hasIdentity: boolean;
   isActive: boolean;
   isCommission: boolean;
   isElected: boolean;
   isFavorite: boolean;
   isNominating: boolean;
   key: string;
+  lastPayout?: BN;
   numNominators: number;
-  rewardPayout: BN;
   rewardSplit: BN;
+  skipRewards: boolean;
+  stakedReturn: number;
+  stakedReturnCmp: number;
   validatorPayment: BN;
   validatorPrefs?: ValidatorPrefs | ValidatorPrefsTo196;
 }
@@ -64,12 +73,12 @@ export type TargetSortBy = keyof ValidatorInfoRank;
 
 export interface SortedTargets {
   avgStaked?: BN;
-  calcWith?: BN;
+  inflation: Inflation;
   lastReward?: BN;
   lowStaked?: BN;
   nominators?: string[];
-  setCalcWith: (amount?: BN) => void;
   totalStaked?: BN;
+  totalIssuance?: BN;
   validators?: ValidatorInfo[];
   validatorIds?: string[];
 }

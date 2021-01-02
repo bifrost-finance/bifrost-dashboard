@@ -1,8 +1,8 @@
 // Copyright 2017-2020 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { StorageEntryBase } from '@polkadot/api/types';
-import { ModuleConstantMetadataV7 } from '@polkadot/types/interfaces';
+import type { StorageEntryBase } from '@polkadot/api/types';
+import type { ModuleConstantMetadataLatest } from '@polkadot/types/interfaces';
 
 export type StorageEntryPromise = StorageEntryBase<'promise', any>;
 
@@ -12,5 +12,5 @@ export interface ConstValueBase {
 }
 
 export interface ConstValue extends ConstValueBase {
-  meta: ModuleConstantMetadataV7;
+  meta: ModuleConstantMetadataLatest;
 }

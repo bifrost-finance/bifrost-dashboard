@@ -5,8 +5,7 @@
 import './initSettings';
 import 'semantic-ui-css/semantic.min.css';
 import '@polkadot/react-components/i18n';
-
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -18,9 +17,10 @@ import ReactGA from 'react-ga';
 import Apps from './Apps';
 import WindowDimensions from './WindowDimensions';
 
+import Root from './Root';
+
 const rootId = 'root';
 const rootElement = document.getElementById(rootId);
-const theme = { theme: settings.uiTheme };
 
 ReactGA.initialize('UA-143666394-2');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -29,22 +29,6 @@ if (!rootElement) {
 }
 
 ReactDOM.render(
-  <Suspense fallback='...'>
-    <ThemeProvider theme={theme}>
-      <Queue>
-        <Api url={settings.apiUrl}>
-          <BlockAuthors>
-            <Events>
-              <HashRouter>
-                <WindowDimensions>
-                  <Apps />
-                </WindowDimensions>
-              </HashRouter>
-            </Events>
-          </BlockAuthors>
-        </Api>
-      </Queue>
-    </ThemeProvider>
-  </Suspense>,
+  <Root />,
   rootElement
 );

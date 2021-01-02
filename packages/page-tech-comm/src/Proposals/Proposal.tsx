@@ -1,17 +1,18 @@
 // Copyright 2017-2020 @polkadot/app-tech-comm authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { AccountId, Hash, Proposal as ProposalType, Votes } from '@polkadot/types/interfaces';
-
 import React, { useMemo } from 'react';
+
+import type { Option } from '@polkadot/types';
+import type { AccountId, Hash, Proposal as ProposalType, Votes } from '@polkadot/types/interfaces';
+import ProposalCell from '@polkadot/app-democracy/Overview/ProposalCell';
 import { AddressMini, TxButton } from '@polkadot/react-components';
 import { useAccounts, useApi, useCall, useVotingStatus, useWeight } from '@polkadot/react-hooks';
 import { BlockToTime } from '@polkadot/react-query';
-import ProposalCell from '@polkadot/app-democracy/Overview/ProposalCell';
-import { Option } from '@polkadot/types';
 import { formatNumber } from '@polkadot/util';
 
 import { useTranslation } from '../translate';
+import Close from './Close';
 import Voting from './Voting';
 
 interface Props {
@@ -39,8 +40,12 @@ function Proposal ({ className = '', imageHash, members, prime }: Props): React.
   const { hasFailed, isCloseable, isVoteable, remainingBlocks } = useVotingStatus(votes, members.length, 'technicalCommittee');
   const [proposalWeight, proposalLength] = useWeight(proposal);
 
-  const councilId = useMemo(
-    () => allAccounts.find((accountId) => members.includes(accountId)) || null,
+  const [councilId, isMultiMembers] = useMemo(
+    (): [string | null, boolean] => {
+      const councilIds = allAccounts.filter((accountId) => members.includes(accountId));
+
+      return [councilIds[0] || null, councilIds.length > 1];
+    },
     [allAccounts, members]
   );
 
@@ -96,19 +101,31 @@ function Proposal ({ className = '', imageHash, members, prime }: Props): React.
           />
         )}
         {isCloseable && (
-          <TxButton
-            accountId={councilId}
-            icon='times'
-            label={t<string>('Close')}
-            params={
-              api.tx.technicalCommittee.close?.meta.args.length === 4
-                ? hasFailed
-                  ? [imageHash, index, 0, 0]
-                  : [imageHash, index, proposalWeight, proposalLength]
-                : [imageHash, index]
-            }
-            tx='technicalCommittee.close'
-          />
+          isMultiMembers
+            ? (
+              <Close
+                hasFailed={hasFailed}
+                hash={imageHash}
+                idNumber={index}
+                members={members}
+                proposal={proposal}
+              />
+            )
+            : (
+              <TxButton
+                accountId={councilId}
+                icon='times'
+                label={t<string>('Close')}
+                params={
+                  api.tx.technicalCommittee.close?.meta.args.length === 4
+                    ? hasFailed
+                      ? [imageHash, index, 0, 0]
+                      : [imageHash, index, proposalWeight, proposalLength]
+                    : [imageHash, index]
+                }
+                tx='technicalCommittee.close'
+              />
+            )
         )}
       </td>
     </tr>
