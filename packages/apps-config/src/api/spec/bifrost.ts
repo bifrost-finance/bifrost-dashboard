@@ -12,17 +12,66 @@ const definitions: OverrideBundleDefinition = {
       // on all versions
       minmax: [0, undefined],
       types: {
-        Token: { symbol: 'Vec<u8>', precision: 'u16', totalSupply: 'u128' },
+        AccountInfo: 'AccountInfoWithRefCount',
+        Address: 'MultiAddress',
+        LookupSource: 'MultiAddress',
+        Token: {
+          symbol: 'Vec<u8>',
+          precision: 'u16',
+          total_supply: 'Balance',
+          token_type: 'TokenType',
+          pair: 'Option<AssetId>'
+        },
+        Price: 'u64',
+        AccountAsset: {
+          balance: 'Balance',
+          locked: 'Balance',
+          available: 'Balance',
+          cost: 'Balance',
+          income: 'Balance'
+        },
+        TokenType: {
+          _enum: [
+            'Native',
+            'Stable',
+            'Token',
+            'VToken'
+          ]
+        },
+        BiddingOrderId: 'u64',
+        RewardRecord: {
+          account_id: 'AccountId',
+          record_amount: 'Balance'
+        },
+        EraId: 'u32',
+        BiddingOrderUnit: {
+          bidder_id: 'AccountId',
+          token_id: 'AssetId',
+          block_num: 'BlockNumber',
+          votes: 'Balance',
+          annual_roi: 'Permill',
+          validator: 'AccountId'
+        },
+        BiddingOrderUnitOf: 'BiddingOrderUnit',
         VersionId: 'u32',
+        PermissionName: 'u64',
+        PermissionLevel: {
+          actor: 'AccountName',
+          permission: 'PermissionName'
+        },
         Action: {
           account: 'AccountName',
           name: 'ActionName',
           authorization: 'Vec<PermissionLevel>',
           data: 'Vec<u8>'
         },
-        IostAction: { contract: 'Vec<u8>', action_name: 'Vec<u8>', data: 'Vec<u8>' },
-        PermissionLevel: { actor: 'AccountName', permission: 'PermissionName' },
-        PermissionName: 'u64',
+        AccountName: 'u64',
+        Checksum256: '([u8;32])',
+        ActionName: 'u64',
+        FlatMap: {
+          map: 'Vec<(ActionName, u64)>'
+        },
+        UnsignedInt: 'u32',
         ActionReceipt: {
           receiver: 'AccountName',
           act_digest: 'Checksum256',
@@ -32,22 +81,37 @@ const definitions: OverrideBundleDefinition = {
           code_sequence: 'UnsignedInt',
           abi_sequence: 'UnsignedInt'
         },
-        Checksum256: '([u8;32])',
-        BlockchainType: { _enum: ['BIFROST', 'EOS', 'IOST'] },
+        BlockchainType: {
+          _enum: [
+            'BIFROST',
+            'EOS',
+            'IOST'
+          ]
+        },
         Precision: 'u32',
         BridgeAssetSymbol: {
           blockchain: 'BlockchainType',
           symbol: 'Vec<u8>',
           precision: 'Precision'
         },
-        ProducerSchedule: { version: 'u32', producers: 'Vec<ProducerKey>' },
-        ProducerKey: { producer_name: 'AccountName', block_signing_key: 'PublicKey' },
-        AccountName: 'u64',
-        ActionName: 'u64',
-        PublicKey: { type_: 'UnsignedInt', data: '[u8;33]' },
-        UnsignedInt: 'u32',
-        Signature: { type_: 'UnsignedInt', data: '[u8;65]' },
-        SignedBlockHeader: { block_header: 'BlockHeader', producer_signature: 'Signature' },
+        PublicKey: {
+          type_: 'UnsignedInt',
+          data: '[u8;33]'
+        },
+        ProducerKey: {
+          producer_name: 'AccountName',
+          block_signing_key: 'PublicKey'
+        },
+        ProducerSchedule: {
+          version: 'u32',
+          producers: 'Vec<ProducerKey>'
+        },
+        bridgeEosSignature: {
+          type_: 'UnsignedInt',
+          data: '[u8;65]'
+        },
+        BlockTimestamp: '(u32)',
+        Extension: '(u16, Vec<u8>)',
         BlockHeader: {
           timestamp: 'BlockTimestamp',
           producer: 'AccountName',
@@ -59,24 +123,43 @@ const definitions: OverrideBundleDefinition = {
           new_producers: 'Option<ProducerSchedule>',
           header_extensions: 'Vec<Extension>'
         },
-        BlockTimestamp: '(u32)',
-        Extension: '(u16, Vec<u8>)',
-        IncrementalMerkle: { _node_count: 'u64', _active_nodes: 'Checksum256Array' },
+        SignedBlockHeader: {
+          block_header: 'BlockHeader',
+          producer_signature: 'bridgeEosSignature'
+        },
         Checksum256Array: 'Vec<Checksum256>',
-        FlatMap: { map: 'Vec<(ActionName, u64)>' },
-        TxSig: { signature: 'Vec<u8>', author: 'AccountId' },
-        MultiSig: { signatures: 'Vec<TxSig>', threshold: 'u8' },
+        IncrementalMerkle: {
+          _node_count: 'u64',
+          _active_nodes: 'Checksum256Array'
+        },
+        TxSig: {
+          signature: 'Vec<u8>',
+          author: 'AccountId'
+        },
+        MultiSig: {
+          signatures: 'Vec<TxSig>',
+          threshold: 'u8'
+        },
         MultiSigTx: {
           chain_id: 'Vec<u8>',
           raw_tx: 'Vec<u8>',
           multi_sig: 'MultiSig',
           action: 'Action',
           from: 'AccountId',
-          token_symbol: 'TokenSymbol'
+          asset_id: 'AssetId'
         },
-        Sent: { tx_id: 'Vec<u8>', from: 'AccountId', token_symbol: 'TokenSymbol' },
-        Succeeded: { tx_id: 'Vec<u8>' },
-        Failed: { tx_id: 'Vec<u8>', reason: 'Vec<u8>' },
+        Sent: {
+          tx_id: 'Vec<u8>',
+          from: 'AccountId',
+          asset_id: 'AssetId'
+        },
+        Succeeded: {
+          tx_id: 'Vec<u8>'
+        },
+        Failed: {
+          tx_id: 'Vec<u8>',
+          reason: 'Vec<u8>'
+        },
         TxOut: {
           _enum: {
             Initialized: 'MultiSigTx',
@@ -86,30 +169,6 @@ const definitions: OverrideBundleDefinition = {
             Succeeded: 'Succeeded',
             Failed: 'Failed'
           }
-        },
-        RewardRecord: { account_id: 'AccountId', record_amount: 'Balance' },
-        ConvertPrice: 'u128',
-        RatePerBlock: 'u64',
-        Fee: 'u64',
-        PoolId: 'u32',
-        Nonce: 'u32',
-        PoolDetails: { owner: 'AccountId', swap_fee_rate: 'Fee', active: 'bool' },
-        PoolCreateTokenDetails: {
-          token_id: 'TokenSymbol',
-          token_balance: 'Balance',
-          token_weight: 'PoolWeight'
-        },
-        TokenPool: 'Balance',
-        VTokenPool: 'Balance',
-        InVariantPool: 'Balance',
-        TokenSymbol: {
-          _enum: [
-            'aUSD', 'DOT',
-            'vDOT', 'KSM',
-            'vKSM', 'EOS',
-            'vEOS', 'IOST',
-            'vIOST'
-          ]
         },
         TransactionStatus: {
           _enum: [
@@ -121,33 +180,57 @@ const definitions: OverrideBundleDefinition = {
             'Failed'
           ]
         },
-        Cost: 'u128',
-        Income: 'u128',
-        Price: 'u64',
-        AccountAsset: {
-          balance: 'Balance',
-          locked: 'Balance',
-          available: 'Balance',
-          cost: 'Cost',
-          income: 'Income'
+        ProducerAuthoritySchedule: {
+          version: 'u32',
+          producers: 'Vec<ProducerAuthority>'
+        },
+        ProducerAuthority: {
+          producer_name: 'ActionName',
+          authority: 'BlockSigningAuthority'
+        },
+        BlockSigningAuthority: '(UnsignedInt, BlockSigningAuthorityV0)',
+        BlockSigningAuthorityV0: {
+          threshold: 'u32',
+          keyWeights: 'Vec<KeyWeight>'
+        },
+        KeyWeight: {
+          key: 'PublicKey',
+          weight: 'u16'
+        },
+        IostAction: {
+          contract: 'Vec<u8>',
+          action_name: 'Vec<u8>',
+          data: 'Vec<u8>'
+        },
+        IostMultiSigTx: {
+          chain_id: 'i32',
+          raw_tx: 'Vec<u8>',
+          multi_sig: 'MultiSig',
+          action: 'IostAction',
+          from: 'AccountId',
+          asset_id: 'AssetId'
+        },
+        Processing: {
+          tx_id: 'Vec<u8>',
+          multi_sig_tx: 'IostMultiSigTx'
+        },
+        IostTxOut: {
+          _enum: {
+            Initial: 'IostMultiSigTx',
+            Generated: 'IostMultiSigTx',
+            Signed: 'IostMultiSigTx',
+            Processing: 'Processing',
+            Success: 'Vec<u8>',
+            Fail: 'Failed'
+          }
         },
         SpecIndex: 'u32',
         RequestIdentifier: 'u64',
         DataVersion: 'u64',
-        ConvertPool: {
-          token_pool: 'Balance',
-          vtoken_pool: 'Balance',
-          current_reward: 'Balance',
-          pending_reward: 'Balance'
+        AssetConfig: {
+          redeem_duration: 'BlockNumber',
+          min_reward_per_block: 'Balance'
         },
-        ProducerAuthoritySchedule: { version: 'u32', producers: 'Vec<ProducerAuthority>' },
-        ProducerAuthority: { producer_name: 'ActionName', authority: 'BlockSigningAuthority' },
-        BlockSigningAuthority: '(UnsignedInt, BlockSigningAuthorityV0)',
-        BlockSigningAuthorityV0: { threshold: 'u32', keys: 'Vec<KeyWeight>' },
-        KeyWeight: { key: 'PublicKey', weight: 'u16' },
-        InvariantValue: 'Balance',
-        PoolWeight: 'Balance',
-        AssetConfig: { redeem_duration: 'BlockNumber', min_reward_per_block: 'Balance' },
         ProxyValidatorRegister: {
           last_block: 'BlockNumber',
           deposit: 'Balance',
@@ -156,7 +239,28 @@ const definitions: OverrideBundleDefinition = {
           reward_per_block: 'Balance',
           validator_address: 'Vec<u8>'
         },
-        BlockNumber: 'u32'
+        PoolId: 'u32',
+        SwapFee: 'u128',
+        PoolDetails: {
+          owner: 'AccountId',
+          swap_fee_rate: 'SwapFee',
+          active: 'bool'
+        },
+        PoolWeight: 'Balance',
+        PoolToken: 'u128',
+        PoolCreateTokenDetails: {
+          token_id: 'AssetId',
+          token_balance: 'Balance',
+          token_weight: 'PoolWeight'
+        },
+        VtokenPool: {
+          token_pool: 'Balance',
+          vtoken_pool: 'Balance',
+          current_reward: 'Balance',
+          pending_reward: 'Balance'
+        },
+        VtokenMintPrice: 'u128',
+        MintPrice: 'VtokenMintPrice'
       }
     }
   ]
