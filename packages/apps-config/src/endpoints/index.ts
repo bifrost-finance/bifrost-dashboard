@@ -11,25 +11,25 @@ import { createRococo } from './testingRococo';
 
 export { CUSTOM_ENDPOINT_KEY } from './development';
 
-export function createWsEndpoints (t: TFunction): LinkOption[] {
+export function createWsEndpoints(t: TFunction): LinkOption[] {
   return [
     ...createCustom(t),
-    {
-      isDisabled: false,
-      isHeader: true,
-      text: t('rpc.header.live', 'Live networks', { ns: 'apps-config' }),
-      textBy: '',
-      value: ''
-    },
-    ...createProduction(t),
-    {
-      isDisabled: false,
-      isHeader: true,
-      text: t('rpc.header.test.relay', 'Test relays & parachains', { ns: 'apps-config' }),
-      textBy: '',
-      value: ''
-    },
-    ...createRococo(t),
+    // {
+    //   isDisabled: false,
+    //   isHeader: true,
+    //   text: t('rpc.header.live', 'Live networks', { ns: 'apps-config' }),
+    //   textBy: '',
+    //   value: ''
+    // },
+    // ...createProduction(t),
+    // {
+    //   isDisabled: false,
+    //   isHeader: true,
+    //   text: t('rpc.header.test.relay', 'Test relays & parachains', { ns: 'apps-config' }),
+    //   textBy: '',
+    //   value: ''
+    // },
+    // ...createRococo(t),
     {
       isDisabled: false,
       isHeader: true,
