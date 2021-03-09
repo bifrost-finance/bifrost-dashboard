@@ -30,6 +30,22 @@ const definitions: OverrideBundleDefinition = {
           cost: 'Balance',
           income: 'Balance'
         },
+        TokenSymbol: {
+          _enum: [
+            'BNC',
+            'aUSD',
+            'DOT',
+            'vDOT',
+            'KSM',
+            'vKSM',
+            'ETH',
+            'vETH',
+            'EOS',
+            'vEOS',
+            'IOST',
+            'vIOST'
+          ]
+        },
         TokenType: {
           _enum: [
             'Native',
@@ -37,6 +53,11 @@ const definitions: OverrideBundleDefinition = {
             'Token',
             'VToken'
           ]
+        },
+        CurrencyId: {
+          _enum: {
+            Token: 'TokenSymbol'
+          }
         },
         BiddingOrderId: 'u64',
         RewardRecord: {
@@ -260,7 +281,8 @@ const definitions: OverrideBundleDefinition = {
           pending_reward: 'Balance'
         },
         VtokenMintPrice: 'u128',
-        MintPrice: 'VtokenMintPrice'
+        MintPrice: 'VtokenMintPrice',
+        CurrencyIdOf: 'CurrencyId'
       }
     }
   ]
