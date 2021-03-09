@@ -1,9 +1,10 @@
-// Copyright 2017-2020 @polkadot/react-components authors & contributors
+// Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { ThemeProps } from '../types';
 
 import { createGlobalStyle } from 'styled-components';
 
-import type { ThemeProps } from '../types';
 import cssComponents from './components';
 import cssForm from './form';
 import cssMedia from './media';
@@ -79,7 +80,7 @@ export default createGlobalStyle<Props & ThemeProps>(({ theme, uiHighlight }: Pr
   }
 
   .highlight--bg-light:before {
-    opacity: 0.125;
+    opacity: 0.2;
   }
 
   .highlight--border {
@@ -173,6 +174,7 @@ export default createGlobalStyle<Props & ThemeProps>(({ theme, uiHighlight }: Pr
 
       .ui--Icon {
         background: transparent;
+        color: inherit;
         color: ${getHighlight(uiHighlight)};
       }
     }
@@ -201,7 +203,7 @@ export default createGlobalStyle<Props & ThemeProps>(({ theme, uiHighlight }: Pr
     .ui--Toggle.isChecked {
       &:not(.isRadio) {
         .ui--Toggle-Slider {
-          background-color: ${getHighlight(uiHighlight)} !important;
+          background: ${getHighlight(uiHighlight)} !important;
 
           &:before {
             border-color: ${getHighlight(uiHighlight)} !important;
@@ -256,6 +258,15 @@ export default createGlobalStyle<Props & ThemeProps>(({ theme, uiHighlight }: Pr
         top: 0;
         z-index: -1;
       }
+    }
+
+    &.mark {
+      margin: 0.5rem 0 0.5rem 2.25rem;
+      padding: 0.5rem 1rem !important;
+    }
+
+    &.nomargin {
+      margin-left: 0;
     }
 
     &.extraMargin {
@@ -369,7 +380,7 @@ export default createGlobalStyle<Props & ThemeProps>(({ theme, uiHighlight }: Pr
     display: block;
     font: ${theme.fontSans};
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: ${theme.fontWeightNormal};
   }
 
   main {

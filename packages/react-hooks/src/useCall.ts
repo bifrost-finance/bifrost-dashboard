@@ -1,14 +1,16 @@
-// Copyright 2017-2020 @polkadot/react-hooks authors & contributors
+// Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { Codec } from '@polkadot/types/types';
+import type { CallOptions, CallParam, CallParams } from './types';
+import type { MountedRef } from './useIsMountedRef';
 
 import { useEffect, useRef, useState } from 'react';
 
-import type { Codec } from '@polkadot/types/types';
 import { isNull, isUndefined } from '@polkadot/util';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { CallOptions, CallParam, CallParams } from './types';
-import { MountedRef, useIsMountedRef } from './useIsMountedRef';
+import { useIsMountedRef } from './useIsMountedRef';
 
 type VoidFn = () => void;
 
@@ -27,7 +29,7 @@ interface TrackFn {
   };
 }
 
-interface Tracker {
+export interface Tracker {
   isActive: boolean;
   serialized: string | null;
   subscriber: TrackFnResult | null;
@@ -38,7 +40,7 @@ interface TrackerRef {
 }
 
 // the default transform, just returns what we have
-function transformIdentity <T> (value: unknown): T {
+export function transformIdentity <T> (value: unknown): T {
   return value as T;
 }
 
@@ -53,7 +55,7 @@ function extractParams <T> (fn: unknown, params: unknown[], { paramMap = transfo
 }
 
 // unsubscribe and remove from  the tracker
-function unsubscribe (tracker: TrackerRef): void {
+export function unsubscribe (tracker: TrackerRef): void {
   tracker.current.isActive = false;
 
   if (tracker.current.subscriber) {
@@ -74,7 +76,7 @@ function subscribe <T> (mountedRef: MountedRef, tracker: TrackerRef, fn: TrackFn
         // swap to acive mode
         tracker.current.isActive = true;
 
-        tracker.current.subscriber = (fn as (...params: unknown[]) => Promise<() => void>)(...params, (value: Codec): void => {
+        tracker.current.subscriber = (fn as (...params: unknown[]) => Promise<VoidFn>)(...params, (value: Codec): void => {
           // we use the isActive flag here since .subscriber may not be set on immediate callback)
           if (mountedRef.current && tracker.current.isActive) {
             mountedRef.current && tracker.current.isActive && setValue(

@@ -1,18 +1,19 @@
-// Copyright 2017-2020 @polkadot/app-staking authors & contributors
+// Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { DeriveAccountInfo } from '@polkadot/api-derive/types';
+import type { UnappliedSlash } from '@polkadot/types/interfaces';
+import type { NominatedBy, ValidatorInfo } from '../types';
 
 import BN from 'bn.js';
 import React, { useCallback, useMemo } from 'react';
 
-import type { DeriveAccountInfo } from '@polkadot/api-derive/types';
-import type { UnappliedSlash } from '@polkadot/types/interfaces';
 import { AddressSmall, Badge, Checkbox, Icon } from '@polkadot/react-components';
 import { checkVisibility } from '@polkadot/react-components/util';
 import { useApi, useBlockTime, useCall } from '@polkadot/react-hooks';
 import { FormatBalance } from '@polkadot/react-query';
 import { formatNumber } from '@polkadot/util';
 
-import type { NominatedBy, ValidatorInfo } from '../types';
 import MaxBadge from '../MaxBadge';
 import Favorite from '../Overview/Address/Favorite';
 import { useTranslation } from '../translate';
@@ -67,7 +68,7 @@ function Validator ({ allSlashes, canSelect, filterName, info, isNominated, isSe
     return null;
   }
 
-  const { accountId, bondOther, bondOwn, bondTotal, commissionPer, isCommission, isElected, isFavorite, key, lastPayout, numNominators, rankOverall, stakedReturnCmp, validatorPayment } = info;
+  const { accountId, bondOther, bondOwn, bondTotal, commissionPer, isElected, isFavorite, key, lastPayout, numNominators, rankOverall, stakedReturnCmp } = info;
 
   return (
     <tr>
@@ -125,13 +126,7 @@ function Validator ({ allSlashes, canSelect, filterName, info, isNominated, isSe
       </td>
       <td className='number media--1200 no-pad-right'>{numNominators || ''}</td>
       <td className='number media--1200 no-pad-left'>{nominatedBy.length || ''}</td>
-      <td className='number media--1100'>
-        {
-          isCommission
-            ? `${commissionPer.toFixed(2)}%`
-            : <FormatBalance value={validatorPayment} />
-        }
-      </td>
+      <td className='number media--1100'>{commissionPer.toFixed(2)}%</td>
       <td className='number together'>{!bondTotal.isZero() && <FormatBalance value={bondTotal} />}</td>
       <td className='number together media--900'>{!bondOwn.isZero() && <FormatBalance value={bondOwn} />}</td>
       <td className='number together media--1600'>{!bondOther.isZero() && <FormatBalance value={bondOther} />}</td>

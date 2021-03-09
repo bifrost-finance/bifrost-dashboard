@@ -1,24 +1,26 @@
-// Copyright 2017-2020 @polkadot/app-staking authors & contributors
+// Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import BN from 'bn.js';
-import React, { useCallback, useContext, useMemo } from 'react';
-import styled from 'styled-components';
 
 import type { DeriveBalancesAll, DeriveStakingAccount } from '@polkadot/api-derive/types';
 import type { StakerState } from '@polkadot/react-hooks/types';
 import type { Option } from '@polkadot/types';
 import type { SlashingSpans, UnappliedSlash } from '@polkadot/types/interfaces';
+import type { SortedTargets } from '../../types';
+import type { Slash } from '../types';
+
+import BN from 'bn.js';
+import React, { useCallback, useContext, useMemo } from 'react';
+import styled from 'styled-components';
+
 import { ApiPromise } from '@polkadot/api';
 import { AddressInfo, AddressMini, AddressSmall, Badge, Button, Menu, Popup, StakingBonded, StakingRedeemable, StakingUnbonding, StatusContext, TxButton } from '@polkadot/react-components';
 import { useApi, useCall, useToggle } from '@polkadot/react-hooks';
-import { formatNumber } from '@polkadot/util';
+import { formatNumber, isFunction } from '@polkadot/util';
 
-import type { SortedTargets } from '../../types';
-import type { Slash } from '../types';
 import { useTranslation } from '../../translate';
 import BondExtra from './BondExtra';
 import InjectKeys from './InjectKeys';
+import KickNominees from './KickNominees';
 import ListNominees from './ListNominees';
 import Nominate from './Nominate';
 import SetControllerAccount from './SetControllerAccount';
@@ -71,6 +73,7 @@ function Account ({ allSlashes, className = '', info: { controllerId, destinatio
   const { queueExtrinsic } = useContext(StatusContext);
   const [isBondExtraOpen, toggleBondExtra] = useToggle();
   const [isInjectOpen, toggleInject] = useToggle();
+  const [isKickOpen, toggleKick] = useToggle();
   const [isNominateOpen, toggleNominate] = useToggle();
   const [isRewardDestinationOpen, toggleRewardDestination] = useToggle();
   const [isSetControllerOpen, toggleSetController] = useToggle();
@@ -128,6 +131,13 @@ function Account ({ allSlashes, className = '', info: { controllerId, destinatio
         )}
         {isInjectOpen && (
           <InjectKeys onClose={toggleInject} />
+        )}
+        {isKickOpen && controllerId && (
+          <KickNominees
+            controllerId={controllerId}
+            onClose={toggleKick}
+            stashId={stashId}
+          />
         )}
         {isNominateOpen && controllerId && (
           <Nominate
@@ -223,7 +233,7 @@ function Account ({ allSlashes, className = '', info: { controllerId, destinatio
                   isDisabled={!isOwnController || isDisabled}
                   key='stop'
                   label={t<string>('Stop')}
-                  tx='staking.chill'
+                  tx={api.tx.staking.chill}
                 />
               )
               : (
@@ -276,7 +286,7 @@ function Account ({ allSlashes, className = '', info: { controllerId, destinatio
                 vertical
               >
                 <Menu.Item
-                  disabled={!isOwnStash && !balancesAll?.freeBalance.gtn(0)}
+                  disabled={!isOwnStash || !balancesAll?.freeBalance.gtn(0)}
                   onClick={toggleBondExtra}
                 >
                   {t<string>('Bond more funds')}
@@ -306,14 +316,24 @@ function Account ({ allSlashes, className = '', info: { controllerId, destinatio
                 >
                   {t<string>('Change reward destination')}
                 </Menu.Item>
-                {isStashValidating &&
-                  <Menu.Item
-                    disabled={!isOwnController}
-                    onClick={toggleValidate}
-                  >
-                    {t<string>('Change validator preferences')}
-                  </Menu.Item>
-                }
+                {isStashValidating && (
+                  <>
+                    <Menu.Item
+                      disabled={!isOwnController}
+                      onClick={toggleValidate}
+                    >
+                      {t<string>('Change validator preferences')}
+                    </Menu.Item>
+                    {isFunction(api.tx.staking.kick) && (
+                      <Menu.Item
+                        disabled={!isOwnController}
+                        onClick={toggleKick}
+                      >
+                        {t<string>('Remove nominees')}
+                      </Menu.Item>
+                    )}
+                  </>
+                )}
                 <Menu.Divider />
                 {!isStashNominating &&
                   <Menu.Item

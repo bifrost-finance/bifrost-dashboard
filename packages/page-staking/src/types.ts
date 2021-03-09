@@ -1,10 +1,10 @@
-// Copyright 2017-2020 @polkadot/app-staking authors & contributors
+// Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import BN from 'bn.js';
 
 import type { Inflation } from '@polkadot/react-hooks/types';
 import type { AccountId, Balance, BlockNumber, EraIndex, Exposure, Hash, SessionIndex, ValidatorPrefs, ValidatorPrefsTo196 } from '@polkadot/types/interfaces';
+
+import BN from 'bn.js';
 
 export type Nominators = Record<string, string[]>;
 
@@ -38,34 +38,32 @@ interface ValidatorInfoRank {
   rankBondOther: number;
   rankBondOwn: number;
   rankBondTotal: number;
-  rankComm: number;
   rankNumNominators: number;
   rankOverall: number;
-  rankPayment: number;
   rankReward: number;
 }
 
 export interface ValidatorInfo extends ValidatorInfoRank {
   accountId: AccountId;
   bondOther: BN;
-  bondOwn: Balance;
+  bondOwn: BN;
   bondShare: number;
-  bondTotal: Balance;
+  bondTotal: BN;
   commissionPer: number;
   exposure: Exposure;
   isActive: boolean;
-  isCommission: boolean;
   isElected: boolean;
   isFavorite: boolean;
   isNominating: boolean;
   key: string;
+  knownLength: BN;
   lastPayout?: BN;
+  minNominated: BN;
   numNominators: number;
-  rewardSplit: BN;
+  numRecentPayouts: number;
   skipRewards: boolean;
   stakedReturn: number;
   stakedReturnCmp: number;
-  validatorPayment: BN;
   validatorPrefs?: ValidatorPrefs | ValidatorPrefsTo196;
 }
 
@@ -73,12 +71,15 @@ export type TargetSortBy = keyof ValidatorInfoRank;
 
 export interface SortedTargets {
   avgStaked?: BN;
+  electedIds?: string[];
   inflation: Inflation;
-  lastReward?: BN;
   lowStaked?: BN;
+  medianComm: number;
+  minNominated: BN;
   nominators?: string[];
   totalStaked?: BN;
   totalIssuance?: BN;
   validators?: ValidatorInfo[];
   validatorIds?: string[];
+  waitingIds?: string[];
 }

@@ -1,14 +1,15 @@
-// Copyright 2017-2020 @polkadot/react-components authors & contributors
+// Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { ConstantCodec } from '@polkadot/metadata/decorate/types';
+import type { DropdownOptions } from '../util/types';
+import type { ConstValue, ConstValueBase } from './types';
 
 import React, { useCallback, useState } from 'react';
 
-import type { ConstantCodec } from '@polkadot/metadata/decorate/types';
 import { ApiPromise } from '@polkadot/api';
 import { useApi } from '@polkadot/react-hooks';
 
-import type { DropdownOptions } from '../util/types';
-import type { ConstValue, ConstValueBase } from './types';
 import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
 import keyOptions from './options/key';
 import sectionOptions from './options/section';
@@ -40,9 +41,9 @@ function getValue (api: ApiPromise, { method, section }: ConstValueBase): ConstV
 
 function InputConsts ({ className = '', defaultValue, help, label, onChange, withLabel }: Props): React.ReactElement<Props> {
   const { api } = useApi();
-  const [optionsMethod, setOptionsMethod] = useState<DropdownOptions>(keyOptions(api, defaultValue.section));
-  const [optionsSection] = useState<DropdownOptions>(sectionOptions(api));
-  const [value, setValue] = useState<ConstValue>(getValue(api, defaultValue));
+  const [optionsMethod, setOptionsMethod] = useState<DropdownOptions>(() => keyOptions(api, defaultValue.section));
+  const [optionsSection] = useState<DropdownOptions>(() => sectionOptions(api));
+  const [value, setValue] = useState<ConstValue>(() => getValue(api, defaultValue));
 
   const _onKeyChange = useCallback(
     (newValue: ConstValueBase): void => {

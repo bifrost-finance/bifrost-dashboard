@@ -1,4 +1,4 @@
-// Copyright 2017-2020 @polkadot/app-democracy authors & contributors
+// Copyright 2017-2021 @polkadot/app-democracy authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useMemo } from 'react';
@@ -6,9 +6,9 @@ import { Route, Switch } from 'react-router';
 
 import { HelpOverlay, Tabs } from '@polkadot/react-components';
 
-import Execute from './Execute';
 import useDispatchCounter from './Execute/useCounter';
 import basicMd from './md/basic.md';
+import Execute from './Execute';
 import Overview from './Overview';
 import { useTranslation } from './translate';
 

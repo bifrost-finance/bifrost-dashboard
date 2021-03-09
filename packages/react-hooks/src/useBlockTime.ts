@@ -1,10 +1,12 @@
-// Copyright 2017-2020 @polkadot/app-democracy authors & contributors
+// Copyright 2017-2021 @polkadot/app-democracy authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { ApiPromise } from '@polkadot/api';
+import type { Time } from '@polkadot/util/types';
 
 import BN from 'bn.js';
 import { useMemo } from 'react';
 
-import type { Time } from '@polkadot/util/types';
 import { useApi } from '@polkadot/react-hooks';
 import { BN_ONE, extractTime } from '@polkadot/util';
 
@@ -14,16 +16,17 @@ type Result = [number, string, Time];
 
 const DEFAULT_TIME = new BN(6000);
 
-export function useBlockTime (blocks = BN_ONE): Result {
+export function useBlockTime (blocks = BN_ONE, apiOverride?: ApiPromise): Result {
   const { t } = useTranslation();
   const { api } = useApi();
 
   return useMemo(
     (): Result => {
+      const a = apiOverride || api;
       const blockTime = (
-        api.consts.babe?.expectedBlockTime ||
-        api.consts.difficulty?.targetBlockTime ||
-        api.consts.timestamp?.minimumPeriod.muln(2) ||
+        a.consts.babe?.expectedBlockTime ||
+        a.consts.difficulty?.targetBlockTime ||
+        a.consts.timestamp?.minimumPeriod.muln(2) ||
         DEFAULT_TIME
       );
       const time = extractTime(blockTime.mul(blocks).toNumber());
@@ -44,6 +47,6 @@ export function useBlockTime (blocks = BN_ONE): Result {
         time
       ];
     },
-    [api, blocks, t]
+    [api, apiOverride, blocks, t]
   );
 }

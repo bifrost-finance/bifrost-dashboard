@@ -1,19 +1,19 @@
-// Copyright 2017-2020 @polkadot/app-accounts authors & contributors
+// Copyright 2017-2021 @polkadot/app-accounts authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { ActionStatus } from '@polkadot/react-components/Status/types';
+import type { AccountId, ProxyDefinition, ProxyType, Voting } from '@polkadot/types/interfaces';
+import type { Delegation, SortedAccount } from '../types';
 
 import BN from 'bn.js';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import type { ActionStatus } from '@polkadot/react-components/Status/types';
-import type { AccountId, ProxyDefinition, ProxyType, Voting } from '@polkadot/types/interfaces';
-import { isLedger } from '@polkadot/react-api';
 import { Button, Input, Table } from '@polkadot/react-components';
-import { useAccounts, useApi, useCall, useFavorites, useIpfs, useLoadingDelay, useToggle } from '@polkadot/react-hooks';
+import { useAccounts, useApi, useCall, useFavorites, useIpfs, useLedger, useLoadingDelay, useToggle } from '@polkadot/react-hooks';
 import { FormatBalance } from '@polkadot/react-query';
 import { BN_ZERO } from '@polkadot/util';
 
-import type { Delegation, SortedAccount } from '../types';
 import CreateModal from '../modals/Create';
 import ImportModal from '../modals/Import';
 import Ledger from '../modals/Ledger';
@@ -48,6 +48,7 @@ function Overview ({ className = '', onStatusChange }: Props): React.ReactElemen
   const { api } = useApi();
   const { allAccounts, hasAccounts } = useAccounts();
   const { isIpfs } = useIpfs();
+  const { isLedgerEnabled } = useLedger();
   const [isCreateOpen, toggleCreate] = useToggle();
   const [isImportOpen, toggleImport] = useToggle();
   const [isLedgerOpen, toggleLedger] = useToggle();
@@ -89,10 +90,6 @@ function Overview ({ className = '', onStatusChange }: Props): React.ReactElemen
   }, [allAccounts, favorites]);
 
   useEffect(() => {
-    if (api.query.democracy?.votingOf && !delegations?.length) {
-      return;
-    }
-
     setSortedAccountsWithDelegation(
       sortedAccounts?.map((account, index) => {
         let delegation: Delegation | undefined;
@@ -207,24 +204,24 @@ function Overview ({ className = '', onStatusChange }: Props): React.ReactElemen
           label={t<string>('Add via Qr')}
           onClick={toggleQr}
         />
-        {isLedger() && (
+        {isLedgerEnabled && (
           <>
             <Button
-              icon='question'
-              label={t<string>('Add Ledger')}
+              icon='project-diagram'
+              label={t<string>('Add via Ledger')}
               onClick={toggleLedger}
             />
           </>
         )}
         <Button
           icon='plus'
-          isDisabled={!(api.tx.multisig || api.tx.utility)}
+          isDisabled={!(api.tx.multisig || api.tx.utility) || !hasAccounts}
           label={t<string>('Multisig')}
           onClick={toggleMultisig}
         />
         <Button
           icon='plus'
-          isDisabled={!api.tx.proxy}
+          isDisabled={!api.tx.proxy || !hasAccounts}
           label={t<string>('Proxied')}
           onClick={toggleProxy}
         />
@@ -232,7 +229,7 @@ function Overview ({ className = '', onStatusChange }: Props): React.ReactElemen
       <BannerExtension />
       <BannerClaims />
       <Table
-        empty={(!hasAccounts || (!isLoading && sortedAccountsWithDelegation)) && t<string>("You don't have any accounts. Some features are currently hidden and will only become available once you have accounts.")}
+        empty={!isLoading && sortedAccountsWithDelegation && t<string>("You don't have any accounts. Some features are currently hidden and will only become available once you have accounts.")}
         filter={filter}
         footer={footer}
         header={headerRef.current}

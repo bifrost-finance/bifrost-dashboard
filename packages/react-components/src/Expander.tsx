@@ -1,11 +1,12 @@
-// Copyright 2017-2020 @polkadot/react-components authors & contributors
+// Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconName } from '@fortawesome/fontawesome-svg-core';
+import type { Text } from '@polkadot/types';
+
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
-import type { Text } from '@polkadot/types';
 import { LabelHelp } from '@polkadot/react-components';
 import { useToggle } from '@polkadot/react-hooks';
 
