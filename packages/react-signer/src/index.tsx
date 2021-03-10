@@ -1,17 +1,17 @@
-// Copyright 2017-2020 @polkadot/react-signer authors & contributors
+// Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import React, { useContext, useEffect, useMemo } from 'react';
-import styled from 'styled-components';
 
 import type { QueueTx, QueueTxMessageSetStatus, QueueTxResult } from '@polkadot/react-components/Status/types';
 import type { BareProps as Props } from '@polkadot/react-components/types';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
+
+import React, { useContext, useEffect, useMemo } from 'react';
+import styled from 'styled-components';
+
 import { ApiPromise } from '@polkadot/api';
 import { Modal, StatusContext } from '@polkadot/react-components';
 import { useApi } from '@polkadot/react-hooks';
-import { assert, isFunction } from '@polkadot/util';
-import { format } from '@polkadot/util/logger';
+import { assert, isFunction, loggerFormat } from '@polkadot/util';
 
 import { useTranslation } from './translate';
 import TxSigned from './TxSigned';
@@ -35,7 +35,7 @@ async function submitRpc (api: ApiPromise, { method, section }: DefinitionRpcExt
 
     const result = await rpc[section][method](...values);
 
-    console.log('submitRpc: result ::', format(result));
+    console.log('submitRpc: result ::', loggerFormat(result));
 
     return {
       result,

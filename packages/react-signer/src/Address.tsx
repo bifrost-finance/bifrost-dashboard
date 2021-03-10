@@ -1,19 +1,20 @@
-// Copyright 2017-2020 @polkadot/react-signer authors & contributors
+// Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { QueueTx } from '@polkadot/react-components/Status/types';
 import type { Option, Vec } from '@polkadot/types';
 import type { AccountId, BalanceOf, Call, Multisig, ProxyDefinition, ProxyType } from '@polkadot/types/interfaces';
 import type { ITuple } from '@polkadot/types/types';
+import type { AddressFlags, AddressProxy } from './types';
+
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { ApiPromise } from '@polkadot/api';
-import { InputAddress, Modal, Toggle } from '@polkadot/react-components';
+import { InputAddress, MarkError, Modal, Toggle } from '@polkadot/react-components';
 import { useAccounts, useApi, useIsMountedRef } from '@polkadot/react-hooks';
 import { isFunction } from '@polkadot/util';
 
-import type { AddressFlags, AddressProxy } from './types';
 import Password from './Password';
 import { useTranslation } from './translate';
 import { extractExternal } from './util';
@@ -74,7 +75,7 @@ function filterProxies (allAccounts: string[], tx: Call | SubmittableExtrinsic<'
         case 'Any':
           return true;
         case 'Governance':
-          return ['council', 'democracy', 'elections', 'electionsPhragmen', 'poll', 'society', 'technicalCommittee', 'treasury'].includes(section);
+          return ['council', 'democracy', 'elections', 'electionsPhragmen', 'poll', 'society', 'technicalCommittee', 'tips', 'treasury'].includes(section);
         case 'IdentityJudgement':
           return section === 'identity' && method === 'provideJudgement';
         case 'NonTransfer':
@@ -265,6 +266,13 @@ function Address ({ currentItem, onChange, onEnter, passwordError, requestAddres
           onChange={_updatePassword}
           onEnter={onEnter}
         />
+      )}
+      {passwordError && (
+        <Modal.Columns>
+          <Modal.Column>
+            <MarkError content={passwordError} />
+          </Modal.Column>
+        </Modal.Columns>
       )}
       {proxyInfo && (
         <Modal.Columns>

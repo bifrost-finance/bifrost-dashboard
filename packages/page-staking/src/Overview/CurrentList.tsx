@@ -1,16 +1,17 @@
-// Copyright 2017-2020 @polkadot/app-staking authors & contributors
+// Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 
 import type { DeriveHeartbeats, DeriveStakingOverview } from '@polkadot/api-derive/types';
 import type { Authors } from '@polkadot/react-query/BlockAuthors';
 import type { AccountId } from '@polkadot/types/interfaces';
+import type { SortedTargets, ValidatorInfo } from '../types';
+
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+
 import { Table } from '@polkadot/react-components';
-import { useApi, useCall, useLoadingDelay } from '@polkadot/react-hooks';
+import { useApi, useCall, useLoadingDelay, useSavedFlags } from '@polkadot/react-hooks';
 import { BlockAuthorsContext } from '@polkadot/react-query';
 
-import type { SortedTargets, ValidatorInfo } from '../types';
 import Filtering from '../Filtering';
 import Legend from '../Legend';
 import { useTranslation } from '../translate';
@@ -21,7 +22,6 @@ interface Props {
   favorites: string[];
   hasQueries: boolean;
   isIntentions?: boolean;
-  next?: string[];
   setNominators?: (nominators: string[]) => void;
   stakingOverview?: DeriveStakingOverview;
   targets: SortedTargets;
@@ -71,26 +71,26 @@ function getFiltered (stakingOverview: DeriveStakingOverview, favorites: string[
   };
 }
 
-function CurrentList ({ favorites, hasQueries, isIntentions, next, stakingOverview, targets, toggleFavorite }: Props): React.ReactElement<Props> | null {
+function CurrentList ({ favorites, hasQueries, isIntentions, stakingOverview, targets, toggleFavorite }: Props): React.ReactElement<Props> | null {
   const { t } = useTranslation();
   const { api } = useApi();
   const { byAuthor, eraPoints } = useContext(isIntentions ? EmptyAuthorsContext : BlockAuthorsContext);
   const recentlyOnline = useCall<DeriveHeartbeats>(!isIntentions && api.derive.imOnline?.receivedHeartbeats);
   const nominatedBy = useNominations(isIntentions);
   const [nameFilter, setNameFilter] = useState<string>('');
-  const [withIdentity, setWithIdentity] = useState(false);
+  const [toggles, setToggle] = useSavedFlags('staking:overview', { withIdentity: false });
 
   // we have a very large list, so we use a loading delay
   const isLoading = useLoadingDelay();
 
   const { elected, validators, waiting } = useMemo(
-    () => stakingOverview ? getFiltered(stakingOverview, favorites, next) : {},
-    [favorites, next, stakingOverview]
+    () => stakingOverview ? getFiltered(stakingOverview, favorites, targets.waitingIds) : {},
+    [favorites, stakingOverview, targets]
   );
 
   const infoMap = useMemo(
     () => targets.validators?.reduce((result: Record<string, ValidatorInfo>, info): Record<string, ValidatorInfo> => {
-      result[info.accountId.toString()] = info;
+      result[info.key] = info;
 
       return result;
     }, {}),
@@ -129,15 +129,14 @@ function CurrentList ({ favorites, hasQueries, isIntentions, next, stakingOvervi
           key={address}
           lastBlock={byAuthor[address]}
           nominatedBy={nominatedBy ? (nominatedBy[address] || []) : undefined}
-          onlineCount={recentlyOnline?.[address]?.blockCount}
-          onlineMessage={recentlyOnline?.[address]?.hasMessage}
           points={eraPoints[address]}
+          recentlyOnline={recentlyOnline?.[address]}
           toggleFavorite={toggleFavorite}
           validatorInfo={infoMap?.[address]}
-          withIdentity={withIdentity}
+          withIdentity={toggles.withIdentity}
         />
       )),
-    [byAuthor, eraPoints, hasQueries, infoMap, nameFilter, nominatedBy, recentlyOnline, toggleFavorite, withIdentity]
+    [byAuthor, eraPoints, hasQueries, infoMap, nameFilter, nominatedBy, recentlyOnline, toggleFavorite, toggles]
   );
 
   return isIntentions
@@ -155,8 +154,8 @@ function CurrentList ({ favorites, hasQueries, isIntentions, next, stakingOvervi
           <Filtering
             nameFilter={nameFilter}
             setNameFilter={setNameFilter}
-            setWithIdentity={setWithIdentity}
-            withIdentity={withIdentity}
+            setWithIdentity={setToggle.withIdentity}
+            withIdentity={toggles.withIdentity}
           />
         }
         header={headerWaitingRef.current}
@@ -179,14 +178,14 @@ function CurrentList ({ favorites, hasQueries, isIntentions, next, stakingOvervi
           <Filtering
             nameFilter={nameFilter}
             setNameFilter={setNameFilter}
-            setWithIdentity={setWithIdentity}
-            withIdentity={withIdentity}
+            setWithIdentity={setToggle.withIdentity}
+            withIdentity={toggles.withIdentity}
           />
         }
         header={headerActiveRef.current}
         legend={<Legend />}
       >
-        {(isLoading || !recentlyOnline || !infoMap) ? undefined : _renderRows(validators, true)}
+        {isLoading ? undefined : _renderRows(validators, true)}
       </Table>
     );
 }

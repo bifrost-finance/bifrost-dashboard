@@ -1,16 +1,18 @@
-// Copyright 2017-2020 @polkadot/app-staking authors & contributors
+// Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { SortedTargets } from '../../types';
+import type { NominateInfo } from './types';
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { InputAddress, InputAddressMulti, Modal } from '@polkadot/react-components';
+import { InputAddressMulti, MarkWarning, Modal } from '@polkadot/react-components';
 import { useApi, useFavorites } from '@polkadot/react-hooks';
 
-import type { SortedTargets } from '../../types';
-import type { NominateInfo } from './types';
 import { MAX_NOMINATIONS, STORE_FAVS_BASE } from '../../constants';
 import { useTranslation } from '../../translate';
+import SenderInfo from './SenderInfo';
 
 interface Props {
   className?: string;
@@ -40,33 +42,24 @@ function Nominate ({ className = '', controllerId, nominating, onChange, stashId
   });
 
   useEffect((): void => {
-    onChange({
-      nominateTx: selected && selected.length
-        ? api.tx.staking.nominate(selected)
-        : null
-    });
+    try {
+      onChange({
+        nominateTx: selected && selected.length
+          ? api.tx.staking.nominate(selected)
+          : null
+      });
+    } catch {
+      onChange({ nominateTx: null });
+    }
   }, [api, onChange, selected]);
 
   return (
     <div className={className}>
       {withSenders && (
-        <Modal.Columns>
-          <Modal.Column>
-            <InputAddress
-              defaultValue={stashId}
-              isDisabled
-              label={t<string>('stash account')}
-            />
-            <InputAddress
-              defaultValue={controllerId}
-              isDisabled
-              label={t<string>('controller account')}
-            />
-          </Modal.Column>
-          <Modal.Column>
-            <p>{t<string>('The stash that is to be affected. The transaction will be sent from the associated controller account.')}</p>
-          </Modal.Column>
-        </Modal.Columns>
+        <SenderInfo
+          controllerId={controllerId}
+          stashId={stashId}
+        />
       )}
       <Modal.Columns>
         <Modal.Column>
@@ -79,7 +72,7 @@ function Nominate ({ className = '', controllerId, nominating, onChange, stashId
             onChange={setSelected}
             valueLabel={t<string>('nominated accounts')}
           />
-          <article className='warning'>{t<string>('You should trust your nominations to act competently and honest; basing your decision purely on their current profitability could lead to reduced profits or even loss of funds.')}</article>
+          <MarkWarning content={t<string>('You should trust your nominations to act competently and honest; basing your decision purely on their current profitability could lead to reduced profits or even loss of funds.')} />
         </Modal.Column>
         <Modal.Column>
           <p>{t<string>('Nominators can be selected manually from the list of all currently available validators.')}</p>

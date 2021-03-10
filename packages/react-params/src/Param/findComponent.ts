@@ -1,12 +1,13 @@
-// Copyright 2017-2020 @polkadot/react-params authors & contributors
+// Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Registry, TypeDef } from '@polkadot/types/types';
+import type { ComponentMap, Props } from '../types';
+
 import { getTypeDef } from '@polkadot/types';
 import { TypeDefInfo } from '@polkadot/types/types';
 import { isBn } from '@polkadot/util';
 
-import type { ComponentMap, Props } from '../types';
 import Account from './Account';
 import Amount from './Amount';
 import Balance from './Balance';

@@ -1,10 +1,10 @@
-// Copyright 2017-2020 @polkadot/react-hooks authors & contributors
+// Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import { useMemo } from 'react';
 
 import type { Option } from '@polkadot/types';
 import type { AccountId, StakingLedger } from '@polkadot/types/interfaces';
+
+import { useMemo } from 'react';
 
 import { useAccounts } from './useAccounts';
 import { useApi } from './useApi';
@@ -37,10 +37,12 @@ export function useOwnStashes (): [string, IsInKeyring][] | undefined {
   const ownLedger = useCall<Option<StakingLedger>[]>(hasAccounts && api.query.staking?.ledger.multi, [allAccounts]);
 
   return useMemo(
-    () => ownBonded && ownLedger
-      ? getStashes(allAccounts, ownBonded, ownLedger)
-      : undefined,
-    [allAccounts, ownBonded, ownLedger]
+    () => hasAccounts
+      ? ownBonded && ownLedger
+        ? getStashes(allAccounts, ownBonded, ownLedger)
+        : undefined
+      : [],
+    [allAccounts, hasAccounts, ownBonded, ownLedger]
   );
 }
 

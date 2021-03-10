@@ -1,10 +1,11 @@
-// Copyright 2017-2020 @polkadot/app-treasury authors & contributors
+// Copyright 2017-2021 @polkadot/app-treasury authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-import React, { useEffect, useRef, useState } from 'react';
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { ProposalIndex } from '@polkadot/types/interfaces';
+
+import React, { useEffect, useRef, useState } from 'react';
+
 import { getTreasuryProposalThreshold } from '@polkadot/apps-config';
 import { Button, Dropdown, InputAddress, Modal, TxButton } from '@polkadot/react-components';
 import { useApi, useToggle } from '@polkadot/react-hooks';
@@ -79,7 +80,7 @@ function Council ({ id, isDisabled, members }: Props): React.ReactElement<Props>
                 />
               </Modal.Column>
               <Modal.Column>
-                <p>{t<string>('Proposal can either be to approve or reject this spend. One approved, the change is applied by either removing the proposal or scheduling payout.')}</p>
+                <p>{t<string>('Proposal can either be to approve or reject this spend. Once approved, the change is applied by either removing the proposal or scheduling payout.')}</p>
               </Modal.Column>
             </Modal.Columns>
           </Modal.Content>
@@ -95,7 +96,7 @@ function Council ({ id, isDisabled, members }: Props): React.ReactElement<Props>
                   ? [threshold, proposal, proposalLength]
                   : [threshold, proposal]
               }
-              tx='council.propose'
+              tx={api.tx.council.propose}
             />
           </Modal.Actions>
         </Modal>

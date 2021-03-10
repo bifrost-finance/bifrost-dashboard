@@ -1,12 +1,13 @@
-// Copyright 2017-2020 @polkadot/react-components authors & contributors
+// Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { ThemeProps } from '../types';
 
 import React from 'react';
 import styled from 'styled-components';
 
 import { isString } from '@polkadot/util';
 
-import type { ThemeProps } from '../types';
 import Spinner from '../Spinner';
 
 interface Props {
@@ -34,6 +35,7 @@ export default React.memo(styled(Body)(({ theme }: ThemeProps) => `
   position: relative;
 
   td {
+    border-bottom: 1px solid ${theme.borderTable};
     padding: 0.75rem 1rem;
     text-align: left;
     vertical-align: middle;
@@ -80,6 +82,15 @@ export default React.memo(styled(Body)(({ theme }: ThemeProps) => `
 
       > * {
         vertical-align: middle;
+      }
+
+      .ui--Toggle {
+        display: inline-block;
+        white-space: nowrap;
+
+        label {
+          display: inline-block !important;
+        }
       }
     }
 
@@ -129,6 +140,10 @@ export default React.memo(styled(Body)(({ theme }: ThemeProps) => `
       text-overflow: ellipsis;
     }
 
+    &.start {
+      text-align: left;
+    }
+
     &.together {
       white-space: nowrap;
     }
@@ -163,11 +178,8 @@ export default React.memo(styled(Body)(({ theme }: ThemeProps) => `
   }
 
   tr {
-    // &:nth-child(odd) {
-    //   background: #faf8f6;
-    // }
-
-    &:nth-child(odd) {
+    &:nth-child(odd):not(.isEven),
+    &:nth-child(even).isOdd {
       background: ${theme.bgTable};
     }
 

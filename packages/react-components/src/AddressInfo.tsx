@@ -216,8 +216,8 @@ function renderValidatorPrefs ({ stakingInfo, withValidatorPrefs = false }: Prop
 }
 
 function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockNumber | undefined, t: TFunction): React.ReactNode {
-  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance = {}, BNCVal=0 } = props;
-    const { aUSD = 0, DOT = 0, vDOT = 0, KSM = 0, vKSM = 0, EOS = 0, vEOS = 0 } = otherBalance;
+  const { address, balancesAll, democracyLocks, stakingInfo, withBalance = true, withBalanceToggle = false, otherBalance = {}, BNCVal = 0 } = props;
+  const { DOT = 0, EOS = 0, KSM = 0, aUSD = 0, vDOT = 0, vEOS = 0, vKSM = 0 } = otherBalance;
   const balanceDisplay = withBalance === true
     ? DEFAULT_BALANCES
     : withBalance || false;
@@ -247,16 +247,16 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
         </>
       )}
       {
-        aUSD ?(
-            <FormatBalance
-            currency="aUSD"
+        aUSD ? (
+          <FormatBalance
             className='result'
+            currency='aUSD'
             value={aUSD}
           />
-        ): (
+        ) : (
           <FormatBalance
-            currency="aUSD"
             className='result'
+            currency='aUSD'
             value={0}
           />
         )
@@ -264,48 +264,47 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
 
       {
         DOT ? (
-            <FormatBalance
-            currency="DOT"
+          <FormatBalance
             className='result'
+            currency='DOT'
             value={DOT}
           />
-        ):(
+        ) : (
           <FormatBalance
-            currency="DOT"
             className='result'
+            currency='DOT'
             value={0}
           />
         )
       }
 
-{
+      {
         vDOT ? (
-            <FormatBalance
-            currency="vDOT"
+          <FormatBalance
             className='result'
+            currency='vDOT'
             value={vDOT}
           />
-        ):(
+        ) : (
           <FormatBalance
-            currency="vDOT"
             className='result'
+            currency='vDOT'
             value={0}
           />
         )
       }
-
 
       {
         KSM ? (
-            <FormatBalance
-            currency="KSM"
+          <FormatBalance
             className='result'
+            currency='KSM'
             value={KSM}
           />
-        ): (
+        ) : (
           <FormatBalance
-            currency="KSM"
             className='result'
+            currency='KSM'
             value={0}
           />
         )
@@ -313,15 +312,15 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
 
       {
         vKSM ? (
-            <FormatBalance
-            currency="vKSM"
+          <FormatBalance
             className='result'
+            currency='vKSM'
             value={vKSM}
           />
-        ): (
+        ) : (
           <FormatBalance
-            currency="vKSM"
             className='result'
+            currency='vKSM'
             value={0}
           />
         )
@@ -329,31 +328,31 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
 
       {
         EOS ? (
-            <FormatBalance
-            currency="EOS"
+          <FormatBalance
             className='result'
+            currency='EOS'
             value={EOS }
           />
-        ):(
+        ) : (
           <FormatBalance
-          currency="EOS"
-          className='result'
-          value={0}
-        />
+            className='result'
+            currency='EOS'
+            value={0}
+          />
         )
       }
 
       {
         vEOS ? (
-            <FormatBalance
-            currency="vEOS"
+          <FormatBalance
             className='result'
+            currency='vEOS'
             value={vEOS }
-            />
-        ):(
-           <FormatBalance
-            currency="vEOS"
+          />
+        ) : (
+          <FormatBalance
             className='result'
+            currency='vEOS'
             value={0}
           />
         )
@@ -486,24 +485,25 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
     return (
       <>
         <Expander summary={
-            <>
-                <FormatBalance value={balancesAll?.votingBalance} />
-                <FormatBalance
-                    label={
-                        <>
-                            <Icon
-                                icon='info-circle'
-                                tooltip={`${address}-vested-trigger`}
-                            />
-                            <Tooltip
-                                text={'BNC mainnet voucher, not tradable, exchanged 1:1 when the mainnet is launch'}
-                                trigger={`${address}-vested-trigger`}
-                            />
-                        </>
-                    }
-                    value={BNCVal} currency='BNC'
-                />
-            </>
+          <>
+            <FormatBalance value={balancesAll?.votingBalance} />
+            <FormatBalance
+              currency='BNC'
+              label={
+                <>
+                  <Icon
+                    icon='info-circle'
+                    tooltip={`${address}-vested-trigger`}
+                  />
+                  <Tooltip
+                    text={'BNC mainnet voucher, not tradable, exchanged 1:1 when the mainnet is launch'}
+                    trigger={`${address}-vested-trigger`}
+                  />
+                </>
+              }
+              value={BNCVal}
+            />
+          </>
         }>
           <div className='body column'>
             {allItems}
