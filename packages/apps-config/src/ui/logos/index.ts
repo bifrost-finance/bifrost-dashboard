@@ -6,11 +6,10 @@
 
 // anything for a specific chain, most would probably fit into the node category (but allow for chain-specific)
 // alphabetical
+import chainBifrost from './chains/bifrost.svg';
 import chainDusty from './chains/dusty.png';
 import chainHydrate from './chains/hydrate.png';
 import chainKusama from './chains/kusama-128.gif';
-import chainBifrost from './chains/bifrost.svg';
-
 import chainPolkaBTC from './chains/polkabtc.png';
 import chainRococo from './chains/rococo.svg';
 import chainRococoTick from './chains/rococo-tick.svg';
@@ -26,7 +25,6 @@ import externalPolkastats from './external/polkastats.png';
 import externalSubscan from './external/subscan.svg';
 import nodeAcala from './nodes/acala-circle.svg';
 import nodeAres from './nodes/ares.svg';
-import nodeBifrost from './nodes/bifrost.svg';
 import nodeBitCountry from './nodes/bitcountry.svg';
 import nodeCanvas from './nodes/canvas-2.png';
 import nodeCentrifuge from './nodes/centrifuge.png';
@@ -59,6 +57,7 @@ import nodePlasm from './nodes/plasm.png';
 import nodePolkaBTC from './nodes/polkabtc.png';
 import nodePolkadex from './nodes/polkadex.svg';
 import nodePolkadot from './nodes/polkadot-circle.svg';
+import nodeBifrost from './nodes/bifrost.svg';
 import nodePolkadotJs from './nodes/polkadot-js.svg';
 import nodeRobonomics from './nodes/robonomics.svg';
 import nodeSgc from './nodes/sgc.svg';
