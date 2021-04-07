@@ -237,7 +237,7 @@ Contributed:
 - Add Plasm Rococo endpoint (thanks to https://github.com/akru)
 - Add Robonomics Rococo endpoint (Thanks to https://github.com/akru)
 - Add Mandala Rococo endpoint (Thanks to https://github.com/ntduan)
-- Add Bitfrost Rococo endpoint (thanks to https://github.com/awesomepan)
+- Add Bifrost Rococo endpoint (thanks to https://github.com/awesomepan)
 - Add Kilt Rococo endpoint (Thanks to https://github.com/wischli)
 - Patract Elara Rococo endpoints (Thanks to https://github.com/toxotguo)
 - Add types for upcoming Rococo Encointer (Thanks to https://github.com/brenzi)
@@ -417,7 +417,7 @@ Contributed:
 - Add first area around bounties, the existing display (Thanks to https://github.com/krzysztof-jelski)
 - Adjust import ordering with plugin (Thanks to https://github.com/ekowalsk)
 - Add Polkadot/Kusama endpoints via PatractLabs (Thanks to https://github.com/toxotguo)
-- Add types for Bitfrost testnet (Thaks to https://github.com/janpo)
+- Add types for Bifrost testnet (Thaks to https://github.com/janpo)
 - Adjust Crust network types & logo (Thanks to https://github.com/zikunfan)
 - Adjust types for Phala poc-3 (Thanks to https://github.com/LusWar)
 - Move to typesBundle for Moonbeam (Thanks to https://github.com/joelamouche)
@@ -496,7 +496,7 @@ Contributed:
 - Update types of Cantillon testnet (Thanks to https://github.com/brenzi)
 - Update types of Gesell testnet (Thanks to https://github.com/brenzi)
 - Add Darwinia network (Thanks to https://github.com/WoeOm)
-- Add Bitfrost Asgard testnet (Thanks to https://github.com/janpo)
+- Add Bifrost Asgard testnet (Thanks to https://github.com/janpo)
 
 Changes:
 
