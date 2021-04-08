@@ -53,7 +53,8 @@ const definitions: OverrideBundleDefinition = {
         CurrencyId: 'u32',
         TokenId: 'u64',
         CurrencyIdOf: 'CurrencyId',
-        BalanceIdOf: 'Balance'
+        BalanceIdOf: 'Balance',
+        BlockNumberFor: 'BlockNumber'
       }
     }
   ]
