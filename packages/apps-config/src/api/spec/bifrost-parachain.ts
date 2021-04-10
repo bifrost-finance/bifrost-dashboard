@@ -282,7 +282,8 @@ const definitions: OverrideBundleDefinition = {
         },
         VtokenMintPrice: 'u128',
         MintPrice: 'VtokenMintPrice',
-        CurrencyIdOf: 'CurrencyId'
+        CurrencyIdOf: 'CurrencyId',
+        BlockNumberFor: 'BlockNumber'
       }
     }
   ]

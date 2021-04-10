@@ -156,7 +156,8 @@ const definitions: OverrideBundleDefinition = {
           reward_per_block: 'Balance',
           validator_address: 'Vec<u8>'
         },
-        BlockNumber: 'u32'
+        BlockNumber: 'u32',
+        BlockNumberFor: 'BlockNumber'
       }
     }
   ]
