@@ -1,8 +1,6 @@
 {
   "lng.detect": "Default browser language (auto-detect)",
-  "rpc.bifrost.n1": "Asgard CC3 (n1.testnet.liebi.com, hosted by Liebi)",
-  "rpc.bifrost.n2": "Asgard CC3 (n2.testnet.liebi.com, hosted by Liebi)",
-  "rpc.bifrost.n3": "Asgard CC3 (n3.testnet.liebi.com, hosted by Liebi)",
+  "rpc.asgard": "Asgard CC4 (asgard-rpc.liebi.com, hosted by Liebi)",
   "rpc.amber": "Amber",
   "rpc.ares": "Ares",
   "rpc.ava.summary": "user-run public nodes; see https://status.cloud.ava.do/",

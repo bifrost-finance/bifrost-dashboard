@@ -19,23 +19,9 @@ export function createTesting(t: TFunction): LinkOption[] {
     // alphabetical based on chain name, e.g. Amber, Arcadia, Beresheet, ...
     {
       info: 'bifrost',
-      text: t('rpc.bifrost', 'Bifrost Asgard n1', { ns: 'apps-config' }),
+      text: t('rpc.asgard', 'Bifrost Asgard', { ns: 'apps-config' }),
       providers: {
-        Bifrost: 'wss://n1.testnet.liebi.com'
-      }
-    },
-    {
-      info: 'bifrost',
-      text: t('rpc.bifrost', 'Bifrost Asgard n2', { ns: 'apps-config' }),
-      providers: {
-        Bifrost: 'wss://n2.testnet.liebi.com'
-      }
-    },
-    {
-      info: 'bifrost',
-      text: t('rpc.bifrost', 'Bifrost Asgard n3', { ns: 'apps-config' }),
-      providers: {
-        Bifrost: 'wss://n3.testnet.liebi.com'
+        Bifrost: 'wss://asgard-rpc.liebi.com'
       }
     }
   ]);
