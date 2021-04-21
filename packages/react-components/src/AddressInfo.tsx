@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { TFunction } from 'i18next';
+import type { DeriveBalancesAccountData, DeriveBalancesAll, DeriveDemocracyLock, DeriveStakingAccount } from '@polkadot/api-derive/types';
+import type { BlockNumber, LockIdentifier, ValidatorPrefsTo145, Voting } from '@polkadot/types/interfaces';
+
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
 
-import type { DeriveBalancesAll, DeriveDemocracyLock, DeriveStakingAccount } from '@polkadot/api-derive/types';
-import type { BlockNumber, LockIdentifier, ValidatorPrefsTo145 } from '@polkadot/types/interfaces';
 import { withCalls, withMulti } from '@polkadot/react-api/hoc';
 import { Expander, Icon, Tooltip } from '@polkadot/react-components';
-import { useAccounts, useApi, useCall } from '@polkadot/react-hooks';
+import { useAccounts, useApi, useBestNumber, useCall } from '@polkadot/react-hooks';
 import { BlockToTime, FormatBalance } from '@polkadot/react-query';
 import { BN_ZERO, formatBalance, formatNumber, hexToString, isObject } from '@polkadot/util';
 
@@ -52,6 +53,7 @@ interface Props {
   democracyLocks?: DeriveDemocracyLock[];
   extraInfo?: [string, string][];
   stakingInfo?: DeriveStakingAccount;
+  votingOf?: Voting;
   withBalance?: boolean | BalanceActiveType;
   withBalanceToggle?: false;
   withExtended?: boolean | CryptoActiveType;
@@ -247,115 +249,129 @@ function renderBalances (props: Props, allAccounts: string[], bestNumber: BlockN
         </>
       )}
       {
-        aUSD ? (
-          <FormatBalance
-            className='result'
-            currency='aUSD'
-            value={aUSD}
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='aUSD'
-            value={0}
-          />
-        )
+        aUSD
+          ? (
+            <FormatBalance
+              className='result'
+              currency='aUSD'
+              value={aUSD}
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='aUSD'
+              value={0}
+            />
+          )
       }
 
       {
-        DOT ? (
-          <FormatBalance
-            className='result'
-            currency='DOT'
-            value={DOT}
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='DOT'
-            value={0}
-          />
-        )
+        DOT
+          ? (
+            <FormatBalance
+              className='result'
+              currency='DOT'
+              value={DOT}
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='DOT'
+              value={0}
+            />
+          )
       }
 
       {
-        vDOT ? (
-          <FormatBalance
-            className='result'
-            currency='vDOT'
-            value={vDOT}
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='vDOT'
-            value={0}
-          />
-        )
+        vDOT
+          ? (
+            <FormatBalance
+              className='result'
+              currency='vDOT'
+              value={vDOT}
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='vDOT'
+              value={0}
+            />
+          )
       }
 
       {
-        KSM ? (
-          <FormatBalance
-            className='result'
-            currency='KSM'
-            value={KSM}
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='KSM'
-            value={0}
-          />
-        )
+        KSM
+          ? (
+            <FormatBalance
+              className='result'
+              currency='KSM'
+              value={KSM}
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='KSM'
+              value={0}
+            />
+          )
       }
 
       {
-        vKSM ? (
-          <FormatBalance
-            className='result'
-            currency='vKSM'
-            value={vKSM}
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='vKSM'
-            value={0}
-          />
-        )
+        vKSM
+          ? (
+            <FormatBalance
+              className='result'
+              currency='vKSM'
+              value={vKSM}
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='vKSM'
+              value={0}
+            />
+          )
       }
 
       {
-        EOS ? (
-          <FormatBalance
-            className='result'
-            currency='EOS'
-            value={EOS }
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='EOS'
-            value={0}
-          />
-        )
+        EOS
+          ? (
+            <FormatBalance
+              className='result'
+              currency='EOS'
+              value={EOS }
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='EOS'
+              value={0}
+            />
+          )
       }
 
       {
-        vEOS ? (
-          <FormatBalance
-            className='result'
-            currency='vEOS'
-            value={vEOS }
-          />
-        ) : (
-          <FormatBalance
-            className='result'
-            currency='vEOS'
-            value={0}
-          />
-        )
+        vEOS
+          ? (
+            <FormatBalance
+              className='result'
+              currency='vEOS'
+              value={vEOS }
+            />
+          )
+          : (
+            <FormatBalance
+              className='result'
+              currency='vEOS'
+              value={0}
+            />
+          )
       }
       {balancesAll && balanceDisplay.available && (
         <>
@@ -638,6 +654,11 @@ export default withMulti(
     ['derive.democracy.locks', {
       paramName: 'address',
       propName: 'democracyLocks',
+      skipIf: skipStakingIf
+    }],
+    ['query.democracy.votingOf', {
+      paramName: 'address',
+      propName: 'votingOf',
       skipIf: skipStakingIf
     }]
   )
