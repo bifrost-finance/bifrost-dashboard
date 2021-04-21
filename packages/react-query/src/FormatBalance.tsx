@@ -1,12 +1,14 @@
 // Copyright 2017-2020 @polkadot/react-query authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { ThemeProps } from '@polkadot/react-components/types';
+import type { Compact } from '@polkadot/types';
+import type { Registry } from '@polkadot/types/types';
+
 import BN from 'bn.js';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import type { ThemeProps } from '@polkadot/react-components/types';
-import type { Compact } from '@polkadot/types';
 import { formatBalance } from '@polkadot/util';
 
 import { useTranslation } from './translate';
@@ -67,7 +69,7 @@ function FormatBalance ({ children, className = '', currency, isShort, label, la
   );
 }
 
-export default React.memo(styled(FormatBalance)(({ theme }: ThemeProps) => `
+export default React.memo(styled(FormatBalance)`
   display: inline-block;
   vertical-align: baseline;
   white-space: nowrap;
@@ -91,7 +93,7 @@ export default React.memo(styled(FormatBalance)(({ theme }: ThemeProps) => `
     text-align: right;
 
     > .ui--FormatBalance-postfix {
-      font-weight: ${theme.fontWeightLight};
+      font-weight: var(--font-weight-light);
       opacity: 0.7;
       vertical-align: baseline;
     }
@@ -109,4 +111,4 @@ export default React.memo(styled(FormatBalance)(({ theme }: ThemeProps) => `
   .ui--Icon+.ui--FormatBalance-value {
     margin-left: 0.375rem;
   }
-`));
+`);

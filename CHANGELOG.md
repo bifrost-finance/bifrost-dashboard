@@ -1,5 +1,168 @@
 # CHANGELOG
 
+## 0.88.1 Apr 19, 2021
+
+Contributed:
+
+- Added Nftmart config (Thanks to https://github.com/caosbad)
+- Update Zenlink config (Thanks to https://github.com/icodezjb)
+- Update Darwinia Crab config (Thanks to https://github.com/WoeOm)
+- Added Riochain config (Thanks to https://github.com/david-rio)
+- Update Bifrost Rococo config (Thanks to https://github.com/yooml)
+- Added VLN Rococo config (Thanks to https://github.com/stanly-johnson)
+- Added Datahighway Westlake config (Thanks to https://github.com/cgroeschel)
+- Update Polkafoundry config (Thanks to https://github.com/hoangnl2112)
+- Adjust Parami logo (thanks to https://github.com/hellotrongo)
+- Update Galital config (thanks to https://github.com/masterdubs)
+- Add Prism Rococo parachain (Thanks to https://github.com/chrissoso)
+- Add HydraDx Snakenet Gen 2 (Thanks to https://github.com/lumir-mrkva)
+- Update Apron Rococo paraId (thanks to https://github.com/Apron2050)
+- Update Clover logo (Thanks to https://github.com/pangwa)
+- Update Sora spec name (Thanks to https://github.com/KalitaAlexey)
+- Add Galital Rococo config (Thanks to  https://github.com/masterdubs)
+- Update Mybank config (Thanks to https://github.com/armatrix)
+
+Changes:
+
+- Fix Elapsed formatting (previously would only show s units)
+- Show unlocking when democracy has been undelegated
+- Disable all parachain < 1000 networks (now reserved)
+- Params now deals defaults to hex-only for H160/256/512
+
+
+## 0.87.1 Apr 12, 2021
+
+Contributed:
+
+- Update Kilt types (Thanks to https://github.com/wischli)
+- Update Zero types (Thanks to https://github.com/2075)
+- Add Polkafoundry chain (Thanks to https://github.com/thanhtung6824)
+- Update Acala endpoint (Thanks to https://github.com/qwer951123)
+- Add Equilibrium Rococo endpoint (Thanks to https://github.com/mn13)
+- Add Galois SessionKey type (Thanks to https://github.com/hging)
+- Update Datahighway endpoint (Thanks to https://github.com/cgroeschel)
+- Add Zeitgeist (Thanks to https://github.com/lsaether)
+- Add Subsocial Rococo parachain (Thanks to https://github.com/siman)
+- Add Parami Rococo parachain (Thanks to https://github.com/chenwei767)
+- Update Robonomics types (Thanks to https://github.com/akru)
+- Add Galitial Rococo parachain (Thanks to https://github.com/masterdubs)
+- Update Jupiter types (Thanks to https://github.com/ii-ii-ii)
+- Update SubDAO logo (Thanks https://github.com/chenwei767)
+- Add Sunrock Rococo parachain (Thanks to https://github.com/crystalin)
+- Update Edgeware live endpoint (Thanks to https://github.com/ShankarWarang)
+- Add Mybank network (Thanks to https://github.com/armatrix)
+- Add Steam & Beast Rococo parachain (Thanks to https://github.com/johnwhitton)
+- Update Unit network logo (Thanks to https://github.com/paulhealy09)
+- Update Encointer types (Thanks to https://github.com/brenzi)
+- Add Apron network (Thanks to https://github.com/Apron2050)
+- Add Manta Rococo parachain (Thanks to https://github.com/zhenfeizhang)
+- Correct Bifrost usage (Thanks to https://github.com/awesomepan)
+- Update Uart test types (Thanks to https://github.com/tianxiemaochiyu)
+- Update Mandala paraId (Thanks to https://github.com/xlc)
+- Update PolkaFoundry paraId (Thanks to https://github.com/hoangnl2112)
+- Update Clover types (Thanks to https://github.com/pangwa)
+
+Changes:
+
+- Extend parachain support to cater for new Rococo usages
+- Display parachain specVersion (in addition to best block)
+- Move batch transaction creation into hook (& apply to all uses)
+
+
+## 0.86.2 Mar 29, 2021
+
+Contributed:
+
+- Adjustments for Crust pinning (Thanks to https://github.com/zikunfan)
+- Adjustments for KILT XCM types (Thanks to https://github.com/wischli)
+
+
+## 0.86.1 Mar 29, 2021
+
+Contributed:
+
+- Change global menu styling (Thanks to https://github.com/MiZiet)
+- Update Unique colors & types (Thanks to https://github.com/gregzaitsev)
+- Update Sora types (Thanks to https://github.com/modbrin)
+- Update Realis network (Thanks to https://github.com/Daelon02)
+- Update PolkaBtc types (thanks to https://github.com/gregdhill)
+- Update Moonbeam types (Thanks to https://github.com/joelamouche)
+- Update Acala endpoints (Thanks to https://github.com/xlc)
+- Update Darwinia Crab logo (Thanks to https://github.com/sxlwar)
+- Update Darwinia Crab RPC & types (thanks to https://github.com/WoeOm)
+- Update Clover types (Thanks to https://github.com/pangwa & https://github.com/superpw)
+- Updata Equilibrium types (Thanks to https://github.com/pr0fedt)
+- Add Phoenix chain to Rococo (Thanks to https://github.com/yuyunhong)
+- Add Litentry testnet (Thanks to https://github.com/chenzongxiong)
+- Update types for DOTMog (Thanks to https://github.com/darkfriend77)
+- Fix language on staking (Thanks to https://github.com/SimonKraus)
+- Add pinning of apps UI IPFS to Crust (Thanks to https://github.com/zikunfan)
+
+Changes:
+
+- Display justifications in block explorer
+- Expansion of crowdloan, auctions & parachain views
+- Basic functionality for asset module
+- Adjust ordering of democracy & tips buttons
+- Cater for new Rococo chain reset/deployment
+- Ensure treasury does not depend on council or tips
+
+
+## 0.85.1 Mar 22, 2021
+
+Contributed:
+
+- Adjust dusty spec name (Thanks to https://github.com/akru)
+- Update Galois types (Thanks to https://github.com/hging)
+- Update Crust types (Thanks to https://github.com/zikunfan)
+- Add Vln testnet (thanks to https://github.com/stanly-johnson)
+- Update Datahighway types (Thanks to https://github.com/cgroeschel)
+- Language fixes (Thanks to https://github.com/wirednkod)
+
+Changes:
+
+- Display validator votes on parachains
+- Adjust society (display split, expand member/candidate info & payouts)
+- Adjust inflation calculation for zero staked/issuance
+- Display call hash on signer modal
+- Cleanup Modal layouts & de-dupe tags
+- Cleanup global tabs displays (optimize elements)
+
+
+## 0.84.1 Mar 15, 2021
+
+Contributed:
+
+- Added ReAlis network & types (Thanks to https://github.com/Daelon02)
+- Added OnFinality endpoint for Moonbeam (Thanks to https://github.com/joelamouche)
+- Update Moonbeam types (Thanks to https://github.com/joelamouche)
+- Update PolkaBTC types (Thanks to https://github.com/savudani8)
+- Update Kilt types (Thanks to https://github.com/wischli)
+- Update Bifrost types (Thanks to https://github.com/awesomepan)
+- Update Bit.Country paraId (Thanks to https://github.com/justinphamnz)
+- Update Dusty types (Thanks to https://github.com/akru)
+- Update Zenlink types (Thanks to https://github.com/Hayden0323)
+- Update Sgc node types (Thanks to https://github.com/Zombieliu)
+- Update DataHighway chain colors (Thanks to https://github.com/cgroeschel)
+- Update specName for ChainX & Zenlink (Thanks to https://github.com/icodezjb)
+- Update it i18n (thanks to https://github.com/fomod-in)
+
+Changes:
+
+- Add display of blocking stashes (& removal from nomination lists)
+- Cater for Rococo reset (genesisHash updates)
+- Add support for parachain auctions
+- Add support for contributions in crowdloan app
+- Update crowdloan app for latest Polkadot types
+- Fix upcoming retrievals for new parachain interfaces
+- Display lease period countdown for parachains
+- show parachain lifecycles (& action countdowns as applicable)
+- Flatten Modal layouts (explicit hint, single column data only)
+- Move theme definitions to CSS variables
+- Add correct keys for account menu (rendering warnings)
+- Add additional errors on invalid keypair retrieval
+
+
 ## 0.83.1 Mar 8, 2021
 
 Contributed:
