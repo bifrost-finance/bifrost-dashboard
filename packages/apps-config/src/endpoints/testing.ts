@@ -21,7 +21,7 @@ export function createTesting(t: TFunction): LinkOption[] {
       info: 'bifrost',
       text: t('rpc.asgard', 'Bifrost Asgard', { ns: 'apps-config' }),
       providers: {
-        Bifrost: 'wss://asgard-rpc.liebi.com'
+        Bifrost: 'wss://asgard-rpc.liebi.com/ws'
       }
     }
   ]);
