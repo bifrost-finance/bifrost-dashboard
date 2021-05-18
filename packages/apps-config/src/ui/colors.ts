@@ -54,7 +54,7 @@ const chainSgc = 'linear-gradient(45deg, #0099F7 0%, #F11712 100%)';
 const chainSnakenet = '#f653a2';
 const chainSunrock = '#ffd13b';
 const chainWestend = '#da68a7';
-const chainBifrost = '#5A25F0';
+const chainBifrost = 'linear-gradient(-45deg, #9E3BFF 0%, #492CFF 100%)';
 const chainGalois = '#000000';
 const chainZero = '#000000';
 const chainZenlink = 'linear-gradient(45deg, #F20082 0%, #FF4D4D 100%)';
@@ -72,7 +72,7 @@ const chainWestlake = 'linear-gradient(-90deg, #9400D3 0%, #5A5CA9 50%, #00BFFF 
 // alphabetical
 const nodeApron = 'linear-gradient(45deg, #0099F7 0%, #2E49EB 100%)';
 const nodeBitCountry = '#191a2e';
-const nodeBifrost = '#5A25F0';
+const nodeBifrost = 'linear-gradient(-45deg, #9E3BFF 0%, #492CFF 100%)';
 const nodeCanvas = '#c77cff';
 const nodeCentrifuge = '#fcc367';
 const nodeDotMog = '#020609';
