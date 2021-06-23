@@ -17,9 +17,18 @@ import { expandEndpoints } from './util';
 export function createTesting(t: TFunction): LinkOption[] {
   return expandEndpoints(t, [
     // alphabetical based on chain name, e.g. Amber, Arcadia, Beresheet, ...
+    // {
+    //   info: 'bifrost',
+    //   homepage: 'https://ksm.vtoken.io/?ref=polkadotjs',
+    //   paraId: 2001,
+    //   text: t('rpc.kusama.bifrost', 'Bifrost', { ns: 'apps-config' }),
+    //   providers: {
+    //     Bifrost: 'wss://bifrost-rpc.liebi.com/ws'
+    //   }
+    // },
     {
       info: 'bifrost',
-      text: t('rpc.asgard', 'Bifrost Asgard', { ns: 'apps-config' }),
+      text: t('rpc.test.bifrost', 'Bifrost Asgard', { ns: 'apps-config' }),
       providers: {
         Bifrost: 'wss://asgard-rpc.liebi.com/ws'
       }
