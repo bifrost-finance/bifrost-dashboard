@@ -156,8 +156,10 @@ export const chainColors: Record<string, string> = Object.entries({
   'acala mandala pc2': chainRoccoAcala,
   'Apron PC1': chainApron,
   'Ares PC1': chainRoccoAres,
+  asgard: nodeBifrost,
   'Beast Developer': chainBeastEave,
   bifrost: chainRoccoBifrost,
+  'Bifrost Asgard CC4': chainRoccoBifrost,
   'Bifrost PC1': chainRoccoBifrost,
   'Bit.Country Tewai Chain': chainBitCountry,
   ChainX: chainChainx,
@@ -284,6 +286,7 @@ export const chainColors: Record<string, string> = Object.entries({
 export const nodeColors = Object.entries({
   'Apron Node': nodeApron,
   Basilisk: nodeBasilisk,
+  'Bifrost Asgard CC4': chainRoccoBifrost,
   'Bifrost Node': nodeBifrost,
   'Bit.Country Node': nodeBitCountry,
   'Canvas Node': nodeCanvas,
